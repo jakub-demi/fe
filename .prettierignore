@@ -1,0 +1,14 @@
+# root/
+.git/*
+.husky/*
+.idea/*
+.vscode/*
+node_modules/*
+public/*
+.env*
+.gitignore
+package.json
+package-lock.json
+
+# src/
+src/styles/globals.css

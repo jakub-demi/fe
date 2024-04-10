@@ -1,0 +1,9 @@
+@import url(@fontsource/roboto/400.css);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: Roboto, serif;
+}

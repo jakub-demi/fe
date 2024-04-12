@@ -5,5 +5,5 @@ export interface AuthStoreI {
   authed: boolean
   setUser: (user: UserT | null) => void
   logout: () => void
-  login: (user: UserT) => void
+  login: () => void
 }

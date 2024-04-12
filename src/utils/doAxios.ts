@@ -1,5 +1,8 @@
-import axios from "axios"
-import { useRouter } from "next/router"
+import axios, { AxiosPromise } from "axios"
+import { useRouter } from "next/navigation"
+import nav from "@/router"
+import { httpStatusE } from "@/types/enums"
+import log from "@/utils/log"
 
 const doAxios = (
   url: string,
@@ -17,7 +20,7 @@ const doAxios = (
   api: boolean = false,
   data?: object,
   headers?: object
-) => {
+): AxiosPromise => {
   return axios({
     baseURL:
       (process.env.NEXT_PUBLIC_API_BASE_URL ?? "//localhost") +
@@ -29,10 +32,12 @@ const doAxios = (
     data,
     headers: headers,
   }).catch((error) => {
-    if (error.response?.status == 404) {
+    if (error.response?.status == httpStatusE.NOT_FOUND) {
       const router = useRouter()
-      router.push("404")
+      nav("e404", router)
     }
+
+    log("doAxios error", error)
 
     throw error
   })

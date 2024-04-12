@@ -1,84 +1,101 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import doAxios from "@/utils/doAxios"
-import { CredentialsType } from "@/types"
+import { CredentialsT } from "@/types"
 import { produce } from "immer"
 import authStore from "@/stores/authStore"
+import { httpStatusE } from "@/types/enums"
+import { useRouter } from "next/navigation"
+import nav from "@/router"
+import log from "@/utils/log"
+import cltm from "@/utils/cltm"
 
 const LoginPage = () => {
-  const [credentials, setCredentials] = useState<CredentialsType>({
+  const auth = authStore()
+  const router = useRouter()
+
+  const [credentials, setCredentials] = useState<CredentialsT>({
     email: "",
     password: "",
   })
 
-  const email = useRef<HTMLInputElement | null>(null)
-  const password = useRef<HTMLInputElement | null>(null)
+  const [loginError, setLoginError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const updateCredentials = (
+    type: keyof CredentialsT,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLoginError(null)
     setCredentials(
       produce((draft) => {
-        draft.email = email.current?.value ?? ""
-        draft.password = password.current?.value ?? ""
+        draft[type] = e.target.value
       })
     )
-  }, [email, password])
-
-  const retrieveUserData = () => {
-    doAxios("/user", "get", true)
   }
 
   const handleLogin = () => {
+    if (credentials.email === "" && credentials.password === "") {
+      setLoginError("Credentials are not filled.")
+      return
+    }
+
+    log("credentials", credentials)
+
     doAxios("/login", "post", false, credentials)
-      .then((response) => {
-        const user = response.data.data
-        authStore.getState().login(user)
+      .then((res) => {
+        if (res.status === httpStatusE.OK || res.status === httpStatusE.FOUND) {
+          auth.login()
+          nav("dashboard", router)
+        }
+
+        // const user = response.data.data
+        // authStore.getState().login(user)
       })
-      .catch((error) => {
-        console.log(error)
+      .catch((err) => {
+        setLoginError(err.response?.data?.message)
       })
   }
 
   //todo:dev remove
-  useEffect(() => {
-    console.log(
-      "process.env.NEXT_PUBLIC_API_BASE_URL:",
-      process.env.NEXT_PUBLIC_API_BASE_URL
-    )
-
-    doAxios("/test", "get", true).then((r) => {
-      console.log(r.data)
-    })
-
-    doAxios("/login", "post", false)
-  }, [])
+  // useEffect(() => {
+  //   // doAxios("/test", "get", true).then((r) => {
+  //   //   console.log(r.data)
+  //   // })
+  // }, [])
 
   return (
     <div className="bg-gray-50 text-[#333]">
       <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
         <div className="max-w-md w-full border py-8 px-6 rounded border-gray-300 bg-white">
           <h2 className="text-center text-3xl font-extrabold">Login</h2>
-          <form className="mt-10 space-y-4">
+          <div className="mt-10 space-y-4">
             <div>
               <input
-                ref={email}
                 name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary"
+                className={cltm(
+                  "w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary",
+                  loginError && "border-red-600"
+                )}
                 placeholder="Email Address"
+                onChange={(e) => updateCredentials("email", e)}
               />
             </div>
             <div>
               <input
-                ref={password}
                 name="password"
                 type="password"
                 autoComplete="current-password"
                 required
-                className="w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary"
+                className={cltm(
+                  "w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary",
+                  loginError && "border-red-600"
+                )}
                 placeholder="Password"
+                onChange={(e) => updateCredentials("password", e)}
               />
             </div>
             <div className="flex items-center justify-between gap-4">
@@ -91,16 +108,23 @@ const LoginPage = () => {
                 </a>
               </div>
             </div>
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                {loginError && (
+                  <span className="text-red-600 text-xs">{loginError}</span>
+                )}
+              </div>
+            </div>
             <div className="!mt-10">
               <button
-                type="submit"
+                //disabled={credentials.email === "" && credentials.password === ""}
                 onClick={handleLogin}
-                className="w-full py-2.5 px-4 text-sm rounded text-white bg-primary hover:bg-primary-hover focus:outline-none"
+                className="w-full py-2.5 px-4 text-sm rounded text-white bg-primary hover:bg-primary-hover focus:outline-none disabled:bg-gray-300"
               >
                 Log In
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

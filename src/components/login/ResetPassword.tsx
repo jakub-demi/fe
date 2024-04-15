@@ -52,7 +52,6 @@ const ResetPasswordDialog = ({
       />
 
       <Dialog
-        className=""
         open={open}
         onClose={handleCloseDialog}
         PaperProps={{

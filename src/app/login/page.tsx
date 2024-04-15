@@ -101,18 +101,18 @@ const LoginPage = () => {
                   onChange={(e) => updateCredentials("password", e)}
                 />
               </div>
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <button
-                    className="text-sm text-primary hover:text-primary-hover"
-                    onClick={() =>
-                      setShowResetPasswordDialog(!showResetPasswordDialog)
-                    }
-                  >
-                    Forgot Password?
-                  </button>
-                </div>
-              </div>
+              {/*<div className="flex items-center justify-between gap-4">*/}
+              {/*  <div>*/}
+              {/*    <button*/}
+              {/*      className="text-sm text-primary hover:text-primary-hover"*/}
+              {/*      onClick={() =>*/}
+              {/*        setShowResetPasswordDialog(!showResetPasswordDialog)*/}
+              {/*      }*/}
+              {/*    >*/}
+              {/*      Forgot Password?*/}
+              {/*    </button>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
               <div className="flex items-center justify-between gap-4">
                 <div>
                   {loginError && (

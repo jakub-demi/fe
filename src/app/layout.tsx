@@ -1,19 +1,21 @@
-import type { Metadata } from "next"
+"use client"
+
+// import type { Metadata } from "next"
 import "@/styles/globals.css"
+import React from "react"
+import AuthMiddleware from "@/components/_common/AuthMiddleware"
 
-export const metadata: Metadata = {
-  title: "Project",
-  description: "",
-}
-
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode
-}>) {
+}>) => {
   return (
     <html lang="en">
-      <body className="">{children}</body>
+      <body>
+        <AuthMiddleware>{children}</AuthMiddleware>
+      </body>
     </html>
   )
 }
+export default RootLayout

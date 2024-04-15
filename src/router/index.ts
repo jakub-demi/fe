@@ -46,4 +46,14 @@ export const getRouteTitle = (pathname: string) => {
   return null
 }
 
+export const doesRouteExist = (pathname: string) => {
+  for (const route in routes()) {
+    const routeUrl = routes()[route].url
+    if (routeUrl === pathname && routeUrl !== "/not-found") {
+      return true
+    }
+  }
+  return false
+}
+
 export default nav

@@ -24,10 +24,8 @@ const LoginPage = () => {
   const [loginError, setLoginError] = useState<string | null>(null)
 
   const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false)
-  const [
-    showResetPasswordConfirmationDialog,
-    setShowResetPasswordConfirmationDialog,
-  ] = useState(false)
+
+  const [submitting, setSubmitting] = useState(false)
 
   const updateCredentials = (
     type: keyof CredentialsT,
@@ -41,7 +39,10 @@ const LoginPage = () => {
     )
   }
 
-  const handleLogin = () => {
+  const handleLogin = (event: React.FormEvent) => {
+    event.preventDefault()
+    setSubmitting(true)
+
     if (credentials.email === "" && credentials.password === "") {
       setLoginError("Credentials are not filled.")
       return
@@ -59,6 +60,7 @@ const LoginPage = () => {
       .catch((err) => {
         setLoginError(err.response?.data?.message)
       })
+      .finally(() => setSubmitting(false))
   }
 
   return (
@@ -72,7 +74,10 @@ const LoginPage = () => {
         <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
           <div className="max-w-md w-full border py-8 px-6 rounded border-gray-300 bg-white">
             <h2 className="text-center text-3xl font-extrabold">Login</h2>
-            <div className="mt-10 space-y-4">
+            <form
+              onSubmit={handleLogin}
+              className="mt-10 space-y-4"
+            >
               <div>
                 <input
                   name="email"
@@ -122,13 +127,14 @@ const LoginPage = () => {
               </div>
               <div className="!mt-10">
                 <button
-                  onClick={handleLogin}
+                  disabled={submitting}
+                  type="submit"
                   className="w-full py-2.5 px-4 text-sm rounded text-white bg-primary hover:bg-primary-hover focus:outline-none disabled:bg-gray-300"
                 >
                   Log In
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

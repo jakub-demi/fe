@@ -20,7 +20,7 @@ const ProfilMenu = () => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleNav = (route?: string) => {
+  const handleNavAndClose = (route?: string) => {
     setAnchorEl(null)
     route && nav(route, router)
   }
@@ -47,16 +47,16 @@ const ProfilMenu = () => {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={() => handleNav()}
+        onClose={() => handleNavAndClose()}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={() => handleNav("profile")}>
+        <MenuItem onClick={() => handleNavAndClose("profile")}>
           {texts.topMenu.avatar.profile}
         </MenuItem>
 
-        <MenuItem onClick={() => handleNav("changePassword")}>
+        <MenuItem onClick={() => handleNavAndClose("changePassword")}>
           {texts.topMenu.avatar.changePassword}
         </MenuItem>
 

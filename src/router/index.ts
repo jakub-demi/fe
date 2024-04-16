@@ -17,13 +17,11 @@ const routes = (): RouteMappings => ({
     url: "/login",
     title: "Login",
   },
+
+  // Dashboard routes:
   dashboard: {
     url: "/dashboard",
     title: "Dashboard",
-  },
-  profile: {
-    url: "/dashboard/user/profile",
-    title: "Profile",
   },
   orders: {
     url: "/dashboard/orders",
@@ -32,6 +30,16 @@ const routes = (): RouteMappings => ({
   users: {
     url: "/dashboard/users",
     title: "Users",
+  },
+
+  // Dashboard User routes:
+  profile: {
+    url: "/dashboard/user/profile",
+    title: "Profile",
+  },
+  changePassword: {
+    url: "/dashboard/user/password",
+    title: "Change Password",
   },
 })
 

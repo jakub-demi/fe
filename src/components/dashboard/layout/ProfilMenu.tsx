@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import doAxios from "@/utils/doAxios"
 import authStore from "@/stores/authStore"
 import nav from "@/router"
+import texts from "@/texts"
 
 const ProfilMenu = () => {
   const router = useRouter()
@@ -51,9 +52,19 @@ const ProfilMenu = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={() => handleNav("profile")}>Profile</MenuItem>
+        <MenuItem onClick={() => handleNav("profile")}>
+          {texts.topMenu.avatar.profile}
+        </MenuItem>
+
+        <MenuItem onClick={() => handleNav("changePassword")}>
+          {texts.topMenu.avatar.changePassword}
+        </MenuItem>
+
         <Divider />
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+
+        <MenuItem onClick={handleLogout}>
+          {texts.topMenu.avatar.logout}
+        </MenuItem>
       </Menu>
     </div>
   )

@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemIcon from "@mui/material/ListItemIcon"
@@ -7,31 +9,43 @@ import DashboardIcon from "@mui/icons-material/Dashboard"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
 import PeopleIcon from "@mui/icons-material/People"
 import AssignmentIcon from "@mui/icons-material/Assignment"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
+import nav, { getRouteTitleByName } from "@/router"
 
-export const mainListItems = (
+export const MainMenuListItems = ({
+  router,
+}: {
+  router: AppRouterInstance
+}): React.JSX.Element => (
   <>
-    <ListItemButton>
+    <ListItemButton onClick={() => nav("dashboard", router)}>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <ListItemText primary={getRouteTitleByName("dashboard")} />
     </ListItemButton>
-    <ListItemButton>
+
+    <ListItemButton onClick={() => nav("orders", router)}>
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary={getRouteTitleByName("orders")} />
     </ListItemButton>
-    <ListItemButton>
+
+    <ListItemButton onClick={() => nav("users", router)}>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Users" />
+      <ListItemText primary={getRouteTitleByName("users")} />
     </ListItemButton>
   </>
 )
 
-export const secondaryListItems = (
+export const SecondaryMenuListItems = ({
+  router,
+}: {
+  router: AppRouterInstance
+}): React.JSX.Element => (
   <>
     <ListSubheader
       component="div"
@@ -39,6 +53,7 @@ export const secondaryListItems = (
     >
       Administrator
     </ListSubheader>
+
     <ListItemButton>
       <ListItemIcon>
         <AssignmentIcon />

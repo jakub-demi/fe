@@ -17,7 +17,7 @@ const texts = {
     },
     changePassword: {
       form: {
-        oldPassword: "Old Password",
+        currentPassword: "Current Password",
         newPassword: "New Password",
         newPasswordRepeat: "Repeat New Password",
         saveBtn: "Save",

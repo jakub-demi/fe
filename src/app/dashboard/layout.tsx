@@ -27,6 +27,7 @@ import { getRouteTitle } from "@/router"
 import log from "@/utils/log"
 import ProfilMenu from "@/components/dashboard/layout/ProfilMenu"
 import theme from "@/styles/theme"
+import Notification from "@/components/_common/Notification"
 
 const DashboardLayout = ({
   children,
@@ -133,6 +134,8 @@ const DashboardLayout = ({
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>
+
+          <Notification />
         </Box>
       </AuthMiddleware>
     </ThemeProvider>

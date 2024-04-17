@@ -48,8 +48,6 @@ const LoginPage = () => {
       return
     }
 
-    log("credentials", credentials)
-
     doAxios("/login", "post", false, credentials)
       .then((res) => {
         if (res.status === httpStatusE.OK || res.status === httpStatusE.FOUND) {

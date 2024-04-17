@@ -27,7 +27,7 @@ const ProfilMenu = () => {
 
   const handleLogout = () => {
     setAnchorEl(null)
-    doAxios("/logout", "post").then(() => {
+    doAxios("/logout", "post").finally(() => {
       logout()
       nav("login", router)
     })

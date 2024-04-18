@@ -16,12 +16,13 @@ const config: Config = {
       colors: {
         primary: "#2563eb",
         "primary-hover": "#1d4ed8",
-        secondy: "#edb437",
-        "secondy-hover": "#ebad25",
-        error: "rgb(220 38 38)",
+        secondary: "#edb437",
+        "secondary-hover": "#ebad25",
+        error: "#dc2626",
       },
     },
   },
+  important: true,
   plugins: [],
 }
 export default config

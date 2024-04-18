@@ -1,5 +1,6 @@
 import { Typography } from "@mui/material"
 import React from "react"
+import texts from "@/texts"
 
 const Copyright = (props: any): React.ReactElement => {
   return (
@@ -9,8 +10,7 @@ const Copyright = (props: any): React.ReactElement => {
       align="center"
       {...props}
     >
-      {"Copyright © "}
-      {new Date().getFullYear()}
+      {texts.footer.copyright} {new Date().getFullYear()}
       {"."}
     </Typography>
   )

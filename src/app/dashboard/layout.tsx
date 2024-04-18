@@ -5,7 +5,6 @@ import AuthMiddleware from "@/components/_common/AuthMiddleware"
 import {
   Box,
   Container,
-  createTheme,
   CssBaseline,
   IconButton,
   ThemeProvider,
@@ -27,6 +26,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { getRouteTitle } from "@/router"
 import log from "@/utils/log"
 import ProfilMenu from "@/components/dashboard/layout/ProfilMenu"
+import theme from "@/styles/theme"
+import Notification from "@/components/_common/Notification"
 
 const DashboardLayout = ({
   children,
@@ -50,7 +51,7 @@ const DashboardLayout = ({
   }, [pathname])
 
   return (
-    <ThemeProvider theme={createTheme()}>
+    <ThemeProvider theme={theme}>
       <AuthMiddleware>
         <Box sx={{ display: "flex" }}>
           <CssBaseline />
@@ -133,6 +134,8 @@ const DashboardLayout = ({
               <Copyright sx={{ pt: 4 }} />
             </Container>
           </Box>
+
+          <Notification />
         </Box>
       </AuthMiddleware>
     </ThemeProvider>

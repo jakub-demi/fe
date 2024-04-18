@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import doAxios from "@/utils/doAxios"
 import authStore from "@/stores/authStore"
 import nav from "@/router"
+import texts from "@/texts"
 
 const ProfilMenu = () => {
   const router = useRouter()
@@ -19,14 +20,14 @@ const ProfilMenu = () => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleNav = (route?: string) => {
+  const handleNavAndClose = (route?: string) => {
     setAnchorEl(null)
     route && nav(route, router)
   }
 
   const handleLogout = () => {
     setAnchorEl(null)
-    doAxios("/logout", "post").then(() => {
+    doAxios("/logout", "post").finally(() => {
       logout()
       nav("login", router)
     })
@@ -46,14 +47,24 @@ const ProfilMenu = () => {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={() => handleNav()}
+        onClose={() => handleNavAndClose()}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={() => handleNav("profile")}>Profile</MenuItem>
+        <MenuItem onClick={() => handleNavAndClose("profile")}>
+          {texts.topMenu.avatar.profile}
+        </MenuItem>
+
+        <MenuItem onClick={() => handleNavAndClose("changePassword")}>
+          {texts.topMenu.avatar.changePassword}
+        </MenuItem>
+
         <Divider />
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+
+        <MenuItem onClick={handleLogout}>
+          {texts.topMenu.avatar.logout}
+        </MenuItem>
       </Menu>
     </div>
   )

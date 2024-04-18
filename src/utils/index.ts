@@ -29,3 +29,14 @@ export const handleInputErrors = <T>(
     })
   )
 }
+
+export const handleInputDefaultErrors = <T>(
+  defaultState: T,
+  setter: React.Dispatch<React.SetStateAction<T>>
+) => {
+  setter(
+    produce((draft: any) => {
+      return defaultState
+    })
+  )
+}

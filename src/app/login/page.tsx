@@ -48,17 +48,22 @@ const LoginPage = () => {
       return
     }
 
-    doAxios("/login", "post", false, credentials)
-      .then((res) => {
-        if (res.status === httpStatusE.OK || res.status === httpStatusE.FOUND) {
-          auth.login()
-          nav("dashboard", router)
-        }
-      })
-      .catch((err) => {
-        setLoginError(err.response?.data?.message)
-      })
-      .finally(() => setSubmitting(false))
+    doAxios("/sanctum/csrf-cookie").then(() => {
+      doAxios("/login", "post", false, credentials)
+        .then((res) => {
+          if (
+            res.status === httpStatusE.OK ||
+            res.status === httpStatusE.FOUND
+          ) {
+            auth.login()
+            nav("dashboard", router)
+          }
+        })
+        .catch((err) => {
+          setLoginError(err.response?.data?.message)
+        })
+        .finally(() => setSubmitting(false))
+    })
   }
 
   return (
@@ -84,7 +89,7 @@ const LoginPage = () => {
                   required
                   className={cltm(
                     "w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary",
-                    loginError && "border-error"
+                    loginError && "border-error focus:border-error"
                   )}
                   placeholder="Email Address"
                   onChange={(e) => updateCredentials("email", e)}
@@ -98,7 +103,7 @@ const LoginPage = () => {
                   required
                   className={cltm(
                     "w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary",
-                    loginError && "border-error"
+                    loginError && "border-error focus:border-error"
                   )}
                   placeholder="Password"
                   onChange={(e) => updateCredentials("password", e)}

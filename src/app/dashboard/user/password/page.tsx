@@ -1,16 +1,28 @@
 "use client"
 
 import React, { useState } from "react"
-import TextField from "@mui/material/TextField"
 import texts from "@/texts"
 import Button from "@mui/material/Button"
-import { handleChangeData, handleInputErrors } from "@/utils"
+import {
+  handleChangeData,
+  handleInputDefaultErrors,
+  handleInputErrors,
+} from "@/utils"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import InputField from "@/components/_common/form/InputField"
 import { produce } from "immer"
+import notificationStore from "@/stores/notificationStore"
+import authStore from "@/stores/authStore"
+import { useRouter } from "next/navigation"
+import nav from "@/router"
 
 const PasswordChangePage = () => {
+  const router = useRouter()
+  const logout = authStore((state) => state.logout)
+
+  const setNotification = notificationStore((state) => state.setNotification)
+
   const [password, setPassword] = useState({
     current_password: "",
     password: "",
@@ -20,19 +32,15 @@ const PasswordChangePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const inputErrorsDefaultState = {
-    current_password: undefined as string | undefined,
-    password: undefined as string | undefined,
-    password_confirmation: undefined as string | undefined,
+    current_password: undefined as string[] | undefined,
+    password: undefined as string[] | undefined,
+    password_confirmation: undefined as string[] | undefined,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChangeData(e, setPassword)
-    setInputErrors(
-      produce((draft) => {
-        return inputErrorsDefaultState
-      })
-    )
+    handleInputDefaultErrors(inputErrorsDefaultState, setInputErrors)
   }
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -40,16 +48,28 @@ const PasswordChangePage = () => {
 
     setIsSubmitting(true)
 
-    log("password (state)", password)
-    //
-
     doAxios("/user/password", "put", false, password)
       .then((res) => {
-        log("res", res)
+        logout()
+        nav("login", router)
       })
       .catch((err) => {
-        log("err", err)
         handleInputErrors(err, setInputErrors)
+        setInputErrors(
+          produce((draft) => {
+            Object.keys(draft).forEach((key) => {
+              if (key === "password" && draft.password) {
+                draft.password_confirmation = draft.password.filter((str) =>
+                  str.includes("confirm")
+                )
+                draft.password = draft.password.filter(
+                  (str) => !str.includes("confirm")
+                )
+              }
+            })
+          })
+        )
+        setNotification(err.response.data.message, "error")
       })
       .finally(() => setIsSubmitting(false))
   }
@@ -69,50 +89,15 @@ const PasswordChangePage = () => {
           label={texts.user.changePassword.form.newPassword}
           handleChange={handleChange}
           type="password"
-          error={
-            inputErrors.password && !inputErrors.password.includes("confirm")
-              ? inputErrors.password
-              : undefined
-          }
+          error={inputErrors.password}
         />
         <InputField
           id="password_confirmation"
           label={texts.user.changePassword.form.newPasswordRepeat}
           handleChange={handleChange}
           type="password"
-          error={
-            inputErrors.password && inputErrors.password.includes("confirm")
-              ? inputErrors.password
-              : undefined
-          }
+          error={inputErrors.password_confirmation}
         />
-
-        {/*<TextField
-          id="current_password"
-          className="w-full mb-2.5"
-          label={inputErrors.current_password ?? texts.user.changePassword.form.currentPassword}
-          variant="outlined"
-          type="password"
-          onChange={(e) => handleChangeData(e, setPassword)}
-        />
-        <TextField
-          id="password"
-          className="w-full mb-2.5"
-          label={inputErrors.password ?? texts.user.changePassword.form.newPassword}
-          variant="outlined"
-          type="password"
-          onChange={(e) => handleChangeData(e, setPassword)}
-        />
-        <TextField
-          id="password_confirmation"
-          className="w-full mb-2.5"
-          label={inputErrors.password_confirmation ?? texts.user.changePassword.form.newPasswordRepeat}
-          variant="outlined"
-          type="password"
-          onChange={(e) => handleChangeData(e, setPassword)}
-          error={inputErrors.password_confirmation !== undefined}
-        />*/}
-
         <Button
           disabled={isSubmitting}
           variant="contained"

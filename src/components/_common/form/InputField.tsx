@@ -20,7 +20,7 @@ const InputField = ({
   className?: string
   type?: React.InputHTMLAttributes<unknown>["type"]
   variant?: TextFieldVariants
-  error?: string
+  error?: string[]
 }) => {
   return (
     <TextField
@@ -30,11 +30,11 @@ const InputField = ({
         "w-full mb-2.5",
         className && `w-full mb-2.5 ${className}`
       )}
-      label={error ?? label}
+      label={error && error.length > 0 ? error : label}
       variant={variant ?? "outlined"}
       type={type}
       onChange={handleChange}
-      error={error !== undefined}
+      error={error && error.length > 0}
     />
   )
 }

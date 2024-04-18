@@ -24,7 +24,7 @@ const notificationStore = create<NotificationStoreI>()((set) => ({
     set(
       produce((state) => {
         state.notification.text = null
-        state.notification.severity = undefined
+        state.notification.severity = "info"
       })
     ),
 }))

@@ -54,7 +54,6 @@ const Notification = () => {
         open={open}
         autoHideDuration={3000}
         onClose={handleClose}
-        //message={notification}
         action={action}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >

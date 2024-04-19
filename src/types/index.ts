@@ -16,3 +16,11 @@ export type notificationStoreSeverityT =
   | "info"
   | "error"
   | "warning"
+
+export type OrderT = {
+  id: bigint
+  order_number: number
+  due_date: Date
+  payment_date: Date
+  created_at: Date
+}

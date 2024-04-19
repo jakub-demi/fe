@@ -41,6 +41,16 @@ const routes = (): RouteMappings => ({
     url: "/dashboard/user/password",
     title: "Change Password",
   },
+
+  // Order action pages
+  "order.create": {
+    url: "/dashboard/orders/create",
+    title: "Order - Create",
+  },
+  "order.edit": {
+    url: "/dashboard/orders/edit",
+    title: "Order - Edit",
+  },
 })
 
 const isValidRoute = (route: string): void => {
@@ -52,13 +62,20 @@ const isValidRoute = (route: string): void => {
 const nav = (
   name: string,
   router: AppRouterInstance,
-  replace: boolean = false
+  replace: boolean = false,
+  param?: string | number
 ): void => {
   isValidRoute(name)
 
   const url = routes()[name]["url"]
 
-  !replace ? router.push(url) : router.replace(url)
+  !replace
+    ? param
+      ? router.push(`${url}/${param}`)
+      : router.push(url)
+    : param
+      ? router.replace(`${url}/${param}`)
+      : router.replace(url)
 }
 
 export const getRoute = (name: string): string => {

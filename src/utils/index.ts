@@ -1,6 +1,7 @@
 import React from "react"
 import { produce } from "immer"
-import { AxiosError } from "axios"
+import { AxiosError, AxiosResponse } from "axios"
+import log from "@/utils/log"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -14,6 +15,18 @@ export const handleChangeData = <T>(
       draft && (draft[id] = value as never)
     })
   )
+}
+
+export const handleResData = <T>(
+  response: AxiosResponse,
+  setter: React.Dispatch<React.SetStateAction<T>>
+): string | null => {
+  setter(
+    produce((draft: any) => {
+      return response.data.data
+    })
+  )
+  return response.data.message
 }
 
 export const handleInputErrors = <T>(

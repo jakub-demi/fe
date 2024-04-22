@@ -21,6 +21,6 @@ export type OrderT = {
   id: bigint
   order_number: number
   due_date: Date
-  payment_date: Date
+  payment_date: Date | null
   created_at: Date
 }

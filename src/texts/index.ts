@@ -27,5 +27,37 @@ const texts = {
   footer: {
     copyright: "Copyright ©",
   },
+  actionsMenu: {
+    title: "Actions",
+    create: "Create",
+    edit: "Edit",
+    delete: "Delete",
+    confirmDialog: {
+      titleItemRemoval: "Are you sure you want to remove this item?",
+    },
+  },
+  drawerMenu: {
+    secondSection: {
+      title: "Administrator",
+    },
+  },
+  orders: {
+    form: {
+      common: {
+        dueDate: {
+          label: "Payment Due Date",
+        },
+      },
+      create: {
+        button: "Create",
+      },
+    },
+  },
+  confirmDialog: {
+    button: {
+      confirm: "Confirm",
+      decline: "Decline",
+    },
+  },
 }
 export default texts

@@ -10,6 +10,7 @@ const authStore = create<AuthStoreI>()(
     (set) => ({
       user: null as UserT | null,
       authed: false,
+      menuPinned: false,
 
       setUser: (user: UserT | null): void =>
         set(
@@ -44,6 +45,14 @@ const authStore = create<AuthStoreI>()(
             state.authed = true
 
             //log("(login) state.authed after", state.authed)
+          })
+        ),
+
+      setMenuPinned: (pinned: boolean) =>
+        set(
+          produce((state) => {
+            state.menuPinned = pinned
+            //log("(setMenuPinned) state.menuPinned", pinned)
           })
         ),
     }),

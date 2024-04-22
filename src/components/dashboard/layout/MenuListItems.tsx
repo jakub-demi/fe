@@ -7,6 +7,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
 import PeopleIcon from "@mui/icons-material/People"
 import AssignmentIcon from "@mui/icons-material/Assignment"
 import MenuListItem from "@/components/dashboard/layout/MenuListItem"
+import texts from "@/texts"
 
 export const MainMenuListItems = (): React.JSX.Element => (
   <>
@@ -31,7 +32,7 @@ export const SecondaryMenuListItems = (): React.JSX.Element => (
       component="div"
       inset
     >
-      Administrator
+      {texts.drawerMenu.secondSection.title}
     </ListSubheader>
 
     <MenuListItem

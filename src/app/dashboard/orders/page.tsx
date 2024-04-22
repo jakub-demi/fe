@@ -19,7 +19,6 @@ const OrdersPage = () => {
 
   const loadData = () => {
     doAxios("/orders", "get", true).then((res) => {
-      log("res", res)
       handleResData(res, setTableData)
     })
   }
@@ -39,7 +38,7 @@ const OrdersPage = () => {
         id: order.id,
         order_number: order.order_number,
         due_date: new Date(order.due_date),
-        payment_date: new Date(order.payment_date),
+        payment_date: order.payment_date ? new Date(order.payment_date) : null,
         created_at: new Date(order.created_at),
       })
     })
@@ -116,15 +115,14 @@ const OrdersPage = () => {
           //return alert(JSON.stringify(thisRow, null, 4));
           // log("clicked", thisRow)
 
-          log("params", params.row)
+          log("(DataGrid) params", params.row)
         }
-
-        //return <button className="py-2 px-4 bg-primary hover:bg-primary-hover rounded-md text-white" onClick={onClick}>Click</button>;
 
         return (
           <ActionsMenu
+            datagridPage="orders"
             id={(params.row as { id: number }).id}
-            setter={setTableData}
+            handleReloadData={() => loadData()}
           />
         )
       },

@@ -2,6 +2,7 @@ import React from "react"
 import { produce } from "immer"
 import { AxiosError, AxiosResponse } from "axios"
 import log from "@/utils/log"
+import dayjs, { Dayjs } from "dayjs"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -52,4 +53,20 @@ export const handleInputDefaultErrors = <T>(
       return defaultState
     })
   )
+}
+
+export const formatDate = (datetime: Date | Dayjs): string => {
+  if (dayjs.isDayjs(datetime)) {
+    datetime = datetime.toDate()
+  }
+
+  const year = datetime.getFullYear().toString().padStart(4, "0")
+  const month = (datetime.getMonth() + 1).toString().padStart(2, "0")
+  const day = datetime.getDate().toString().padStart(2, "0")
+
+  const hours = datetime.getHours().toString().padStart(2, "0")
+  const minutes = datetime.getMinutes().toString().padStart(2, "0")
+  const seconds = datetime.getSeconds().toString().padStart(2, "0")
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }

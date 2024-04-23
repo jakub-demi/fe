@@ -24,3 +24,13 @@ export type OrderT = {
   payment_date: Date | null
   created_at: Date
 }
+
+export type OrderDataCreateT = {
+  due_date: Date | string
+}
+
+export type OrderDataUpdateT = {
+  due_date: Date | string
+  payment_date: Date | string | null
+  created_at: Date | string
+}

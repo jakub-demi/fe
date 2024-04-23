@@ -1,18 +1,30 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import { DataGrid, GridApi, GridColDef } from "@mui/x-data-grid"
+import {
+  DataGrid,
+  GridApi,
+  GridColDef,
+  GridSlots,
+  GridToolbarContainer,
+} from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderT } from "@/types"
 import { handleResData } from "@/utils"
 import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
-import ActionsMenu from "@/components/dashboard/orders/ActionsMenu"
+import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
+import DataGridToolbar from "@/components/_common/datagrid/DataGridToolbar"
+import texts from "@/texts"
+import nav from "@/router"
+import { useRouter } from "next/navigation"
 
 const OrdersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
+
+  const router = useRouter()
 
   const [tableData, setTableData] = useState<OrderT[]>()
   const [gridRows, setGridRows] = useState<OrderT[]>([])
@@ -31,7 +43,6 @@ const OrdersPage = () => {
   }, [])
 
   useEffect(() => {
-    log("tableData", tableData)
     const rows: OrderT[] = []
     tableData?.forEach((order, idx) => {
       rows.push({
@@ -129,6 +140,10 @@ const OrdersPage = () => {
     },
   ]
 
+  const Toolbar = () => (
+    <DataGridToolbar handleClick={() => nav("order.create", router)} />
+  )
+
   return (
     <div
       ref={dataGridRef}
@@ -142,6 +157,9 @@ const OrdersPage = () => {
         <DataGrid
           rows={gridRows}
           columns={columns}
+          slots={{
+            toolbar: Toolbar as GridSlots["toolbar"],
+          }}
         />
       )}
     </div>

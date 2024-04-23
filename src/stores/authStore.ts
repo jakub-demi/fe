@@ -10,7 +10,7 @@ const authStore = create<AuthStoreI>()(
     (set) => ({
       user: null as UserT | null,
       authed: false,
-      menuPinned: false,
+      menuPinned: true,
 
       setUser: (user: UserT | null): void =>
         set(

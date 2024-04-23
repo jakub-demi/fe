@@ -1,4 +1,8 @@
 const texts = {
+  login: {
+    title: "Login",
+    button: "Log In",
+  },
   topMenu: {
     avatar: {
       profile: "Profile",
@@ -51,12 +55,28 @@ const texts = {
       create: {
         button: "Create",
       },
+      update: {
+        button: "Save",
+        paymentDate: {
+          label: "Payment Date",
+        },
+        createdAtDate: {
+          label: "Created At Date",
+        },
+      },
     },
   },
   confirmDialog: {
     button: {
       confirm: "Confirm",
       decline: "Decline",
+    },
+  },
+  dataGrid: {
+    toolbar: {
+      button: {
+        create: "Create",
+      },
     },
   },
 }

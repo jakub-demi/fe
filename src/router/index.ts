@@ -83,8 +83,10 @@ export const getRoute = (name: string): string => {
 }
 
 export const getRouteTitle = (pathname: string): string | null => {
+  const regex = /\/\d+$/
   for (const route in routes()) {
-    if (routes()[route].url === pathname) {
+    const url = routes()[route].url
+    if (url === pathname || url === pathname.replace(regex, "")) {
       return routes()[route].title
     }
   }

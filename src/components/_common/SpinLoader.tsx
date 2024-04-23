@@ -2,7 +2,13 @@ import CircularProgress from "@mui/material/CircularProgress"
 import React from "react"
 import cltm from "@/utils/cltm"
 
-const SpinLoader = ({ className }: { className?: string }) => {
+const SpinLoader = ({
+  large = false,
+  className,
+}: {
+  large?: boolean
+  className?: string
+}) => {
   return (
     <>
       <svg
@@ -29,7 +35,11 @@ const SpinLoader = ({ className }: { className?: string }) => {
         </defs>
       </svg>
       <CircularProgress
-        className={cltm("w-1/3 h-1/3", className !== undefined && className)}
+        size={!large ? "1.5rem" : undefined}
+        className={cltm(
+          large && "w-1/3 h-1/3",
+          className !== undefined && className
+        )}
         sx={{ "svg circle": { stroke: "url(#gradient)" } }}
       />
     </>

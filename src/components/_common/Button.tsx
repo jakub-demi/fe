@@ -8,14 +8,17 @@ const Btn = ({
   text,
   className,
   disabled = false,
+  type = "button",
 }: {
-  handleClick: () => void
+  handleClick?: () => void
   text: string
   className?: string
   disabled?: boolean
+  type?: "button" | "submit"
 }) => {
   return (
     <Button
+      type={type}
       disabled={disabled}
       onClick={handleClick}
       className={cltm(

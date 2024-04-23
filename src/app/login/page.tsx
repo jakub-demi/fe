@@ -11,6 +11,8 @@ import nav from "@/router"
 import log from "@/utils/log"
 import cltm from "@/utils/cltm"
 import ResetPassword from "@/components/login/ResetPassword"
+import Button from "@/components/_common/Button"
+import texts from "@/texts"
 
 const LoginPage = () => {
   const auth = authStore()
@@ -76,7 +78,9 @@ const LoginPage = () => {
       <div className="bg-gray-50 text-[#333]">
         <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
           <div className="max-w-md w-full border py-8 px-6 rounded border-gray-300 bg-white">
-            <h2 className="text-center text-3xl font-extrabold">Login</h2>
+            <h2 className="text-center text-3xl font-extrabold">
+              {texts.login.title}
+            </h2>
             <form
               onSubmit={handleLogin}
               className="mt-10 space-y-4"
@@ -129,13 +133,12 @@ const LoginPage = () => {
                 </div>
               </div>
               <div className="!mt-10">
-                <button
-                  disabled={submitting}
+                <Button
                   type="submit"
-                  className="w-full py-2.5 px-4 text-sm rounded text-white bg-primary hover:bg-primary-hover focus:outline-none disabled:bg-gray-300"
-                >
-                  Log In
-                </button>
+                  disabled={submitting}
+                  text={texts.login.button}
+                  className="w-full py-2.5 px-4 text-sm rounded focus:outline-none"
+                />
               </div>
             </form>
           </div>

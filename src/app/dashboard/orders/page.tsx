@@ -19,6 +19,7 @@ import DataGridToolbar from "@/components/_common/datagrid/DataGridToolbar"
 import texts from "@/texts"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
+import MenuItem from "@mui/material/MenuItem"
 
 const OrdersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
@@ -28,6 +29,7 @@ const OrdersPage = () => {
 
   const [tableData, setTableData] = useState<OrderT[]>()
   const [gridRows, setGridRows] = useState<OrderT[]>([])
+  const [colsCount, setColsCount] = useState<number>()
 
   const loadData = () => {
     doAxios("/orders", "get", true).then((res) => {
@@ -54,6 +56,10 @@ const OrdersPage = () => {
       })
     })
 
+    if (rows[0]) {
+      setColsCount(Object.keys(rows[0]).length)
+    }
+
     setGridRows(
       produce((draft) => {
         return rows
@@ -61,12 +67,18 @@ const OrdersPage = () => {
     )
   }, [tableData])
 
+  const getColumnWidth = (): number => {
+    if (!(tableWidth && colsCount)) return 100
+
+    return tableWidth / colsCount
+  }
+
   const columns: GridColDef[] = [
     {
       field: "order_number",
       headerName: "Order Number",
       type: "number",
-      width: tableWidth ? tableWidth / gridRows.length : 100,
+      width: getColumnWidth(),
       minWidth: 100,
       editable: false,
       align: "left",
@@ -77,7 +89,7 @@ const OrdersPage = () => {
       headerName: "Due Date",
       type: "dateTime",
       editable: true,
-      width: tableWidth ? tableWidth / gridRows.length : 100,
+      width: getColumnWidth(),
       minWidth: 100,
       align: "left",
       headerAlign: "left",
@@ -86,7 +98,7 @@ const OrdersPage = () => {
       field: "payment_date",
       headerName: "Payment Date",
       type: "dateTime",
-      width: tableWidth ? tableWidth / gridRows.length : 100,
+      width: getColumnWidth(),
       minWidth: 100,
       editable: true,
       align: "left",
@@ -96,7 +108,7 @@ const OrdersPage = () => {
       field: "created_at",
       headerName: "Created At",
       type: "dateTime",
-      width: tableWidth ? tableWidth / gridRows.length : 100,
+      width: getColumnWidth(),
       minWidth: 100,
       editable: true,
       align: "left",
@@ -105,35 +117,23 @@ const OrdersPage = () => {
     {
       field: "Actions",
       headerName: "Actions",
-      width: tableWidth ? tableWidth / gridRows.length : 100,
+      width: getColumnWidth(),
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const onClick = (e: React.MouseEvent) => {
-          e.stopPropagation() // don't select this row after clicking
-
-          // const api: GridApi = params.api;
-          // const thisRow: Record<string, any> = [];
-          //const thisRow = api.getAllColumns().filter((c) => c.field !== "__check__" && !!c)
-
-          // api
-          //   .getAllColumns()
-          //   .filter((c) => c.field !== "__check__" && !!c)
-          //   .forEach(
-          //     (c) => (thisRow.push(params.row) /*thisRow[c.field] = params.getValue(params.id, c.field)*/)
-          //   );
-
-          //return alert(JSON.stringify(thisRow, null, 4));
-          // log("clicked", thisRow)
-
-          log("(DataGrid) params", params.row)
-        }
-
+        const orderId = (params.row as { id: number }).id
         return (
           <ActionsMenu
             datagridPage="orders"
-            id={(params.row as { id: number }).id}
+            id={orderId}
             handleReloadData={() => loadData()}
+            additionalActionItems={
+              <MenuItem
+                onClick={() => nav("orders.items", router, false, orderId)}
+              >
+                Order Items
+              </MenuItem>
+            }
           />
         )
       },

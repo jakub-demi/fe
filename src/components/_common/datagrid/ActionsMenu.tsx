@@ -10,15 +10,18 @@ import doAxios from "@/utils/doAxios"
 import notificationStore from "@/stores/notificationStore"
 import texts from "@/texts"
 import confirmDialogStore from "@/stores/confirmDialogStore"
+import Divider from "@mui/material/Divider"
 
 const ActionsMenu = ({
   datagridPage,
   id,
   handleReloadData,
+  additionalActionItems,
 }: {
   datagridPage: string
   id: number
   handleReloadData: () => void
+  additionalActionItems?: React.ReactNode
 }): React.JSX.Element => {
   const router = useRouter()
   const setNotification = notificationStore((state) => state.setNotification)
@@ -96,6 +99,8 @@ const ActionsMenu = ({
         <MenuItem onClick={() => handleAction("delete")}>
           {texts.actionsMenu.delete}
         </MenuItem>
+        {additionalActionItems && <Divider />}
+        {additionalActionItems !== undefined && additionalActionItems}
       </Menu>
     </div>
   )

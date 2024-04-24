@@ -141,7 +141,7 @@ const OrdersPage = () => {
   ]
 
   const Toolbar = () => (
-    <DataGridToolbar handleClick={() => nav("order.create", router)} />
+    <DataGridToolbar handleClick={() => nav("orders.create", router)} />
   )
 
   return (

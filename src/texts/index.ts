@@ -33,7 +33,7 @@ const texts = {
   },
   actionsMenu: {
     title: "Actions",
-    create: "Create",
+    view: "View",
     edit: "Edit",
     delete: "Delete",
     confirmDialog: {
@@ -63,6 +63,9 @@ const texts = {
         createdAtDate: {
           label: "Created At Date",
         },
+      },
+      view: {
+        button: "Back",
       },
     },
   },

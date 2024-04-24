@@ -10,6 +10,7 @@ const DateTimeChooser = ({
   minDateTime,
   className,
   error,
+  disabled = false,
 }: {
   handleChange?: (event: Dayjs | null) => void
   label: string
@@ -17,9 +18,11 @@ const DateTimeChooser = ({
   minDateTime?: Dayjs
   className?: string
   error?: string[]
+  disabled?: boolean
 }) => {
   return (
     <DateTimePicker
+      disabled={disabled}
       onChange={(e) => (handleChange ? handleChange(e) : void 0)}
       className={cltm("w-full mb-2", className && `w-full mb-2 ${className}`)}
       defaultValue={defaultValue}

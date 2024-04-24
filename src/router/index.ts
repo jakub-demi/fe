@@ -42,14 +42,18 @@ const routes = (): RouteMappings => ({
     title: "Change Password",
   },
 
-  // Order action pages
-  "order.create": {
+  // Dashboard Orders action pages
+  "orders.create": {
     url: "/dashboard/orders/create",
     title: "Order - Create",
   },
-  "order.edit": {
+  "orders.edit": {
     url: "/dashboard/orders/edit",
     title: "Order - Edit",
+  },
+  "orders.view": {
+    url: "/dashboard/orders/view",
+    title: "Order - View",
   },
 })
 

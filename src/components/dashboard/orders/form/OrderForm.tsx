@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { Box, Container } from "@mui/material"
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker"
 import texts from "@/texts"
 import Button from "@/components/_common/Button"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -14,9 +13,20 @@ import { OrderDataCreateT, OrderDataUpdateT } from "@/types"
 import log from "@/utils/log"
 import { formatDate, handleInputErrors, handleResData } from "@/utils"
 import Preloader from "@/components/_common/Preloader"
+import DateTimePicker from "@/components/_common/form/DateTimePicker"
+import nav from "@/router"
+import { useRouter } from "next/navigation"
 
-const OrderForm = ({ id }: { id?: number }) => {
+const OrderForm = ({
+  id,
+  readonly = false,
+}: {
+  id?: number
+  readonly?: boolean
+}) => {
   const isUpdateForm: boolean = id !== undefined
+
+  const router = useRouter()
 
   const tomorrow = dayjs().add(1, "day")
 
@@ -113,65 +123,54 @@ const OrderForm = ({ id }: { id?: number }) => {
         <Container>
           <Box>
             <DateTimePicker
-              onChange={(e) => handleChange(e, setSelectedDueDate)}
+              disabled={readonly}
               label={texts.orders.form.common.dueDate.label}
-              className="w-full mb-2"
               defaultValue={selectedDueDate}
               minDateTime={selectedDueDate}
-              slotProps={{
-                textField: {
-                  error: inputErrors.due_date !== undefined,
-                  label:
-                    inputErrors.due_date !== undefined && inputErrors.due_date,
-                },
-              }}
+              error={inputErrors.due_date}
+              handleChange={(e) => handleChange(e, setSelectedDueDate)}
             />
 
             {isUpdateForm && (
               <>
                 <DateTimePicker
-                  onChange={(e) => handleChange(e, setSelectedPaymentDate)}
+                  disabled={readonly}
                   label={texts.orders.form.update.paymentDate.label}
-                  className="w-full mb-2"
                   defaultValue={selectedPaymentDate}
                   minDateTime={selectedPaymentDate}
-                  slotProps={{
-                    textField: {
-                      error: inputErrors.payment_date !== undefined,
-                      label:
-                        inputErrors.payment_date !== undefined &&
-                        inputErrors.payment_date,
-                    },
-                  }}
+                  error={inputErrors.payment_date}
+                  handleChange={(e) => handleChange(e, setSelectedPaymentDate)}
                 />
 
                 <DateTimePicker
-                  onChange={(e) => handleChange(e, setSelectedCreatedAtDate)}
+                  disabled={readonly}
                   label={texts.orders.form.update.createdAtDate.label}
-                  className="w-full mb-2"
                   defaultValue={selectedCreatedAtDate}
                   minDateTime={selectedCreatedAtDate}
-                  slotProps={{
-                    textField: {
-                      error: inputErrors.created_at !== undefined,
-                      label:
-                        inputErrors.created_at !== undefined &&
-                        inputErrors.created_at,
-                    },
-                  }}
+                  error={inputErrors.created_at}
+                  handleChange={(e) =>
+                    handleChange(e, setSelectedCreatedAtDate)
+                  }
                 />
               </>
             )}
 
             <Button
-              disabled={isSubmitting}
-              handleClick={createOrUpdateOrder}
-              text={
-                isUpdateForm
-                  ? texts.orders.form.update.button
-                  : texts.orders.form.create.button
-              }
+              handleClick={() => nav("orders", router)}
+              text={texts.orders.form.view.button}
             />
+            {!readonly && (
+              <Button
+                className="ml-1"
+                disabled={isSubmitting}
+                handleClick={createOrUpdateOrder}
+                text={
+                  isUpdateForm
+                    ? texts.orders.form.update.button
+                    : texts.orders.form.create.button
+                }
+              />
+            )}
           </Box>
         </Container>
       </LocalizationProvider>

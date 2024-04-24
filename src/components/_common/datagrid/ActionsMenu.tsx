@@ -34,11 +34,11 @@ const ActionsMenu = ({
     setAnchorEl(null)
   }
 
-  const handleAction = (type: "create" | "edit" | "delete") => {
+  const handleAction = (type: "view" | "edit" | "delete") => {
     handleClose()
 
-    type === "create" && nav("order.create", router)
-    type === "edit" && nav("order.edit", router, false, id)
+    type === "view" && nav(`${datagridPage}.view`, router, false, id)
+    type === "edit" && nav(`${datagridPage}.edit`, router, false, id)
     type === "delete" &&
       setConfirmDialog(
         texts.actionsMenu.confirmDialog.titleItemRemoval,
@@ -87,8 +87,8 @@ const ActionsMenu = ({
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={() => handleAction("create")}>
-          {texts.actionsMenu.create}
+        <MenuItem onClick={() => handleAction("view")}>
+          {texts.actionsMenu.view}
         </MenuItem>
         <MenuItem onClick={() => handleAction("edit")}>
           {texts.actionsMenu.edit}

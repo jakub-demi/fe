@@ -24,8 +24,8 @@ const ConfirmDialog = (): React.JSX.Element => {
   const [open, setOpen] = React.useState(false)
 
   const handleDecline = () => {
-    clearConfirmDialog()
     setOpen(false)
+    setTimeout(clearConfirmDialog, 150)
   }
 
   const handleConfirmation = () => {

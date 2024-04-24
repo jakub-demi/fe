@@ -22,12 +22,15 @@ import {
 import Drawer from "@/components/dashboard/layout/Drawer"
 import Copyright from "@/components/dashboard/layout/Copyright"
 import AppBar from "@/components/dashboard/layout/AppBar"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { getRouteTitle } from "@/router"
 import log from "@/utils/log"
 import ProfilMenu from "@/components/dashboard/layout/ProfilMenu"
 import theme from "@/styles/theme"
 import Notification from "@/components/_common/Notification"
+import authStore from "@/stores/authStore"
+import ConfirmDialog from "@/components/_common/ConfirmDialog"
+import { useShallow } from "zustand/react/shallow"
 
 const DashboardLayout = ({
   children,
@@ -35,15 +38,15 @@ const DashboardLayout = ({
   children: React.ReactNode
 }>) => {
   const pathname = usePathname()
-  const router = useRouter()
+
+  const menuPinned = authStore(useShallow((state) => state.menuPinned))
+  const setMenuPinned = authStore((state) => state.setMenuPinned)
 
   const dashboard = "Dashboard"
   const [pageTitle, setPageTitle] = useState<string | null>(dashboard)
 
-  const [open, setOpen] = React.useState(true)
-
   const toggleDrawer = () => {
-    setOpen(!open)
+    setMenuPinned(!menuPinned)
   }
 
   useEffect(() => {
@@ -57,7 +60,7 @@ const DashboardLayout = ({
           <CssBaseline />
           <AppBar
             position="absolute"
-            open={open}
+            open={menuPinned}
           >
             <Toolbar
               sx={{
@@ -71,7 +74,7 @@ const DashboardLayout = ({
                 onClick={toggleDrawer}
                 sx={{
                   marginRight: "36px",
-                  ...(open && { display: "none" }),
+                  ...(menuPinned && { display: "none" }),
                 }}
               >
                 <MenuIcon />
@@ -92,7 +95,7 @@ const DashboardLayout = ({
           </AppBar>
           <Drawer
             variant="permanent"
-            open={open}
+            open={menuPinned}
           >
             <Toolbar
               sx={{
@@ -108,9 +111,9 @@ const DashboardLayout = ({
             </Toolbar>
             <Divider />
             <List component="nav">
-              <MainMenuListItems router={router} />
+              <MainMenuListItems />
               <Divider sx={{ my: 1 }} />
-              <SecondaryMenuListItems router={router} />
+              <SecondaryMenuListItems />
             </List>
           </Drawer>
           <Box
@@ -136,6 +139,7 @@ const DashboardLayout = ({
           </Box>
 
           <Notification />
+          <ConfirmDialog />
         </Box>
       </AuthMiddleware>
     </ThemeProvider>

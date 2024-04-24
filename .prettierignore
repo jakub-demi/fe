@@ -12,3 +12,4 @@ package-lock.json
 
 # src/
 src/styles/globals.css
+src/styles/fonts/*

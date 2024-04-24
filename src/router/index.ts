@@ -41,6 +41,20 @@ const routes = (): RouteMappings => ({
     url: "/dashboard/user/password",
     title: "Change Password",
   },
+
+  // Dashboard Orders action pages
+  "orders.create": {
+    url: "/dashboard/orders/create",
+    title: "Order - Create",
+  },
+  "orders.edit": {
+    url: "/dashboard/orders/edit",
+    title: "Order - Edit",
+  },
+  "orders.view": {
+    url: "/dashboard/orders/view",
+    title: "Order - View",
+  },
 })
 
 const isValidRoute = (route: string): void => {
@@ -52,13 +66,20 @@ const isValidRoute = (route: string): void => {
 const nav = (
   name: string,
   router: AppRouterInstance,
-  replace: boolean = false
+  replace: boolean = false,
+  param?: string | number
 ): void => {
   isValidRoute(name)
 
   const url = routes()[name]["url"]
 
-  !replace ? router.push(url) : router.replace(url)
+  !replace
+    ? param
+      ? router.push(`${url}/${param}`)
+      : router.push(url)
+    : param
+      ? router.replace(`${url}/${param}`)
+      : router.replace(url)
 }
 
 export const getRoute = (name: string): string => {
@@ -66,8 +87,10 @@ export const getRoute = (name: string): string => {
 }
 
 export const getRouteTitle = (pathname: string): string | null => {
+  const regex = /\/\d+$/
   for (const route in routes()) {
-    if (routes()[route].url === pathname) {
+    const url = routes()[route].url
+    if (url === pathname || url === pathname.replace(regex, "")) {
       return routes()[route].title
     }
   }

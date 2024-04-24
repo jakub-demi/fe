@@ -2,8 +2,8 @@
 
 import React from "react"
 import { Grid, Paper } from "@mui/material"
-import Deposits from "@/components/dashboard/Deposits"
-import Orders from "@/components/dashboard/Orders"
+import Deposits from "@/components/dashboard/index/Deposits"
+import Orders from "@/components/dashboard/index/Orders"
 
 const DashboardPage = () => {
   return (

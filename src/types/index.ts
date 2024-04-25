@@ -34,3 +34,13 @@ export type OrderDataUpdateT = {
   payment_date: Date | string | null
   created_at: Date | string
 }
+
+export type OrderItemT = {
+  id: bigint
+  order_id: bigint
+  name: string
+  count: number
+  cost: number
+  vat: number
+  cost_with_vat: number
+}

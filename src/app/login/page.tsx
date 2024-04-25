@@ -87,6 +87,7 @@ const LoginPage = () => {
             >
               <div>
                 <input
+                  autoFocus
                   name="email"
                   type="email"
                   autoComplete="email"
@@ -95,7 +96,7 @@ const LoginPage = () => {
                     "w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary",
                     loginError && "border-error focus:border-error"
                   )}
-                  placeholder="Email Address"
+                  placeholder={texts.login.inputs.email}
                   onChange={(e) => updateCredentials("email", e)}
                 />
               </div>
@@ -109,7 +110,7 @@ const LoginPage = () => {
                     "w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-primary",
                     loginError && "border-error focus:border-error"
                   )}
-                  placeholder="Password"
+                  placeholder={texts.login.inputs.password}
                   onChange={(e) => updateCredentials("password", e)}
                 />
               </div>

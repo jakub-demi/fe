@@ -1,6 +1,10 @@
 const texts = {
   login: {
     title: "Login",
+    inputs: {
+      email: "Email Address",
+      password: "Password",
+    },
     button: "Log In",
   },
   topMenu: {
@@ -68,6 +72,30 @@ const texts = {
         button: "Back",
       },
     },
+    actionsMenu: {
+      menuItems: {
+        orderItems: "Order Items",
+      },
+    },
+    dataGrid: {
+      headers: {
+        orderNumber: "Order Number",
+        dueDate: "Due Date",
+        paymentDate: "Payment Date",
+        createdAt: "Created At",
+      },
+    },
+    orderItems: {
+      dataGrid: {
+        headers: {
+          name: "Item Name",
+          count: "Count",
+          cost: "Cost",
+          vat: "VAT",
+          cost_with_vat: "Cost with VAT",
+        },
+      },
+    },
   },
   confirmDialog: {
     button: {
@@ -80,6 +108,9 @@ const texts = {
       button: {
         create: "Create",
       },
+    },
+    headers: {
+      actions: "Actions",
     },
   },
 }

@@ -1,13 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import {
-  DataGrid,
-  GridApi,
-  GridColDef,
-  GridSlots,
-  GridToolbarContainer,
-} from "@mui/x-data-grid"
+import { DataGrid, GridColDef, GridSlots } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderT } from "@/types"
@@ -30,6 +24,7 @@ const OrdersPage = () => {
   const [tableData, setTableData] = useState<OrderT[]>()
   const [gridRows, setGridRows] = useState<OrderT[]>([])
   const [colsCount, setColsCount] = useState<number>()
+  const [isLoading, setIsLoading] = useState(true)
 
   const loadData = () => {
     doAxios("/orders", "get", true).then((res) => {
@@ -65,6 +60,8 @@ const OrdersPage = () => {
         return rows
       })
     )
+
+    setIsLoading(false)
   }, [tableData])
 
   const getColumnWidth = (): number => {
@@ -76,7 +73,7 @@ const OrdersPage = () => {
   const columns: GridColDef[] = [
     {
       field: "order_number",
-      headerName: "Order Number",
+      headerName: texts.orders.dataGrid.headers.orderNumber,
       type: "number",
       width: getColumnWidth(),
       minWidth: 100,
@@ -86,7 +83,7 @@ const OrdersPage = () => {
     },
     {
       field: "due_date",
-      headerName: "Due Date",
+      headerName: texts.orders.dataGrid.headers.dueDate,
       type: "dateTime",
       editable: true,
       width: getColumnWidth(),
@@ -96,7 +93,7 @@ const OrdersPage = () => {
     },
     {
       field: "payment_date",
-      headerName: "Payment Date",
+      headerName: texts.orders.dataGrid.headers.paymentDate,
       type: "dateTime",
       width: getColumnWidth(),
       minWidth: 100,
@@ -106,7 +103,7 @@ const OrdersPage = () => {
     },
     {
       field: "created_at",
-      headerName: "Created At",
+      headerName: texts.orders.dataGrid.headers.createdAt,
       type: "dateTime",
       width: getColumnWidth(),
       minWidth: 100,
@@ -116,7 +113,7 @@ const OrdersPage = () => {
     },
     {
       field: "Actions",
-      headerName: "Actions",
+      headerName: texts.dataGrid.headers.actions,
       width: getColumnWidth(),
       minWidth: 100,
       type: "actions",
@@ -131,7 +128,7 @@ const OrdersPage = () => {
               <MenuItem
                 onClick={() => nav("orders.items", router, false, orderId)}
               >
-                Order Items
+                {texts.orders.actionsMenu.menuItems.orderItems}
               </MenuItem>
             }
           />
@@ -149,7 +146,7 @@ const OrdersPage = () => {
       ref={dataGridRef}
       className="w-full"
     >
-      {gridRows.length === 0 ? (
+      {isLoading ? (
         <div className="flex items-center justify-center">
           <SpinLoader />
         </div>

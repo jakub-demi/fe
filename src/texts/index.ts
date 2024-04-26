@@ -95,6 +95,28 @@ const texts = {
           cost_with_vat: "Cost with VAT",
         },
       },
+      form: {
+        common: {
+          name: {
+            label: "Item Name",
+          },
+          count: {
+            label: "Count",
+          },
+          cost: {
+            label: "Cost",
+          },
+          vat: {
+            label: "VAT",
+          },
+        },
+        create: {
+          button: "Create",
+        },
+        update: {
+          button: "Save",
+        },
+      },
     },
   },
   confirmDialog: {
@@ -106,6 +128,7 @@ const texts = {
   dataGrid: {
     toolbar: {
       button: {
+        back: "Back",
         create: "Create",
       },
     },

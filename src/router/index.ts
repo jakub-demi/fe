@@ -4,7 +4,7 @@ type RouteMappings = {
   [key: string]: { url: string; title: string }
 }
 
-type RouterParam = string | string[] | number
+export type RouterParam = string | string[] | number | number[]
 
 const routes = (): RouteMappings => ({
   home: {
@@ -109,7 +109,7 @@ const paramHandler = (url: string, param: RouterParam): string | undefined => {
       )
     }
     let index = 0
-    return url.replace(/\{param}/g, () => param[index++])
+    return url.replace(/\{param}/g, () => `${param[index++]}`)
   }
 }
 
@@ -125,6 +125,8 @@ const nav = (
 
   if (param) {
     url = paramHandler(url, param) ?? url
+  } else if (url.includes("{param}")) {
+    throw new Error("Route which requires param(s) - param is not present.")
   }
 
   !replace ? router.push(url) : router.replace(url)

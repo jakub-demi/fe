@@ -1,17 +1,15 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import { DataGrid, GridColDef, GridSlots } from "@mui/x-data-grid"
+import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderItemT } from "@/types"
 import { handleResData } from "@/utils"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
-import DataGridToolbar from "@/components/_common/datagrid/DataGridToolbar"
 import texts from "@/texts"
-import nav from "@/router"
-import { useRouter } from "next/navigation"
+import DataGrid from "@/components/_common/datagrid/DataGrid"
 
 const OrdersPage = ({ params }: { params: { order_id: number } }) => {
   const orderId = params.order_id
@@ -19,15 +17,13 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
-  const router = useRouter()
-
   const [tableData, setTableData] = useState<OrderItemT[]>([])
   //const [gridRows, setGridRows] = useState<OrderItemT[]>([])
   const [colsCount, setColsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState(true)
 
   const loadData = () => {
-    doAxios(`/order-items/${orderId}`, "get", true).then((res) => {
+    doAxios(`/order-items/index/${orderId}`, "get", true).then((res) => {
       handleResData(res, setTableData)
     })
   }
@@ -147,10 +143,6 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
     },
   ]
 
-  const Toolbar = () => (
-    <DataGridToolbar handleClick={() => nav("orders.items.create", router)} />
-  )
-
   return (
     <div
       ref={dataGridRef}
@@ -164,9 +156,9 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
         <DataGrid
           rows={tableData}
           columns={columns}
-          slots={{
-            toolbar: Toolbar as GridSlots["toolbar"],
-          }}
+          createRoute="orders.items.create"
+          createRouteParams={orderId}
+          backBtn={true}
         />
       )}
     </div>

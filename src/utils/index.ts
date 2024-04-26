@@ -70,3 +70,16 @@ export const formatDate = (datetime: Date | Dayjs): string => {
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
+
+type Initializer<T> = {
+  [K in keyof T]: undefined extends T[K] ? string[] | undefined : never
+}
+
+const initializeArray = <T>(type: T[]): Initializer<T> => {
+  return Object.fromEntries(
+    Object.entries(type).map(([key, value]) => [
+      key,
+      Array.isArray(value) || value === undefined ? value : [value],
+    ])
+  ) as Initializer<T>
+}

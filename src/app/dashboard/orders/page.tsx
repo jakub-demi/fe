@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import { DataGrid, GridColDef, GridSlots } from "@mui/x-data-grid"
+import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderT } from "@/types"
@@ -9,11 +9,11 @@ import { handleResData } from "@/utils"
 import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
-import DataGridToolbar from "@/components/_common/datagrid/DataGridToolbar"
 import texts from "@/texts"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
 import MenuItem from "@mui/material/MenuItem"
+import DataGrid from "@/components/_common/datagrid/DataGrid"
 
 const OrdersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
@@ -137,10 +137,6 @@ const OrdersPage = () => {
     },
   ]
 
-  const Toolbar = () => (
-    <DataGridToolbar handleClick={() => nav("orders.create", router)} />
-  )
-
   return (
     <div
       ref={dataGridRef}
@@ -154,9 +150,7 @@ const OrdersPage = () => {
         <DataGrid
           rows={gridRows}
           columns={columns}
-          slots={{
-            toolbar: Toolbar as GridSlots["toolbar"],
-          }}
+          createRoute="orders.create"
         />
       )}
     </div>

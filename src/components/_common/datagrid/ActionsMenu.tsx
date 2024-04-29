@@ -10,15 +10,18 @@ import doAxios from "@/utils/doAxios"
 import notificationStore from "@/stores/notificationStore"
 import texts from "@/texts"
 import confirmDialogStore from "@/stores/confirmDialogStore"
+import Divider from "@mui/material/Divider"
 
 const ActionsMenu = ({
   datagridPage,
   id,
   handleReloadData,
+  additionalActionItems,
 }: {
   datagridPage: string
-  id: number
+  id: number | number[]
   handleReloadData: () => void
+  additionalActionItems?: React.ReactNode
 }): React.JSX.Element => {
   const router = useRouter()
   const setNotification = notificationStore((state) => state.setNotification)
@@ -50,7 +53,8 @@ const ActionsMenu = ({
   }
 
   const handleDelete = () => {
-    doAxios(`/${datagridPage}/${id}`, "delete", true)
+    const _id = typeof id === "number" ? id : id[id.length - 1]
+    doAxios(`/${datagridPage}/${_id}`, "delete", true)
       .then((res) => {
         setNotification(res.data.message)
         handleReloadData()
@@ -64,7 +68,7 @@ const ActionsMenu = ({
     <div>
       <Button
         className="py-2 px-4 bg-primary hover:bg-primary-hover text-white"
-        id="demo-positioned-button"
+        id="actions-menu"
         aria-controls={open ? "actions-menu-button" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
@@ -73,7 +77,7 @@ const ActionsMenu = ({
         {texts.actionsMenu.title}
       </Button>
       <Menu
-        id="demo-positioned-menu"
+        id="actions-menu"
         aria-labelledby="actions-menu-button"
         anchorEl={anchorEl}
         open={open}
@@ -96,6 +100,8 @@ const ActionsMenu = ({
         <MenuItem onClick={() => handleAction("delete")}>
           {texts.actionsMenu.delete}
         </MenuItem>
+        {additionalActionItems && <Divider />}
+        {additionalActionItems !== undefined && additionalActionItems}
       </Menu>
     </div>
   )

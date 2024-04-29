@@ -4,62 +4,41 @@ import React, { useEffect, useRef, useState } from "react"
 import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
-import { OrderT } from "@/types"
+import { OrderItemT } from "@/types"
 import { handleResData } from "@/utils"
-import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
-import nav from "@/router"
-import { useRouter } from "next/navigation"
-import MenuItem from "@mui/material/MenuItem"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
 
-const OrdersPage = () => {
+const OrdersPage = ({ params }: { params: { order_id: number } }) => {
+  const orderId = params.order_id
+
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
-  const router = useRouter()
-
-  const [tableData, setTableData] = useState<OrderT[]>()
-  const [gridRows, setGridRows] = useState<OrderT[]>([])
+  const [tableData, setTableData] = useState<OrderItemT[]>([])
   const [colsCount, setColsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState(true)
 
   const loadData = () => {
-    doAxios("/orders", "get", true).then((res) => {
+    doAxios(`/order-items/index/${orderId}`, "get", true).then((res) => {
       handleResData(res, setTableData)
     })
   }
 
   useEffect(() => {
-    loadData()
+    if (dataGridRef.current) {
+      setTableWidth(dataGridRef.current.getBoundingClientRect()?.width)
+    }
 
-    if (!dataGridRef.current) return
-    setTableWidth(dataGridRef.current?.getBoundingClientRect()?.width)
+    loadData()
   }, [])
 
   useEffect(() => {
-    const rows: OrderT[] = []
-    tableData?.forEach((order, idx) => {
-      rows.push({
-        id: order.id,
-        order_number: order.order_number,
-        due_date: new Date(order.due_date),
-        payment_date: order.payment_date ? new Date(order.payment_date) : null,
-        created_at: new Date(order.created_at),
-      })
-    })
-
-    if (rows[0]) {
-      setColsCount(Object.keys(rows[0]).length)
+    if (tableData[0]) {
+      setColsCount(Object.keys(tableData[0]).length - 1)
     }
-
-    setGridRows(
-      produce((draft) => {
-        return rows
-      })
-    )
 
     setIsLoading(false)
   }, [tableData])
@@ -72,42 +51,52 @@ const OrdersPage = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "order_number",
-      headerName: texts.orders.dataGrid.headers.orderNumber,
+      field: "name",
+      headerName: texts.orders.orderItems.dataGrid.headers.name,
+      type: "string",
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: true,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "count",
+      headerName: texts.orders.orderItems.dataGrid.headers.count,
+      type: "number",
+      editable: true,
+      width: getColumnWidth(),
+      minWidth: 100,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "cost",
+      headerName: texts.orders.orderItems.dataGrid.headers.cost,
+      type: "number",
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: true,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "vat",
+      headerName: texts.orders.orderItems.dataGrid.headers.vat,
+      type: "number",
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: true,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "cost_with_vat",
+      headerName: texts.orders.orderItems.dataGrid.headers.cost_with_vat,
       type: "number",
       width: getColumnWidth(),
       minWidth: 100,
       editable: false,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "due_date",
-      headerName: texts.orders.dataGrid.headers.dueDate,
-      type: "dateTime",
-      editable: true,
-      width: getColumnWidth(),
-      minWidth: 100,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "payment_date",
-      headerName: texts.orders.dataGrid.headers.paymentDate,
-      type: "dateTime",
-      width: getColumnWidth(),
-      minWidth: 100,
-      editable: true,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "created_at",
-      headerName: texts.orders.dataGrid.headers.createdAt,
-      type: "dateTime",
-      width: getColumnWidth(),
-      minWidth: 100,
-      editable: true,
       align: "left",
       headerAlign: "left",
     },
@@ -118,19 +107,12 @@ const OrdersPage = () => {
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const orderId = (params.row as { id: number }).id
+        const orderItemId = (params.row as { id: number }).id
         return (
           <ActionsMenu
-            datagridPage="orders"
-            id={orderId}
+            datagridPage="order-items"
+            id={[orderId, orderItemId]}
             handleReloadData={() => loadData()}
-            additionalActionItems={
-              <MenuItem
-                onClick={() => nav("order-items", router, false, orderId)}
-              >
-                {texts.orders.actionsMenu.menuItems.orderItems}
-              </MenuItem>
-            }
           />
         )
       },
@@ -148,9 +130,11 @@ const OrdersPage = () => {
         </div>
       ) : (
         <DataGrid
-          rows={gridRows}
+          rows={tableData}
           columns={columns}
-          createRoute="orders.create"
+          createRoute="order-items.create"
+          createRouteParams={orderId}
+          backBtn={true}
         />
       )}
     </div>

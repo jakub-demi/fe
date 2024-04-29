@@ -12,8 +12,9 @@ const InputField = ({
   type,
   variant = "outlined",
   error,
-  min,
-  max,
+  min = 0,
+  max = 99999,
+  disabled = false,
 }: {
   id: string
   label: string
@@ -25,9 +26,11 @@ const InputField = ({
   error?: string[]
   min?: number
   max?: number
+  disabled?: boolean
 }) => {
   return (
     <TextField
+      disabled={disabled}
       id={id}
       defaultValue={defaultValue}
       className={cltm(

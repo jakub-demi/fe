@@ -18,7 +18,6 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
   const [tableWidth, setTableWidth] = useState<number>()
 
   const [tableData, setTableData] = useState<OrderItemT[]>([])
-  //const [gridRows, setGridRows] = useState<OrderItemT[]>([])
   const [colsCount, setColsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -34,38 +33,15 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
     }
 
     loadData()
+  }, [])
 
+  useEffect(() => {
     if (tableData[0]) {
       setColsCount(Object.keys(tableData[0]).length - 1)
     }
 
     setIsLoading(false)
-  }, [])
-
-  // useEffect(() => {
-  //   const rows: OrderItemT[] = []
-  //   tableData?.forEach((orderItem, idx) => {
-  //     rows.push({
-  //       id: orderItem.id,
-  //       order_id: orderItem.order_id,
-  //       name: orderItem.name,
-  //       count: orderItem.count,
-  //       cost: orderItem.cost,
-  //       vat: orderItem.vat,
-  //       cost_with_vat: orderItem.cost_with_vat,
-  //     })
-  //   })
-  //
-  //   if (rows[0]) {
-  //     setColsCount(Object.keys(rows[0]).length)
-  //   }
-  //
-  //   setGridRows(
-  //     produce((draft) => {
-  //       return rows
-  //     })
-  //   )
-  // }, [tableData])
+  }, [tableData])
 
   const getColumnWidth = (): number => {
     if (!(tableWidth && colsCount)) return 100
@@ -134,8 +110,8 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
         const orderItemId = (params.row as { id: number }).id
         return (
           <ActionsMenu
-            datagridPage="orders.items"
-            id={orderItemId}
+            datagridPage="order-items"
+            id={[orderId, orderItemId]}
             handleReloadData={() => loadData()}
           />
         )
@@ -156,7 +132,7 @@ const OrdersPage = ({ params }: { params: { order_id: number } }) => {
         <DataGrid
           rows={tableData}
           columns={columns}
-          createRoute="orders.items.create"
+          createRoute="order-items.create"
           createRouteParams={orderId}
           backBtn={true}
         />

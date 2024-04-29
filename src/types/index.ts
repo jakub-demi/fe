@@ -50,4 +50,5 @@ export type OrderItemDataCreateUpdateT = {
   count: number
   cost?: number
   vat: number
+  cost_with_vat?: number
 }

@@ -126,7 +126,7 @@ const OrdersPage = () => {
             handleReloadData={() => loadData()}
             additionalActionItems={
               <MenuItem
-                onClick={() => nav("orders.items", router, false, orderId)}
+                onClick={() => nav("order-items", router, false, orderId)}
               >
                 {texts.orders.actionsMenu.menuItems.orderItems}
               </MenuItem>

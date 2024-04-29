@@ -20,6 +20,7 @@ const SelectMui = ({
   error,
   specificValueDisplayFormat,
   className,
+  disabled = false,
 }: {
   id: string
   value?: string | number
@@ -29,6 +30,7 @@ const SelectMui = ({
   error?: string[]
   specificValueDisplayFormat?: string
   className?: string
+  disabled?: boolean
 }) => {
   const valueToDisplay = (value: string | number) => {
     return specificValueDisplayFormat
@@ -42,6 +44,7 @@ const SelectMui = ({
     >
       <InputLabel id={`${id}-label`}>{error ?? label}</InputLabel>
       <Select
+        disabled={disabled}
         labelId={`${id}-label`}
         id={id}
         value={value ? `${value}` : `${values[0]}`}

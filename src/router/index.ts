@@ -59,19 +59,19 @@ const routes = (): RouteMappings => ({
   },
 
   // Dashboard Order Items pages
-  "orders.items": {
+  "order-items": {
     url: "/dashboard/orders/view/{param}/items",
     title: "Order Items",
   },
-  "orders.items.create": {
+  "order-items.create": {
     url: "/dashboard/orders/view/{param}/items/create",
     title: "Order Item - Create",
   },
-  "orders.items.edit": {
+  "order-items.edit": {
     url: "/dashboard/orders/view/{param}/items/edit/{param}",
     title: "Order Item - Edit",
   },
-  "orders.items.view": {
+  "order-items.view": {
     url: "/dashboard/orders/view/{param}/items/view/{param}",
     title: "Order Item - View",
   },
@@ -98,7 +98,7 @@ const paramHandler = (url: string, param: RouterParam): string | undefined => {
   if (typeof param === "string") {
     if (numMatches !== 1) {
       throw new Error(
-        `Invalid number of params (${numMatches}) for route's url: '${url}', exactly (1) param is required.`
+        `Invalid number of params (1) for route's url: '${url}', exactly (${numMatches}) params are required.`
       )
     }
     return url.replace(/\{param}/, param)

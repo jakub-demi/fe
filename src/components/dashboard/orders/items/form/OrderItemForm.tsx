@@ -109,6 +109,12 @@ const OrderItemForm = ({
 
     doAxios(`/order-items/${id}`, "get", true).then((res) => {
       handleResData(res, setResData)
+
+      setResData(
+        produce((draft) => {
+          draft.vat = draft.vat * 100
+        })
+      )
     })
   }, [])
 
@@ -125,6 +131,7 @@ const OrderItemForm = ({
       <Container>
         <Box>
           <InputField
+            disabled={readonly}
             id="name"
             label={texts.orders.orderItems.form.common.name.label}
             defaultValue={resData?.name}
@@ -132,6 +139,7 @@ const OrderItemForm = ({
             error={inputErrors.name}
           />
           <InputField
+            disabled={readonly}
             id="count"
             label={texts.orders.orderItems.form.common.count.label}
             defaultValue={resData?.count}
@@ -142,6 +150,7 @@ const OrderItemForm = ({
             max={200}
           />
           <InputField
+            disabled={readonly}
             id="cost"
             label={texts.orders.orderItems.form.common.cost.label}
             defaultValue={resData?.cost}
@@ -151,17 +160,8 @@ const OrderItemForm = ({
             min={0}
             max={99999}
           />
-
-          {/*<InputField*/}
-          {/*  id="vat"*/}
-          {/*  label={texts.orders.orderItems.form.common.cost.label}*/}
-          {/*  defaultValue={resData?.cost}*/}
-          {/*  handleChange={(e) => handleChange(e)}*/}
-          {/*  error={inputErrors.cost}*/}
-          {/*  type="number"*/}
-          {/*/>*/}
-
           <Select
+            disabled={readonly}
             id="vat"
             value={resData?.vat}
             label={texts.orders.orderItems.form.common.vat.label}
@@ -170,8 +170,18 @@ const OrderItemForm = ({
             specificValueDisplayFormat="%v%"
           />
 
+          {readonly && (
+            <InputField
+              disabled={true}
+              id="cost_with_vat"
+              defaultValue={resData?.cost_with_vat}
+              label={texts.orders.orderItems.form.view.cost_with_vat.label}
+              handleChange={() => void 0}
+            />
+          )}
+
           <Button
-            handleClick={() => nav("orders.items", router, false, orderId)}
+            handleClick={() => nav("order-items", router, false, orderId)}
             text={texts.orders.form.view.button}
           />
           {!readonly && (

@@ -90,9 +90,9 @@ const texts = {
         headers: {
           name: "Item Name",
           count: "Count",
-          cost: "Cost",
+          cost: "Cost (€)",
           vat: "VAT",
-          cost_with_vat: "Cost with VAT",
+          cost_with_vat: "Cost with VAT (€)",
         },
       },
       form: {
@@ -104,7 +104,7 @@ const texts = {
             label: "Count",
           },
           cost: {
-            label: "Cost",
+            label: "Cost (€)",
           },
           vat: {
             label: "VAT",
@@ -115,6 +115,11 @@ const texts = {
         },
         update: {
           button: "Save",
+        },
+        view: {
+          cost_with_vat: {
+            label: "Cost with VAT (€)",
+          },
         },
       },
     },

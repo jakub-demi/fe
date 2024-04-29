@@ -19,7 +19,7 @@ const ActionsMenu = ({
   additionalActionItems,
 }: {
   datagridPage: string
-  id: number
+  id: number | number[]
   handleReloadData: () => void
   additionalActionItems?: React.ReactNode
 }): React.JSX.Element => {
@@ -53,7 +53,8 @@ const ActionsMenu = ({
   }
 
   const handleDelete = () => {
-    doAxios(`/${datagridPage}/${id}`, "delete", true)
+    const _id = typeof id === "number" ? id : id[id.length - 1]
+    doAxios(`/${datagridPage}/${_id}`, "delete", true)
       .then((res) => {
         setNotification(res.data.message)
         handleReloadData()
@@ -67,7 +68,7 @@ const ActionsMenu = ({
     <div>
       <Button
         className="py-2 px-4 bg-primary hover:bg-primary-hover text-white"
-        id="demo-positioned-button"
+        id="actions-menu"
         aria-controls={open ? "actions-menu-button" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
@@ -76,7 +77,7 @@ const ActionsMenu = ({
         {texts.actionsMenu.title}
       </Button>
       <Menu
-        id="demo-positioned-menu"
+        id="actions-menu"
         aria-labelledby="actions-menu-button"
         anchorEl={anchorEl}
         open={open}

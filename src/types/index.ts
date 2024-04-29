@@ -52,3 +52,12 @@ export type OrderItemDataCreateUpdateT = {
   vat: number
   cost_with_vat?: number
 }
+
+export type UserDataCreateUpdateT = {
+  firstname: string
+  lastname: string
+  email: string
+  password: string
+  password_confirmation: string
+  is_admin: boolean | 0 | 1
+}

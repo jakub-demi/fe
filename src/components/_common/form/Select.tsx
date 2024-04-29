@@ -10,6 +10,8 @@ import {
 import MenuItem from "@mui/material/MenuItem"
 import cltm from "@/utils/cltm"
 import log from "@/utils/log"
+import { hasDistinctValues } from "@/utils"
+import texts from "@/texts"
 
 const SelectMui = ({
   id,
@@ -57,7 +59,11 @@ const SelectMui = ({
             key={idx.toString() + val.toString()}
             value={`${val}`}
           >
-            {valueToDisplay(val)}
+            {hasDistinctValues(values, [0, 1])
+              ? `${val}` === "1"
+                ? texts.select.trueFalse.yes
+                : texts.select.trueFalse.no
+              : valueToDisplay(val)}
           </MenuItem>
         ))}
       </Select>

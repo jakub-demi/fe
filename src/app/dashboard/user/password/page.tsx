@@ -55,20 +55,6 @@ const PasswordChangePage = () => {
       })
       .catch((err) => {
         handleInputErrors(err, setInputErrors)
-        setInputErrors(
-          produce((draft) => {
-            Object.keys(draft).forEach((key) => {
-              if (key === "password" && draft.password) {
-                draft.password_confirmation = draft.password.filter((str) =>
-                  str.includes("confirm")
-                )
-                draft.password = draft.password.filter(
-                  (str) => !str.includes("confirm")
-                )
-              }
-            })
-          })
-        )
         setNotification(err.response.data.message, "error")
       })
       .finally(() => setIsSubmitting(false))

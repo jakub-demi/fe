@@ -75,6 +75,20 @@ const routes = (): RouteMappings => ({
     url: "/dashboard/orders/view/{param}/items/view/{param}",
     title: "Order Item - View",
   },
+
+  // Dashboard Users pages
+  "users.create": {
+    url: "/dashboard/users/create",
+    title: "User - Create",
+  },
+  "users.edit": {
+    url: "/dashboard/users/edit/{param}",
+    title: "User - Edit",
+  },
+  "users.view": {
+    url: "/dashboard/users/view/{param}",
+    title: "User - View",
+  },
 })
 
 const isValidRoute = (route: string): void => {

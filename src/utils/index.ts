@@ -34,11 +34,22 @@ export const handleInputErrors = <T>(
   error: AxiosError,
   setter: React.Dispatch<React.SetStateAction<T>>
 ) => {
+  const errData = error.response?.data as {
+    errors: { [key: string]: string[] }
+  }
+  const { errors } = errData
+
+  if ("password" in errors) {
+    errors["password_confirmation"] = errors["password"].filter((str) =>
+      str.toLowerCase().includes("confirm")
+    )
+    errors["password"] = errors["password"].filter(
+      (str) => !str.toLowerCase().includes("confirm")
+    )
+  }
+
   setter(
     produce((draft: any) => {
-      const errData = error.response?.data as {
-        errors: { [key: string]: string[] }
-      }
       return errData.errors
     })
   )
@@ -71,15 +82,26 @@ export const formatDate = (datetime: Date | Dayjs): string => {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
 
-type Initializer<T> = {
-  [K in keyof T]: undefined extends T[K] ? string[] | undefined : never
+export const hasDistinctValues = (
+  checkingArray: (string | number)[],
+  validValues: (string | number)[]
+): boolean => {
+  if (checkingArray.length !== validValues.length) return false
+
+  const validValuesSet = new Set(validValues)
+
+  return checkingArray.every((value) => validValuesSet.has(value))
 }
 
-const initializeArray = <T>(type: T[]): Initializer<T> => {
-  return Object.fromEntries(
-    Object.entries(type).map(([key, value]) => [
-      key,
-      Array.isArray(value) || value === undefined ? value : [value],
-    ])
-  ) as Initializer<T>
-}
+// type Initializer<T> = {
+//   [K in keyof T]: undefined extends T[K] ? string[] | undefined : never
+// }
+//
+// const initializeArray = <T>(type: T[]): Initializer<T> => {
+//   return Object.fromEntries(
+//     Object.entries(type).map(([key, value]) => [
+//       key,
+//       Array.isArray(value) || value === undefined ? value : [value],
+//     ])
+//   ) as Initializer<T>
+// }

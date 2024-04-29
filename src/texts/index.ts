@@ -124,6 +124,44 @@ const texts = {
       },
     },
   },
+  users: {
+    form: {
+      common: {
+        firstname: {
+          label: "First Name",
+        },
+        lastname: {
+          label: "Last Name",
+        },
+        email: {
+          label: "Email",
+        },
+        password: {
+          label: "Password",
+        },
+        password_confirmation: {
+          label: "Repeat Password",
+        },
+        is_admin: {
+          label: "Is Administrator?",
+        },
+      },
+      create: {
+        button: "Create",
+      },
+      update: {
+        button: "Update",
+      },
+    },
+    dataGrid: {
+      headers: {
+        firstname: "First Name",
+        lastname: "Last Name",
+        email: "Email",
+        is_admin: "Is Administrator?",
+      },
+    },
+  },
   confirmDialog: {
     button: {
       confirm: "Confirm",
@@ -139,6 +177,12 @@ const texts = {
     },
     headers: {
       actions: "Actions",
+    },
+  },
+  select: {
+    trueFalse: {
+      yes: "Yes",
+      no: "No",
     },
   },
 }

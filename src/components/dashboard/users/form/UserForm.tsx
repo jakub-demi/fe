@@ -17,17 +17,15 @@ import Preloader from "@/components/_common/Preloader"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
 import InputField from "@/components/_common/form/InputField"
-import { OrderItemDataCreateUpdateT } from "@/types"
+import { UserDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
 
-const OrderItemForm = ({
+const UserForm = ({
   id,
-  orderId,
   readonly = false,
 }: {
   id?: number
-  orderId: number
   readonly?: boolean
 }) => {
   const isUpdateForm: boolean = id !== undefined
@@ -38,22 +36,24 @@ const OrderItemForm = ({
 
   const [loading, setLoading] = useState(true)
 
-  const [resData, setResData] = useState<OrderItemDataCreateUpdateT>({
-    name: "",
-    count: 1,
-    cost: undefined,
-    vat: 20,
+  const [resData, setResData] = useState<UserDataCreateUpdateT>({
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    is_admin: 0,
   })
-
-  const [vatRates, setVatRates] = useState<number[]>([])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const inputErrorsDefaultState = {
-    name: undefined as string[] | undefined,
-    count: undefined as string[] | undefined,
-    cost: undefined as string[] | undefined,
-    vat: undefined as string[] | undefined,
+    firstname: undefined as string[] | undefined,
+    lastname: undefined as string[] | undefined,
+    email: undefined as string[] | undefined,
+    password: undefined as string[] | undefined,
+    password_confirmation: undefined as string[] | undefined,
+    is_admin: undefined as string[] | undefined,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
@@ -62,27 +62,22 @@ const OrderItemForm = ({
     handleInputDefaultErrors(inputErrorsDefaultState, setInputErrors)
   }
 
-  const handleVatChange = (event: SelectChangeEvent) => {
+  const handleIsAdminChange = (event: SelectChangeEvent) => {
     setResData(
       produce((draft) => {
-        draft && (draft.vat = Number.parseFloat(event.target.value))
+        draft && (draft.is_admin = event.target.value === "1" ? 1 : 0)
       })
     )
   }
 
-  const getCreateUpdateData = () => {
-    const vatCalc = resData.vat / 100
-    return { ...resData, vat: vatCalc }
-  }
-
-  const createOrUpdateOrderItem = () => {
+  const createOrUpdateUser = () => {
     setIsSubmitting(true)
 
     doAxios(
-      !isUpdateForm ? `/order-items/store/${orderId}` : `/order-items/${id}`,
+      !isUpdateForm ? "/users" : `/users/${id}`,
       !isUpdateForm ? "post" : "put",
       true,
-      getCreateUpdateData()
+      resData
     )
       .then((res) => {
         setNotification(res.data.message)
@@ -95,26 +90,13 @@ const OrderItemForm = ({
   }
 
   useEffect(() => {
-    doAxios("/vat-rates", "get", true).then((res) => {
-      const rates = res.data.data.map((rate: number) => {
-        return rate * 100
-      })
-      setVatRates(rates)
-    })
-
     if (!id) {
       setLoading(false)
       return
     }
 
-    doAxios(`/order-items/${id}`, "get", true).then((res) => {
+    doAxios(`/users/${id}`, "get", true).then((res) => {
       handleResData(res, setResData)
-
-      setResData(
-        produce((draft) => {
-          draft.vat = draft.vat * 100
-        })
-      )
     })
   }, [])
 
@@ -132,67 +114,70 @@ const OrderItemForm = ({
         <Box>
           <InputField
             disabled={readonly}
-            id="name"
-            label={texts.orders.orderItems.form.common.name.label}
-            defaultValue={resData?.name}
+            id="firstname"
+            label={texts.users.form.common.firstname.label}
+            defaultValue={resData?.firstname}
             handleChange={(e) => handleChange(e)}
-            error={inputErrors.name}
+            error={inputErrors.firstname}
           />
           <InputField
             disabled={readonly}
-            id="count"
-            label={texts.orders.orderItems.form.common.count.label}
-            defaultValue={resData?.count}
+            id="lastname"
+            label={texts.users.form.common.lastname.label}
+            defaultValue={resData?.lastname}
             handleChange={(e) => handleChange(e)}
-            error={inputErrors.count}
-            type="number"
-            min={1}
-            max={200}
+            error={inputErrors.lastname}
           />
           <InputField
             disabled={readonly}
-            id="cost"
-            label={texts.orders.orderItems.form.common.cost.label}
-            defaultValue={resData?.cost}
+            id="email"
+            label={texts.users.form.common.email.label}
+            defaultValue={resData?.email}
             handleChange={(e) => handleChange(e)}
-            error={inputErrors.cost}
-            type="number"
-            min={0}
-            max={99999}
+            error={inputErrors.email}
+            type="email"
           />
+          {!readonly && (
+            <>
+              <InputField
+                id="password"
+                label={texts.users.form.common.password.label}
+                handleChange={(e) => handleChange(e)}
+                error={inputErrors.password}
+                type="password"
+              />
+              <InputField
+                id="password_confirmation"
+                label={texts.users.form.common.password_confirmation.label}
+                handleChange={(e) => handleChange(e)}
+                error={inputErrors.password_confirmation}
+                type="password"
+              />
+            </>
+          )}
           <Select
             disabled={readonly}
-            id="vat"
-            value={resData?.vat}
-            label={texts.orders.orderItems.form.common.vat.label}
-            values={vatRates}
-            handleChange={(e) => handleVatChange(e)}
-            specificValueDisplayFormat="%v%"
-            error={inputErrors.vat}
+            id="is_admin"
+            value={+resData?.is_admin}
+            label={texts.users.form.common.is_admin.label}
+            values={[0, 1]}
+            handleChange={(e) => handleIsAdminChange(e)}
+            error={inputErrors.is_admin}
           />
 
-          {readonly && (
-            <InputField
-              disabled={true}
-              id="cost_with_vat"
-              defaultValue={resData?.cost_with_vat}
-              label={texts.orders.orderItems.form.view.cost_with_vat.label}
-            />
-          )}
-
           <Button
-            handleClick={() => nav("order-items", router, false, orderId)}
+            handleClick={() => nav("users", router)}
             text={texts.orders.form.view.button}
           />
           {!readonly && (
             <Button
               className="ml-1"
               disabled={isSubmitting}
-              handleClick={createOrUpdateOrderItem}
+              handleClick={createOrUpdateUser}
               text={
                 isUpdateForm
-                  ? texts.orders.orderItems.form.update.button
-                  : texts.orders.orderItems.form.create.button
+                  ? texts.users.form.update.button
+                  : texts.users.form.create.button
               }
             />
           )}
@@ -200,4 +185,4 @@ const OrderItemForm = ({
       </Container>
     )
 }
-export default OrderItemForm
+export default UserForm

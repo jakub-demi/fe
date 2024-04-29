@@ -4,25 +4,23 @@ import React, { useEffect, useRef, useState } from "react"
 import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
-import { OrderItemT } from "@/types"
+import { UserT } from "@/types"
 import { handleResData } from "@/utils"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
 
-const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
-  const orderId = params.order_id
-
+const UsersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
-  const [tableData, setTableData] = useState<OrderItemT[]>([])
+  const [tableData, setTableData] = useState<UserT[]>([])
   const [colsCount, setColsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState(true)
 
   const loadData = () => {
-    doAxios(`/order-items/index/${orderId}`, "get", true).then((res) => {
+    doAxios("/users", "get", true).then((res) => {
       handleResData(res, setTableData)
     })
   }
@@ -37,7 +35,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
 
   useEffect(() => {
     if (tableData[0]) {
-      setColsCount(Object.keys(tableData[0]).length - 1)
+      setColsCount(Object.keys(tableData[0]).length)
     }
 
     setIsLoading(false)
@@ -51,49 +49,39 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
 
   const columns: GridColDef[] = [
     {
-      field: "name",
-      headerName: texts.orders.orderItems.dataGrid.headers.name,
+      field: "firstname",
+      headerName: texts.users.dataGrid.headers.firstname,
       type: "string",
       width: getColumnWidth(),
       minWidth: 100,
-      editable: true,
+      editable: false,
       align: "left",
       headerAlign: "left",
     },
     {
-      field: "count",
-      headerName: texts.orders.orderItems.dataGrid.headers.count,
-      type: "number",
-      editable: true,
+      field: "lastname",
+      headerName: texts.users.dataGrid.headers.lastname,
+      type: "string",
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: false,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "email",
+      headerName: texts.users.dataGrid.headers.email,
+      type: "string",
+      editable: false,
       width: getColumnWidth(),
       minWidth: 100,
       align: "left",
       headerAlign: "left",
     },
     {
-      field: "cost",
-      headerName: texts.orders.orderItems.dataGrid.headers.cost,
-      type: "number",
-      width: getColumnWidth(),
-      minWidth: 100,
-      editable: true,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "vat",
-      headerName: texts.orders.orderItems.dataGrid.headers.vat,
-      type: "number",
-      width: getColumnWidth(),
-      minWidth: 100,
-      editable: true,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "cost_with_vat",
-      headerName: texts.orders.orderItems.dataGrid.headers.cost_with_vat,
-      type: "number",
+      field: "is_admin",
+      headerName: texts.users.dataGrid.headers.is_admin,
+      type: "boolean",
       width: getColumnWidth(),
       minWidth: 100,
       editable: false,
@@ -107,11 +95,11 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const orderItemId = (params.row as { id: number }).id
+        const userId = (params.row as { id: number }).id
         return (
           <ActionsMenu
-            datagridPage="order-items"
-            id={[orderId, orderItemId]}
+            datagridPage="users"
+            id={userId}
             handleReloadData={() => loadData()}
           />
         )
@@ -132,12 +120,10 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
         <DataGrid
           rows={tableData}
           columns={columns}
-          createRoute="order-items.create"
-          createRouteParams={orderId}
-          backBtn={true}
+          createRoute="users.create"
         />
       )}
     </div>
   )
 }
-export default OrderItemsPage
+export default UsersPage

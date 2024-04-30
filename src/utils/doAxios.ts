@@ -37,7 +37,12 @@ const doAxios = (
       nav("e404", router)
     }
 
-    log("doAxios error", error)
+    if (
+      process.env.NEXT_PUBLIC_DEV_ENV &&
+      process.env.NEXT_PUBLIC_DEV_ENV === "true"
+    ) {
+      log("doAxios error", error)
+    }
 
     throw error
   })

@@ -7,25 +7,28 @@ const confirmDialogStore = create<ConfirmDialogStoreI>()((set) => ({
   confirmDialog: {
     title: null as string | null,
     description: undefined as string | undefined,
-    confirmText: texts.confirmDialog.button.confirm as string | undefined,
-    declineText: texts.confirmDialog.button.decline as string | undefined,
+    confirmBtnText: texts.confirmDialog.button.confirm as string | undefined,
+    declineBtnText: texts.confirmDialog.button.decline as string | undefined,
     confirmationFunction: void 0 as unknown as () => void,
+    declineFunction: void 0 as unknown as () => void | undefined,
   },
 
   setConfirmDialog: (
     title: string,
     description?: string,
-    confirmText?: string,
-    declineText?: string,
-    func?: () => void
+    confirmBtnText?: string,
+    declineBtnText?: string,
+    confirmationFunc?: () => void,
+    declineFunc?: () => void
   ): void =>
     set(
       produce((state) => {
         state.confirmDialog.title = title
         state.confirmDialog.description = description
-        state.confirmDialog.confirmText = confirmText
-        state.confirmDialog.declineText = declineText
-        state.confirmDialog.confirmationFunction = func
+        state.confirmDialog.confirmBtnText = confirmBtnText
+        state.confirmDialog.declineBtnText = declineBtnText
+        state.confirmDialog.confirmationFunction = confirmationFunc
+        state.confirmDialog.declineFunction = declineFunc
       })
     ),
 
@@ -34,9 +37,10 @@ const confirmDialogStore = create<ConfirmDialogStoreI>()((set) => ({
       produce((state) => {
         state.confirmDialog.title = null
         state.confirmDialog.description = undefined
-        state.confirmDialog.confirmText = texts.confirmDialog.button.confirm
-        state.confirmDialog.declineText = texts.confirmDialog.button.decline
+        state.confirmDialog.confirmBtnText = texts.confirmDialog.button.confirm
+        state.confirmDialog.declineBtnText = texts.confirmDialog.button.decline
         state.confirmDialog.confirmationFunction = void 0
+        state.confirmDialog.declineFunction = undefined
       })
     ),
 }))

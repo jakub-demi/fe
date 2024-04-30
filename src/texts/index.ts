@@ -90,9 +90,9 @@ const texts = {
         headers: {
           name: "Item Name",
           count: "Count",
-          cost: "Cost (€)",
+          cost: "Cost",
           vat: "VAT",
-          cost_with_vat: "Cost with VAT (€)",
+          cost_with_vat: "Cost with VAT",
         },
       },
       form: {

@@ -17,20 +17,33 @@ const ConfirmDialog = (): React.JSX.Element => {
   const confirmationFunction = confirmDialogStore(
     (state) => state.confirmDialog.confirmationFunction
   )
+  const declineFunction = confirmDialogStore(
+    (state) => state.confirmDialog.declineFunction
+  )
   const clearConfirmDialog = confirmDialogStore(
     (state) => state.clearConfirmDialog
   )
 
   const [open, setOpen] = React.useState(false)
 
-  const handleDecline = () => {
+  const handleClose = () => {
     setOpen(false)
     setTimeout(clearConfirmDialog, 150)
   }
 
   const handleConfirmation = () => {
-    handleDecline()
+    handleClose()
     confirmationFunction()
+  }
+
+  const handleDecline = () => {
+    if (!declineFunction) {
+      handleClose()
+      return
+    }
+
+    handleClose()
+    declineFunction()
   }
 
   useEffect(() => {
@@ -54,11 +67,15 @@ const ConfirmDialog = (): React.JSX.Element => {
       )}
       <DialogActions>
         <Button
-          text={confirmDialog.confirmText ?? texts.confirmDialog.button.confirm}
+          text={
+            confirmDialog.confirmBtnText ?? texts.confirmDialog.button.confirm
+          }
           handleClick={handleConfirmation}
         />
         <Button
-          text={confirmDialog.declineText ?? texts.confirmDialog.button.decline}
+          text={
+            confirmDialog.declineBtnText ?? texts.confirmDialog.button.decline
+          }
           handleClick={handleDecline}
         />
       </DialogActions>

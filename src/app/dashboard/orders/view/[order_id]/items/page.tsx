@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from "react"
-import { GridColDef } from "@mui/x-data-grid"
+import { GridCellEditStopParams, GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderItemT } from "@/types"
@@ -10,9 +10,14 @@ import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
+import notificationStore from "@/stores/notificationStore"
+import confirmDialogStore from "@/stores/confirmDialogStore"
 
 const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   const orderId = params.order_id
+
+  const setNotification = notificationStore((state) => state.setNotification)
+  const setConfirmDialog = confirmDialogStore((state) => state.setConfirmDialog)
 
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
@@ -79,6 +84,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
       editable: true,
       align: "left",
       headerAlign: "left",
+      valueFormatter: (value) => value + " €",
     },
     {
       field: "vat",
@@ -86,9 +92,10 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
       type: "number",
       width: getColumnWidth(),
       minWidth: 100,
-      editable: true,
+      editable: false,
       align: "left",
       headerAlign: "left",
+      valueFormatter: (value) => value * 100 + "%",
     },
     {
       field: "cost_with_vat",
@@ -99,6 +106,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
       editable: false,
       align: "left",
       headerAlign: "left",
+      valueFormatter: (value) => value + " €",
     },
     {
       field: "Actions",
@@ -119,6 +127,34 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
     },
   ]
 
+  const inRowEditUpdate = (row: OrderItemT) => {
+    const orderItemId = row.id
+    doAxios(`/order-items/${orderItemId}`, "put", true, row)
+      .then((res) => {
+        log("[inRowEditUpdate] res", res)
+      })
+      .catch((err) => {
+        log("[inRowEditUpdate] err", err)
+
+        setNotification(err.response.data.message, "error")
+      })
+      .finally(() => loadData())
+  }
+
+  const handleInRowEdit = (params: GridCellEditStopParams) => {
+    log("[handleInRowEdit] params", params)
+    const { row } = params
+    log("[handleInRowEdit] row", row)
+    setConfirmDialog(
+      "Are you sure you want to update data?",
+      undefined,
+      undefined,
+      undefined,
+      () => inRowEditUpdate(row),
+      () => loadData()
+    )
+  }
+
   return (
     <div
       ref={dataGridRef}
@@ -135,6 +171,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
           createRoute="order-items.create"
           createRouteParams={orderId}
           backBtn={true}
+          //onCellEditStopHandler={(params) => handleInRowEdit(params)} //todo:dev
         />
       )}
     </div>

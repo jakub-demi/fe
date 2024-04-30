@@ -50,7 +50,7 @@ export const handleInputErrors = <T>(
 
   setter(
     produce((draft: any) => {
-      return errData.errors
+      return errors
     })
   )
 }

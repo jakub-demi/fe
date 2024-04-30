@@ -26,16 +26,18 @@ export interface ConfirmDialogStoreI {
   confirmDialog: {
     title: string | null
     description?: string
-    confirmText?: string
-    declineText?: string
+    confirmBtnText?: string
+    declineBtnText?: string
     confirmationFunction: () => void
+    declineFunction?: () => void
   }
   setConfirmDialog: (
     title: string,
     description?: string,
-    confirmText?: string,
-    declineText?: string,
-    func?: () => void
+    confirmBtnText?: string,
+    declineBtnText?: string,
+    confirmationFunc?: () => void,
+    declineFunc?: () => void
   ) => void
   clearConfirmDialog: () => void
 }

@@ -1,51 +1,30 @@
 import React from "react"
-import {
-  DataGrid,
-  GridCellEditStopParams,
-  GridColDef,
-  GridEventListener,
-  GridSlots,
-  useGridApiContext,
-  useGridApiEventHandler,
-} from "@mui/x-data-grid"
+import { DataGrid, GridColDef, GridSlots } from "@mui/x-data-grid"
 import DataGridToolbar from "@/components/_common/datagrid/DataGridToolbar"
 import nav, { RouterParam } from "@/router"
 import { useRouter } from "next/navigation"
 import log from "@/utils/log"
-import DataGridChangeHandler from "@/components/_common/datagrid/DataGridChangeHandler"
 
 const DataGridFrame = ({
+  rowEditMode = false,
   rows,
   columns,
   createRoute,
   createRouteParams,
   backBtn = false,
-  onCellEditStopHandler,
+  processRowUpdateHandler,
+  processRowUpdateErrorHandler,
 }: {
+  rowEditMode?: boolean
   rows: Array<any>
   columns: GridColDef[]
   createRoute: string
   createRouteParams?: RouterParam
   backBtn?: boolean
-  onCellEditStopHandler?: (params: GridCellEditStopParams) => void
-}) => {
+  processRowUpdateHandler?: (newRow: any, oldRow: any) => void
+  processRowUpdateErrorHandler?: (error: any) => void
+}): React.JSX.Element => {
   const router = useRouter()
-
-  //const apiRef = useGridApiContext() //todo:dev
-
-  const handleEvent: GridEventListener<"columnsChange"> = (
-    params,
-    event,
-    details
-  ) => {
-    log("[handleEvent] - params", params)
-  }
-
-  // // todo:dev
-  // apiRef.current.subscribeEvent(
-  //   "columnsChange",
-  //   handleEvent
-  // )
 
   const Toolbar = () => (
     <DataGridToolbar
@@ -56,13 +35,22 @@ const DataGridFrame = ({
 
   return (
     <DataGrid
-      // [Begin] todo:dev
-      // onCellEditStop={
-      //   onCellEditStopHandler
-      //     ? (params) => onCellEditStopHandler(params)
-      //     : void(0)
-      // }
-      // [End]
+      editMode={rowEditMode ? "row" : "cell"}
+      processRowUpdate={
+        processRowUpdateHandler
+          ? (newRow, oldRow) => {
+              processRowUpdateHandler(newRow, oldRow)
+              return newRow
+            }
+          : (newRow, oldRow) => {
+              return newRow
+            }
+      }
+      onProcessRowUpdateError={
+        processRowUpdateErrorHandler
+          ? (error) => processRowUpdateErrorHandler(error)
+          : void 0
+      }
       sx={{
         height: rows.length === 0 ? 200 : "auto",
       }}
@@ -71,9 +59,7 @@ const DataGridFrame = ({
       slots={{
         toolbar: Toolbar as GridSlots["toolbar"],
       }}
-    >
-      {/*<DataGridChangeHandler/> todo:dev */}
-    </DataGrid>
+    />
   )
 }
 export default DataGridFrame

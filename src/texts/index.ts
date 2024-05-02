@@ -94,6 +94,9 @@ const texts = {
           vat: "VAT",
           cost_with_vat: "Cost with VAT",
         },
+        confirmDialog: {
+          inRowEditConfirm: "Are you sure you want to update row data?",
+        },
       },
       form: {
         common: {

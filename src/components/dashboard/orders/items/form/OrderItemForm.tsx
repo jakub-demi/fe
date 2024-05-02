@@ -20,6 +20,7 @@ import InputField from "@/components/_common/form/InputField"
 import { OrderItemDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
+import { getAndSetVatRates } from "@/utils/axiosCalls"
 
 const OrderItemForm = ({
   id,
@@ -95,12 +96,7 @@ const OrderItemForm = ({
   }
 
   useEffect(() => {
-    doAxios("/vat-rates", "get", true).then((res) => {
-      const rates = res.data.data.map((rate: number) => {
-        return rate * 100
-      })
-      setVatRates(rates)
-    })
+    getAndSetVatRates(setVatRates, true)
 
     if (!id) {
       setLoading(false)

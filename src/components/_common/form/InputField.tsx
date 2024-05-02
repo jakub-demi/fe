@@ -10,6 +10,7 @@ import {
   OutlinedInput,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
+import log from "@/utils/log"
 
 const InputField = ({
   id,
@@ -38,6 +39,10 @@ const InputField = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false)
 
+  const doShrink = (): boolean | undefined => {
+    return defaultValue ? true : undefined
+  }
+
   return (
     <>
       {(type as string) !== "password" ? (
@@ -63,7 +68,7 @@ const InputField = ({
               : undefined
           }
           InputLabelProps={{
-            shrink: !!defaultValue,
+            shrink: doShrink(),
           }}
         />
       ) : (
@@ -77,7 +82,7 @@ const InputField = ({
           disabled={disabled}
         >
           <InputLabel
-            shrink={!!defaultValue}
+            shrink={doShrink()}
             htmlFor={id}
           >
             {error && error.length > 0 ? error : label}

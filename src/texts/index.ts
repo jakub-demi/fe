@@ -90,9 +90,12 @@ const texts = {
         headers: {
           name: "Item Name",
           count: "Count",
-          cost: "Cost (€)",
+          cost: "Cost",
           vat: "VAT",
-          cost_with_vat: "Cost with VAT (€)",
+          cost_with_vat: "Cost with VAT",
+        },
+        confirmDialog: {
+          inRowEditConfirm: "Are you sure you want to update row data?",
         },
       },
       form: {

@@ -43,10 +43,10 @@ const SelectMui = ({
   return (
     <FormControl
       className={cltm("w-full mb-2", className && `w-full mb-2 ${className}`)}
+      disabled={disabled}
     >
       <InputLabel id={`${id}-label`}>{error ?? label}</InputLabel>
       <Select
-        disabled={disabled}
         labelId={`${id}-label`}
         id={id}
         value={value ? `${value}` : `${values[0]}`}

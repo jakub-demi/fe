@@ -20,6 +20,7 @@ import InputField from "@/components/_common/form/InputField"
 import { OrderItemDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
+import { getAndSetVatRates } from "@/utils/axiosCalls"
 
 const OrderItemForm = ({
   id,
@@ -40,7 +41,7 @@ const OrderItemForm = ({
 
   const [resData, setResData] = useState<OrderItemDataCreateUpdateT>({
     name: "",
-    count: 1,
+    count: undefined,
     cost: undefined,
     vat: 20,
   })
@@ -95,12 +96,7 @@ const OrderItemForm = ({
   }
 
   useEffect(() => {
-    doAxios("/vat-rates", "get", true).then((res) => {
-      const rates = res.data.data.map((rate: number) => {
-        return rate * 100
-      })
-      setVatRates(rates)
-    })
+    getAndSetVatRates(setVatRates, true)
 
     if (!id) {
       setLoading(false)
@@ -175,6 +171,7 @@ const OrderItemForm = ({
             <InputField
               disabled={true}
               id="cost_with_vat"
+              type="number"
               defaultValue={resData?.cost_with_vat}
               label={texts.orders.orderItems.form.view.cost_with_vat.label}
             />

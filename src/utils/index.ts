@@ -3,6 +3,7 @@ import { produce } from "immer"
 import { AxiosError, AxiosResponse } from "axios"
 import log from "@/utils/log"
 import dayjs, { Dayjs } from "dayjs"
+import isEqual from "lodash.isequal"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -50,7 +51,7 @@ export const handleInputErrors = <T>(
 
   setter(
     produce((draft: any) => {
-      return errData.errors
+      return errors
     })
   )
 }
@@ -93,15 +94,6 @@ export const hasDistinctValues = (
   return checkingArray.every((value) => validValuesSet.has(value))
 }
 
-// type Initializer<T> = {
-//   [K in keyof T]: undefined extends T[K] ? string[] | undefined : never
-// }
-//
-// const initializeArray = <T>(type: T[]): Initializer<T> => {
-//   return Object.fromEntries(
-//     Object.entries(type).map(([key, value]) => [
-//       key,
-//       Array.isArray(value) || value === undefined ? value : [value],
-//     ])
-//   ) as Initializer<T>
-// }
+export const areObjectsEqual = (object1: object, object2: object): boolean => {
+  return isEqual(object1, object2)
+}

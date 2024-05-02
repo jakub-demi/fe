@@ -41,7 +41,7 @@ const OrderItemForm = ({
 
   const [resData, setResData] = useState<OrderItemDataCreateUpdateT>({
     name: "",
-    count: 1,
+    count: undefined,
     cost: undefined,
     vat: 20,
   })
@@ -171,6 +171,7 @@ const OrderItemForm = ({
             <InputField
               disabled={true}
               id="cost_with_vat"
+              type="number"
               defaultValue={resData?.cost_with_vat}
               label={texts.orders.orderItems.form.view.cost_with_vat.label}
             />

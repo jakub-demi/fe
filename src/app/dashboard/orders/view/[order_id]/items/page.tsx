@@ -134,6 +134,9 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   const inRowEditUpdate = (row: OrderItemT) => {
     const orderItemId = row.id
     doAxios(`/order-items/${orderItemId}`, "put", true, row)
+      .then((res) => {
+        setNotification(res.data.message)
+      })
       .catch((err) => {
         setNotification(err.response.data.message, "error")
       })

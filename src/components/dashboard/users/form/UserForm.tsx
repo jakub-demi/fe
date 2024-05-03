@@ -20,6 +20,7 @@ import InputField from "@/components/_common/form/InputField"
 import { UserDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
+import { extShowPasswordStateHandler } from "@/utils/inputField"
 
 const UserForm = ({
   id,
@@ -56,6 +57,8 @@ const UserForm = ({
     is_admin: undefined as string[] | undefined,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleChangeData(event, setResData)
@@ -145,6 +148,13 @@ const UserForm = ({
                 handleChange={(e) => handleChange(e)}
                 error={inputErrors.password}
                 type="password"
+                extShowPasswordStateHandler={(update) =>
+                  extShowPasswordStateHandler(
+                    update,
+                    showPassword,
+                    setShowPassword
+                  )
+                }
               />
               <InputField
                 id="password_confirmation"
@@ -152,6 +162,13 @@ const UserForm = ({
                 handleChange={(e) => handleChange(e)}
                 error={inputErrors.password_confirmation}
                 type="password"
+                extShowPasswordStateHandler={(update) =>
+                  extShowPasswordStateHandler(
+                    update,
+                    showPassword,
+                    setShowPassword
+                  )
+                }
               />
             </>
           )}

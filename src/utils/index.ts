@@ -97,3 +97,7 @@ export const hasDistinctValues = (
 export const areObjectsEqual = (object1: object, object2: object): boolean => {
   return isEqual(object1, object2)
 }
+
+export const formDataToJson = (formData: FormData) => {
+  return Object.fromEntries(formData.entries())
+}

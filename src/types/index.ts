@@ -61,3 +61,8 @@ export type UserDataCreateUpdateT = {
   password_confirmation: string
   is_admin: boolean | 0 | 1
 }
+
+export type ChangePasswordT = {
+  token: string
+  email: string
+}

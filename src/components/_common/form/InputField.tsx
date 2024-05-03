@@ -24,6 +24,7 @@ const InputField = ({
   min = 0,
   max = 99999,
   disabled = false,
+  extShowPasswordStateHandler,
 }: {
   id: string
   label: string
@@ -36,8 +37,21 @@ const InputField = ({
   min?: number
   max?: number
   disabled?: boolean
+  extShowPasswordStateHandler?: (update: boolean) => boolean
 }) => {
   const [showPassword, setShowPassword] = useState(false)
+
+  const handlePasswordView = () => {
+    extShowPasswordStateHandler
+      ? extShowPasswordStateHandler(true)
+      : setShowPassword(!showPassword)
+  }
+
+  const doShowPassword = (): boolean => {
+    return extShowPasswordStateHandler
+      ? extShowPasswordStateHandler(false)
+      : showPassword
+  }
 
   const doShrink = (): boolean | undefined => {
     return defaultValue ? true : undefined
@@ -49,6 +63,7 @@ const InputField = ({
         <TextField
           disabled={disabled}
           id={id}
+          name={id}
           defaultValue={defaultValue}
           className={cltm(
             "w-full mb-2.5",
@@ -89,18 +104,19 @@ const InputField = ({
           </InputLabel>
           <OutlinedInput
             id={id}
-            type={showPassword ? "text" : "password"}
+            name={id}
+            type={doShowPassword() ? "text" : "password"}
             onChange={handleChange}
             defaultValue={defaultValue}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
                   aria-label="Toggle Password Visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  onMouseDown={() => setShowPassword(!showPassword)}
+                  onClick={handlePasswordView}
+                  onMouseDown={handlePasswordView}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {doShowPassword() ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }

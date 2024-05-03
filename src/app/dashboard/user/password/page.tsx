@@ -16,6 +16,7 @@ import notificationStore from "@/stores/notificationStore"
 import authStore from "@/stores/authStore"
 import { useRouter } from "next/navigation"
 import nav from "@/router"
+import { extShowPasswordStateHandler } from "@/utils/inputField"
 
 const PasswordChangePage = () => {
   const router = useRouter()
@@ -37,6 +38,8 @@ const PasswordChangePage = () => {
     password_confirmation: undefined as string[] | undefined,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleChangeData(e, setPassword)
@@ -76,6 +79,9 @@ const PasswordChangePage = () => {
           handleChange={handleChange}
           type="password"
           error={inputErrors.password}
+          extShowPasswordStateHandler={(update) =>
+            extShowPasswordStateHandler(update, showPassword, setShowPassword)
+          }
         />
         <InputField
           id="password_confirmation"
@@ -83,6 +89,9 @@ const PasswordChangePage = () => {
           handleChange={handleChange}
           type="password"
           error={inputErrors.password_confirmation}
+          extShowPasswordStateHandler={(update) =>
+            extShowPasswordStateHandler(update, showPassword, setShowPassword)
+          }
         />
         <Button
           disabled={isSubmitting}

@@ -5,7 +5,44 @@ const texts = {
       email: "Email Address",
       password: "Password",
     },
-    button: "Log In",
+    buttons: {
+      logIn: "Log In",
+      forgotPassword: "Forgot Password?",
+    },
+    resetPasswordConfirmationDialog: {
+      okBtn: "Okay",
+      reset: {
+        title: "Reset Password Confirmation",
+        description:
+          "Password reset confirmation email was sent to you, check your inbox.",
+      },
+      change: {
+        title: "Password Changed",
+        description:
+          "Your password has been changed, you can log in with it now.",
+      },
+    },
+    resetPasswordDialog: {
+      title: "Reset Password",
+      inputs: {
+        email: "Email Address",
+      },
+      buttons: {
+        cancel: "Cancel",
+        submit: "Reset",
+      },
+    },
+    changePasswordDialog: {
+      title: "Change Password",
+      inputs: {
+        password: "Password",
+        password_confirmation: "Repeat Password",
+      },
+      buttons: {
+        cancel: "Cancel",
+        submit: "Change",
+      },
+    },
   },
   topMenu: {
     avatar: {

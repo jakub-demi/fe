@@ -9,6 +9,7 @@ import doAxios from "@/utils/doAxios"
 import ResetPasswordConfirmation from "@/components/login/ResetPasswordConfirmation"
 import { useState } from "react"
 import log from "@/utils/log"
+import texts from "@/texts"
 
 const ResetPasswordDialog = ({
   open,
@@ -23,10 +24,6 @@ const ResetPasswordDialog = ({
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-
-    const formJson = Object.fromEntries((formData as any).entries())
-    const email = formJson.email
-    log("email", email)
 
     doAxios("/forgot-password", "post", false, formData)
       .then(() => {
@@ -59,7 +56,7 @@ const ResetPasswordDialog = ({
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => submit(event),
         }}
       >
-        <DialogTitle>Reset Password</DialogTitle>
+        <DialogTitle>{texts.login.resetPasswordDialog.title}</DialogTitle>
         <DialogContent className="w-80">
           <TextField
             autoFocus
@@ -67,7 +64,7 @@ const ResetPasswordDialog = ({
             margin="dense"
             id="name"
             name="email"
-            label="Email Address"
+            label={texts.login.resetPasswordDialog.inputs.email}
             type="email"
             fullWidth
             variant="standard"
@@ -75,8 +72,12 @@ const ResetPasswordDialog = ({
           {emailError && <div className="text-sm text-error">{emailError}</div>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button type="submit">Reset</Button>
+          <Button onClick={handleCloseDialog}>
+            {texts.login.resetPasswordDialog.buttons.cancel}
+          </Button>
+          <Button type="submit">
+            {texts.login.resetPasswordDialog.buttons.submit}
+          </Button>
         </DialogActions>
       </Dialog>
     </>

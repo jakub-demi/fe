@@ -1,22 +1,24 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import doAxios from "@/utils/doAxios"
-import { CredentialsT } from "@/types"
+import { ChangePasswordT, CredentialsT } from "@/types"
 import { produce } from "immer"
 import authStore from "@/stores/authStore"
 import { httpStatusE } from "@/types/enums"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import nav from "@/router"
 import log from "@/utils/log"
 import cltm from "@/utils/cltm"
 import ResetPassword from "@/components/login/ResetPassword"
 import Button from "@/components/_common/Button"
 import texts from "@/texts"
+import ChangePassword from "@/components/login/ChangePassword"
 
 const LoginPage = () => {
   const auth = authStore()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [credentials, setCredentials] = useState<CredentialsT>({
     email: "",
@@ -28,6 +30,12 @@ const LoginPage = () => {
   const [showResetPasswordDialog, setShowResetPasswordDialog] = useState(false)
 
   const [submitting, setSubmitting] = useState(false)
+
+  const [showChangePasswordDialog, setShowChangePasswordDialog] =
+    useState(false)
+
+  const [changePasswordData, setChangePasswordData] =
+    useState<ChangePasswordT | null>(null)
 
   const updateCredentials = (
     type: keyof CredentialsT,
@@ -68,12 +76,33 @@ const LoginPage = () => {
     })
   }
 
+  useEffect(() => {
+    const token = searchParams.get("token")
+    const email = searchParams.get("email")
+
+    if (!searchParams.has("pwdres") || !token || !email) return
+
+    setChangePasswordData({
+      token: token,
+      email: email,
+    })
+
+    setShowChangePasswordDialog(true)
+  }, [])
+
   return (
     <>
       <ResetPassword
         open={showResetPasswordDialog}
         handleClose={() => setShowResetPasswordDialog(false)}
       />
+      {changePasswordData && (
+        <ChangePassword
+          open={showChangePasswordDialog}
+          changePasswordData={changePasswordData}
+          handleClose={() => setShowChangePasswordDialog(false)}
+        />
+      )}
 
       <div className="bg-gray-50 text-[#333]">
         <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
@@ -114,18 +143,18 @@ const LoginPage = () => {
                   onChange={(e) => updateCredentials("password", e)}
                 />
               </div>
-              {/*<div className="flex items-center justify-between gap-4">*/}
-              {/*  <div>*/}
-              {/*    <button*/}
-              {/*      className="text-sm text-primary hover:text-primary-hover"*/}
-              {/*      onClick={() =>*/}
-              {/*        setShowResetPasswordDialog(!showResetPasswordDialog)*/}
-              {/*      }*/}
-              {/*    >*/}
-              {/*      Forgot Password?*/}
-              {/*    </button>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <span
+                    className="text-sm text-primary hover:text-primary-hover cursor-pointer"
+                    onClick={() =>
+                      setShowResetPasswordDialog(!showResetPasswordDialog)
+                    }
+                  >
+                    {texts.login.buttons.forgotPassword}
+                  </span>
+                </div>
+              </div>
               <div className="flex items-center justify-between gap-4">
                 <div>
                   {loginError && (
@@ -137,7 +166,7 @@ const LoginPage = () => {
                 <Button
                   type="submit"
                   disabled={submitting}
-                  text={texts.login.button}
+                  text={texts.login.buttons.logIn}
                   className="w-full py-2.5 px-4 text-sm rounded focus:outline-none"
                 />
               </div>

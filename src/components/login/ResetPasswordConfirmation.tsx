@@ -5,13 +5,16 @@ import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogContentText from "@mui/material/DialogContentText"
 import DialogTitle from "@mui/material/DialogTitle"
+import texts from "@/texts"
 
 const ResetPasswordConfirmation = ({
   open,
   handleClose,
+  passwordChange = false,
 }: {
   open: boolean
   handleClose: () => void
+  passwordChange?: boolean
 }) => {
   return (
     <Dialog
@@ -21,11 +24,15 @@ const ResetPasswordConfirmation = ({
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        Reset Password Confirmation
+        {!passwordChange
+          ? texts.login.resetPasswordConfirmationDialog.reset.title
+          : texts.login.resetPasswordConfirmationDialog.change.title}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Password reset confirmation email was sent to you, check your inbox.
+          {!passwordChange
+            ? texts.login.resetPasswordConfirmationDialog.reset.description
+            : texts.login.resetPasswordConfirmationDialog.change.description}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -33,7 +40,7 @@ const ResetPasswordConfirmation = ({
           onClick={handleClose}
           autoFocus
         >
-          Okay
+          {texts.login.resetPasswordConfirmationDialog.okBtn}
         </Button>
       </DialogActions>
     </Dialog>

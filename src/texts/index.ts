@@ -57,6 +57,7 @@ const texts = {
         email: "Email",
         firstname: "First Name",
         lastname: "Last Name",
+        avatar: "Avatar",
         saveBtn: "Save",
       },
     },

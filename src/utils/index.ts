@@ -4,6 +4,7 @@ import { AxiosError, AxiosResponse } from "axios"
 import log from "@/utils/log"
 import dayjs, { Dayjs } from "dayjs"
 import isEqual from "lodash.isequal"
+import authStore from "@/stores/authStore"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -12,9 +13,15 @@ export const handleChangeData = <T>(
   const id = event.target.id
   const value = event.target.value
 
+  const inputFileEvent =
+    event.target.tagName.toLowerCase() === "input"
+      ? (event as React.ChangeEvent<HTMLInputElement>)
+      : undefined
+  const file = inputFileEvent ? inputFileEvent.target.files![0] : undefined
+
   setter(
     produce((draft: any) => {
-      draft && (draft[id] = value as never)
+      draft && (draft[id] = (file ?? value) as never)
     })
   )
 }
@@ -100,4 +107,28 @@ export const areObjectsEqual = (object1: object, object2: object): boolean => {
 
 export const formDataToJson = (formData: FormData) => {
   return Object.fromEntries(formData.entries())
+}
+
+export const buildFilesFormData = (
+  data: object,
+  ignoredFileKeys?: string[]
+): FormData => {
+  const formData = new FormData()
+
+  if (ignoredFileKeys) {
+    for (const key in data) {
+      const value = (data as Record<string, any>)[key]
+
+      if (!(ignoredFileKeys.includes(key) && !(value instanceof File))) {
+        formData.append(key, value)
+      }
+    }
+  } else {
+    for (const key in data) {
+      const value = (data as Record<string, any>)[key]
+      formData.append(key, value)
+    }
+  }
+
+  return formData
 }

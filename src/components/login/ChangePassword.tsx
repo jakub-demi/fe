@@ -42,9 +42,6 @@ const ChangePasswordDialog = ({
     formData.append("email", changePasswordData.email)
     formData.append("token", changePasswordData.token)
 
-    const formJson = Object.fromEntries((formData as any).entries())
-    log("formData", formJson, "lightYellow")
-
     doAxios("/reset-password", "post", false, formData)
       .then(() => {
         handleClose()

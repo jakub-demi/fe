@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { UserT } from "@/types"
+import { UserAvatarT, UserT } from "@/types"
 import { persist } from "zustand/middleware"
 import { AuthStoreI } from "@/types/interfaces"
 import { produce } from "immer"
@@ -55,11 +55,26 @@ const authStore = create<AuthStoreI>()(
             //log("(setMenuPinned) state.menuPinned", pinned)
           })
         ),
+
+      setUserAvatar: (avatar: UserAvatarT) =>
+        set(
+          produce((state) => {
+            state.user && (state.user.avatar = avatar)
+          })
+        ),
     }),
     {
       name: "authStore",
     }
   )
 )
+
+export const getUserAvatar = () => {
+  return authStore((state) =>
+    state.user?.avatar?.image && process.env.NEXT_PUBLIC_API_BASE_URL
+      ? process.env.NEXT_PUBLIC_API_BASE_URL + "/" + state.user.avatar.image
+      : undefined
+  )
+}
 
 export default authStore

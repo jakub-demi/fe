@@ -3,12 +3,18 @@ export type CredentialsT = {
   password: string
 }
 
+export type UserAvatarT = {
+  image: string | null
+  thumb: string | null
+}
+
 export type UserT = {
   id: bigint
   email: string
   firstname: string
   lastname: string
   is_admin: boolean
+  avatar?: UserAvatarT
 }
 
 export type notificationStoreSeverityT =

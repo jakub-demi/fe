@@ -9,12 +9,16 @@ const Btn = ({
   className,
   disabled = false,
   type = "button",
+  icon,
+  tabIndex,
 }: {
   handleClick?: () => void
   text: string
   className?: string
   disabled?: boolean
   type?: "button" | "submit"
+  icon?: React.JSX.Element
+  tabIndex?: number
 }) => {
   return (
     <Button
@@ -24,6 +28,8 @@ const Btn = ({
       className={cltm(
         `text-white bg-primary hover:bg-primary-hover py-2 px-2 ${className}`
       )}
+      startIcon={icon}
+      tabIndex={tabIndex}
     >
       {!disabled ? <>{text}</> : <SpinLoader />}
     </Button>

@@ -5,7 +5,7 @@ import { GridColDef, GridRenderEditCellParams } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderItemT } from "@/types"
-import { areObjectsEqual, handleResData } from "@/utils"
+import { areObjectsEqual, handleForbiddenAccess, handleResData } from "@/utils"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
@@ -13,9 +13,13 @@ import DataGrid from "@/components/_common/datagrid/DataGrid"
 import notificationStore from "@/stores/notificationStore"
 import confirmDialogStore from "@/stores/confirmDialogStore"
 import VatRenderEditCell from "@/components/dashboard/orders/items/datagrid/VatRenderEditCell"
+import { httpStatusE } from "@/types/enums"
+import nav from "@/router"
+import { useRouter } from "next/navigation"
 
 const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   const orderId = params.order_id
+  const router = useRouter()
 
   const setNotification = notificationStore((state) => state.setNotification)
   const setConfirmDialog = confirmDialogStore((state) => state.setConfirmDialog)
@@ -28,9 +32,13 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   const [isLoading, setIsLoading] = useState(true)
 
   const loadData = () => {
-    doAxios(`/order-items/index/${orderId}`, "get", true).then((res) => {
-      handleResData(res, setTableData)
-    })
+    doAxios(`/orders/${orderId}/order-items`, "get", true)
+      .then((res) => {
+        handleResData(res, setTableData)
+      })
+      .catch((err) => {
+        handleForbiddenAccess(err, setNotification, router, "orders")
+      })
   }
 
   useEffect(() => {

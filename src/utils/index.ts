@@ -4,6 +4,10 @@ import { AxiosError, AxiosResponse } from "axios"
 import log from "@/utils/log"
 import dayjs, { Dayjs } from "dayjs"
 import isEqual from "lodash.isequal"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
+import nav, { RouterParam } from "@/router"
+import { httpStatusE } from "@/types/enums"
+import { setNotificationT } from "@/types"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -130,4 +134,20 @@ export const buildFilesFormData = (
   }
 
   return formData
+}
+
+export const handleForbiddenAccess = (
+  error: AxiosError,
+  notifSetter: setNotificationT,
+  router: AppRouterInstance,
+  route: string,
+  routerParams?: RouterParam
+) => {
+  log("error", error, "lightRed")
+
+  if (error.response?.status === httpStatusE.FORBIDDEN) {
+    nav(route, router, true, routerParams)
+    const errData = error.response.data as { message: string }
+    notifSetter(errData.message, "error")
+  }
 }

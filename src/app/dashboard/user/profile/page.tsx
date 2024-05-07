@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import MaterialIcon from "@/components/_common/MaterialIcon"
 import Button from "@mui/material/Button"
 import { UserT } from "@/types"
-import authStore, { getUserAvatar } from "@/stores/authStore"
+import authStore from "@/stores/authStore"
 import texts from "@/texts"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
@@ -22,6 +22,7 @@ const ProfilePage = () => {
   const user = authStore.getState().user
   const setUser = authStore((state) => state.setUser)
   const setUserAvatar = authStore((state) => state.setUserAvatar)
+  const getUserAvatar = authStore((state) => state.getUserAvatar)
 
   const setNotification = notificationStore((state) => state.setNotification)
 

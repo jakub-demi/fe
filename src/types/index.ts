@@ -72,3 +72,8 @@ export type ChangePasswordT = {
   token: string
   email: string
 }
+
+export type setNotificationT = (
+  notification: string,
+  severity?: notificationStoreSeverityT
+) => void

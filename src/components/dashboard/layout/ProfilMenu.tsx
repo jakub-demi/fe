@@ -1,10 +1,12 @@
-import React from "react"
+"use client"
+
+import React, { useEffect, useState } from "react"
 import MaterialIcon from "@/components/_common/MaterialIcon"
 import { Menu, MenuItem } from "@mui/material"
 import Divider from "@mui/material/Divider"
 import { useRouter } from "next/navigation"
 import doAxios from "@/utils/doAxios"
-import authStore, { getUserAvatar } from "@/stores/authStore"
+import authStore from "@/stores/authStore"
 import nav from "@/router"
 import texts from "@/texts"
 import Image from "next/image"
@@ -13,8 +15,11 @@ import cltm from "@/utils/cltm"
 const ProfilMenu = () => {
   const router = useRouter()
   const logout = authStore((state) => state.logout)
+  const getUserAvatar = authStore((state) => state.getUserAvatar)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+
+  const [userAvatar, setUserAvatar] = useState(getUserAvatar)
 
   const open = Boolean(anchorEl)
 
@@ -35,6 +40,10 @@ const ProfilMenu = () => {
     })
   }
 
+  useEffect(() => {
+    setUserAvatar(getUserAvatar)
+  }, [getUserAvatar])
+
   return (
     <div>
       <div
@@ -44,12 +53,12 @@ const ProfilMenu = () => {
         aria-expanded={open ? "true" : undefined}
         className={cltm(
           "leading-3 rounded-full",
-          getUserAvatar() && "border-2 border-primary-hover bg-white"
+          userAvatar && "border-2 border-primary-hover bg-white"
         )}
       >
-        {getUserAvatar() ? (
+        {userAvatar ? (
           <Image
-            src={getUserAvatar() ?? ""}
+            src={userAvatar}
             alt="User Menu Image"
             width={30}
             height={30}

@@ -11,11 +11,17 @@ import notificationStore from "@/stores/notificationStore"
 import doAxios from "@/utils/doAxios"
 import { OrderDataCreateT, OrderDataUpdateT } from "@/types"
 import log from "@/utils/log"
-import { formatDate, handleInputErrors, handleResData } from "@/utils"
+import {
+  formatDate,
+  handleForbiddenAccess,
+  handleInputErrors,
+  handleResData,
+} from "@/utils"
 import Preloader from "@/components/_common/Preloader"
 import DateTimePicker from "@/components/_common/form/DateTimePicker"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
+import { httpStatusE } from "@/types/enums"
 
 const OrderForm = ({
   id,
@@ -100,9 +106,13 @@ const OrderForm = ({
       return
     }
 
-    doAxios(`/orders/${id}`, "get", true).then((res) => {
-      handleResData(res, setResData)
-    })
+    doAxios(`/orders/${id}`, "get", true)
+      .then((res) => {
+        handleResData(res, setResData)
+      })
+      .catch((err) => {
+        handleForbiddenAccess(err, setNotification, router, "orders")
+      })
   }, [])
 
   useEffect(() => {

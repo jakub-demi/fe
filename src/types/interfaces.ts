@@ -1,4 +1,9 @@
-import { notificationStoreSeverityT, UserAvatarT, UserT } from "@/types"
+import {
+  notificationStoreSeverityT,
+  setNotificationT,
+  UserAvatarT,
+  UserT,
+} from "@/types"
 
 export interface AuthStoreI {
   user: UserT | null
@@ -10,6 +15,7 @@ export interface AuthStoreI {
   login: () => void
   setMenuPinned: (pinned: boolean) => void
   setUserAvatar: (avatar: UserAvatarT) => void
+  getUserAvatar: () => string | undefined
 }
 
 export interface NotificationStoreI {
@@ -17,10 +23,7 @@ export interface NotificationStoreI {
     text: string | null
     severity: notificationStoreSeverityT | undefined
   }
-  setNotification: (
-    notification: string,
-    severity?: notificationStoreSeverityT
-  ) => void
+  setNotification: setNotificationT
   clearNotification: () => void
 }
 

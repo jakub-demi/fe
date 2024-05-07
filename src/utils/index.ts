@@ -4,7 +4,6 @@ import { AxiosError, AxiosResponse } from "axios"
 import log from "@/utils/log"
 import dayjs, { Dayjs } from "dayjs"
 import isEqual from "lodash.isequal"
-import authStore from "@/stores/authStore"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

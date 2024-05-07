@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import MaterialIcon from "@/components/_common/MaterialIcon"
 import Button from "@mui/material/Button"
 import { UserT } from "@/types"
@@ -16,7 +16,6 @@ import {
   handleInputErrors,
 } from "@/utils"
 import InputField from "@/components/_common/form/InputField"
-import { produce } from "immer"
 import Image from "next/image"
 
 const ProfilePage = () => {

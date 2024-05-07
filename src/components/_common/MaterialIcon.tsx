@@ -12,7 +12,7 @@ const MaterialIcon = ({
     <span
       className={cltm(
         "material-icons text-[24px]",
-        className !== undefined && `material-icons text-[24px] ${className}`
+        className !== undefined && `text-[24px] ${className}`
       )}
     >
       {icon}

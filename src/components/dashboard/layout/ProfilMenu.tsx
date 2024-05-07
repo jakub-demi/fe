@@ -4,9 +4,11 @@ import { Menu, MenuItem } from "@mui/material"
 import Divider from "@mui/material/Divider"
 import { useRouter } from "next/navigation"
 import doAxios from "@/utils/doAxios"
-import authStore from "@/stores/authStore"
+import authStore, { getUserAvatar } from "@/stores/authStore"
 import nav from "@/router"
 import texts from "@/texts"
+import Image from "next/image"
+import cltm from "@/utils/cltm"
 
 const ProfilMenu = () => {
   const router = useRouter()
@@ -40,8 +42,25 @@ const ProfilMenu = () => {
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
+        className={cltm(
+          "leading-3 rounded-full",
+          getUserAvatar() && "border-2 border-primary-hover bg-white"
+        )}
       >
-        <MaterialIcon icon="account_circle" />
+        {getUserAvatar() ? (
+          <Image
+            src={getUserAvatar() ?? ""}
+            alt="User Menu Image"
+            width={30}
+            height={30}
+            className="rounded-full"
+          />
+        ) : (
+          <MaterialIcon
+            icon="account_circle"
+            className="text-[30px]"
+          />
+        )}
       </div>
       <Menu
         id="basic-menu"

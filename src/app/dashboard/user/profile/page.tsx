@@ -4,21 +4,24 @@ import React, { useState } from "react"
 import MaterialIcon from "@/components/_common/MaterialIcon"
 import Button from "@mui/material/Button"
 import { UserT } from "@/types"
-import authStore from "@/stores/authStore"
+import authStore, { getUserAvatar } from "@/stores/authStore"
 import texts from "@/texts"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import notificationStore from "@/stores/notificationStore"
 import {
+  buildFilesFormData,
   handleChangeData,
   handleInputDefaultErrors,
   handleInputErrors,
 } from "@/utils"
 import InputField from "@/components/_common/form/InputField"
+import Image from "next/image"
 
 const ProfilePage = () => {
   const user = authStore.getState().user
   const setUser = authStore((state) => state.setUser)
+  const setUserAvatar = authStore((state) => state.setUserAvatar)
 
   const setNotification = notificationStore((state) => state.setNotification)
 
@@ -28,6 +31,7 @@ const ProfilePage = () => {
     email: undefined as string[] | undefined,
     firstname: undefined as string[] | undefined,
     lastname: undefined as string[] | undefined,
+    avatar: undefined as string[] | undefined,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
@@ -42,9 +46,15 @@ const ProfilePage = () => {
     if (userData) {
       setIsSubmitting(true)
 
-      doAxios("/user/update-profile", "post", true, userData)
+      doAxios(
+        "/user/update-profile",
+        "post",
+        true,
+        buildFilesFormData(userData)
+      )
         .then((res) => {
           setUser(userData)
+          setUserAvatar(res.data.data.avatar)
           setNotification(res.data.message)
         })
         .catch((err) => {
@@ -58,10 +68,20 @@ const ProfilePage = () => {
   return (
     <div>
       <div>
-        <MaterialIcon
-          icon="account_circle"
-          className="text-9xl"
-        />
+        {getUserAvatar() ? (
+          <Image
+            src={getUserAvatar() ?? ""}
+            alt="User Avatar"
+            width={128}
+            height={128}
+            className="rounded-full mb-2 border-4 border-primary-hover"
+          />
+        ) : (
+          <MaterialIcon
+            icon="account_circle"
+            className="text-9xl rounded-full mb-2 border-4 border-primary-hover"
+          />
+        )}
       </div>
       <form onSubmit={handleSubmit}>
         <InputField
@@ -84,6 +104,13 @@ const ProfilePage = () => {
           label={texts.user.profile.form.lastname}
           handleChange={handleChange}
           error={inputErrors.lastname}
+        />
+        <InputField
+          id="avatar"
+          label={texts.user.profile.form.avatar}
+          handleChange={handleChange}
+          type="file"
+          acceptMimes={["image/jpeg", "image/png"]}
         />
         <Button
           disabled={isSubmitting}

@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import doAxios from "@/utils/doAxios"
 import ResetPasswordConfirmation from "@/components/login/ResetPasswordConfirmation"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import log from "@/utils/log"
 import { ChangePasswordT } from "@/types"
 import InputField from "@/components/_common/form/InputField"
@@ -41,9 +41,6 @@ const ChangePasswordDialog = ({
     const formData = new FormData(event.currentTarget)
     formData.append("email", changePasswordData.email)
     formData.append("token", changePasswordData.token)
-
-    const formJson = Object.fromEntries((formData as any).entries())
-    log("formData", formJson, "lightYellow")
 
     doAxios("/reset-password", "post", false, formData)
       .then(() => {

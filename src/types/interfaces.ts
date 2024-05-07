@@ -1,13 +1,15 @@
-import { notificationStoreSeverityT, UserT } from "@/types"
+import { notificationStoreSeverityT, UserAvatarT, UserT } from "@/types"
 
 export interface AuthStoreI {
   user: UserT | null
   authed: boolean
+  menuPinned: boolean
+  avatar?: string
   setUser: (user: UserT | null) => void
   logout: () => void
   login: () => void
-  menuPinned: boolean
   setMenuPinned: (pinned: boolean) => void
+  setUserAvatar: (avatar: UserAvatarT) => void
 }
 
 export interface NotificationStoreI {

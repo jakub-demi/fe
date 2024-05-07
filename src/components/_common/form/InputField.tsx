@@ -10,7 +10,6 @@ import {
   OutlinedInput,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
-import log from "@/utils/log"
 
 const InputField = ({
   id,
@@ -25,6 +24,7 @@ const InputField = ({
   max = 99999,
   disabled = false,
   extShowPasswordStateHandler,
+  acceptMimes,
 }: {
   id: string
   label: string
@@ -38,6 +38,7 @@ const InputField = ({
   max?: number
   disabled?: boolean
   extShowPasswordStateHandler?: (update: boolean) => boolean
+  acceptMimes?: string[]
 }) => {
   const [showPassword, setShowPassword] = useState(false)
 
@@ -54,7 +55,23 @@ const InputField = ({
   }
 
   const doShrink = (): boolean | undefined => {
-    return defaultValue ? true : undefined
+    return defaultValue || type === "file" ? true : undefined
+  }
+
+  const inputProps = () => {
+    switch (type) {
+      case "number":
+        return {
+          min: min,
+          max: max,
+        }
+      case "file":
+        return {
+          accept: acceptMimes,
+        }
+      default:
+        return undefined
+    }
   }
 
   return (
@@ -74,14 +91,7 @@ const InputField = ({
           type={type}
           onChange={handleChange}
           error={error && error.length > 0}
-          inputProps={
-            type === "number"
-              ? {
-                  min: min,
-                  max: max,
-                }
-              : undefined
-          }
+          inputProps={inputProps()}
           InputLabelProps={{
             shrink: doShrink(),
           }}

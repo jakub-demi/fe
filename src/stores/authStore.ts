@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { UserT } from "@/types"
+import { UserAvatarT, UserT } from "@/types"
 import { persist } from "zustand/middleware"
 import { AuthStoreI } from "@/types/interfaces"
 import { produce } from "immer"
@@ -15,36 +15,22 @@ const authStore = create<AuthStoreI>()(
       setUser: (user: UserT | null): void =>
         set(
           produce((state) => {
-            //log("(setUser) state.user before", state.user)
-
             state.user = user
-
-            //log("(setUser) state.user after", state.user)
           })
         ),
 
       logout: (): void =>
         set(
           produce((state) => {
-            //log("(logout) state.authed before", state.authed)
-            //log("(logout) state.user before", state.authed)
-
             state.authed = false
             state.user = null
-
-            //log("(logout) state.authed after", state.authed)
-            //log("(logout) state.user after", state.authed)
           })
         ),
 
       login: (): void =>
         set(
           produce((state) => {
-            //log("(login) state.authed before", state.authed)
-
             state.authed = true
-
-            //log("(login) state.authed after", state.authed)
           })
         ),
 
@@ -52,7 +38,13 @@ const authStore = create<AuthStoreI>()(
         set(
           produce((state) => {
             state.menuPinned = pinned
-            //log("(setMenuPinned) state.menuPinned", pinned)
+          })
+        ),
+
+      setUserAvatar: (avatar: UserAvatarT) =>
+        set(
+          produce((state) => {
+            state.user && (state.user.avatar = avatar)
           })
         ),
     }),
@@ -61,5 +53,13 @@ const authStore = create<AuthStoreI>()(
     }
   )
 )
+
+export const getUserAvatar = () => {
+  return authStore((state) =>
+    state.user?.avatar?.image && process.env.NEXT_PUBLIC_API_BASE_URL
+      ? process.env.NEXT_PUBLIC_API_BASE_URL + "/" + state.user.avatar.image
+      : undefined
+  )
+}
 
 export default authStore

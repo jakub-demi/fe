@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
-import { OrderT } from "@/types"
+import { OrderT, UserT } from "@/types"
 import { handleResData } from "@/utils"
 import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
@@ -14,6 +14,7 @@ import nav from "@/router"
 import { useRouter } from "next/navigation"
 import MenuItem from "@mui/material/MenuItem"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
+import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
 
 const OrdersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
@@ -48,6 +49,8 @@ const OrdersPage = () => {
         due_date: new Date(order.due_date),
         payment_date: order.payment_date ? new Date(order.payment_date) : null,
         created_at: new Date(order.created_at),
+        has_access: order.has_access,
+        order_users: order.order_users,
       })
     })
 
@@ -110,6 +113,29 @@ const OrdersPage = () => {
       editable: true,
       align: "left",
       headerAlign: "left",
+    },
+    {
+      field: "has_access",
+      headerName: texts.orders.dataGrid.headers.has_access,
+      type: "boolean",
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: false,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "order_users",
+      headerName: texts.orders.dataGrid.headers.order_users,
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: false,
+      align: "left",
+      headerAlign: "left",
+      renderCell: (params) => {
+        const users = (params.row as { order_users: UserT[] }).order_users
+        return <Avatars users={users} />
+      },
     },
     {
       field: "Actions",

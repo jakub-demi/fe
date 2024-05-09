@@ -13,6 +13,7 @@ export type UserT = {
   email: string
   firstname: string
   lastname: string
+  fullName: string
   is_admin: boolean
   avatar?: UserAvatarT
 }
@@ -29,16 +30,24 @@ export type OrderT = {
   due_date: Date
   payment_date: Date | null
   created_at: Date
+  has_access: boolean
+  order_users: UserT[]
 }
 
 export type OrderDataCreateT = {
   due_date: Date | string
+  order_users: number[]
 }
 
 export type OrderDataUpdateT = {
   due_date: Date | string
   payment_date: Date | string | null
   created_at: Date | string
+  order_users: number[]
+}
+
+export type OrderChoosenUsersT = {
+  [key: number]: string
 }
 
 export type OrderItemT = {

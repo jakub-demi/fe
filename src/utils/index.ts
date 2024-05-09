@@ -7,7 +7,8 @@ import isEqual from "lodash.isequal"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import nav, { RouterParam } from "@/router"
 import { httpStatusE } from "@/types/enums"
-import { setNotificationT } from "@/types"
+import { setNotificationT, UserAvatarT, UserT } from "@/types"
+import texts from "@/texts"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -137,17 +138,44 @@ export const buildFilesFormData = (
 }
 
 export const handleForbiddenAccess = (
-  error: AxiosError,
+  errorOrResponse: AxiosError | AxiosResponse,
   notifSetter: setNotificationT,
   router: AppRouterInstance,
   route: string,
   routerParams?: RouterParam
 ) => {
-  log("error", error, "lightRed")
+  const isError = errorOrResponse instanceof AxiosError
 
-  if (error.response?.status === httpStatusE.FORBIDDEN) {
+  if (isError && errorOrResponse.response?.status === httpStatusE.FORBIDDEN) {
     nav(route, router, true, routerParams)
-    const errData = error.response.data as { message: string }
+    const errData = errorOrResponse.response.data as { message: string }
     notifSetter(errData.message, "error")
+  } else if (!isError) {
+    const hasAccess: boolean | null = errorOrResponse.data.data?.has_access
+      ? errorOrResponse.data.data.has_access
+      : null
+
+    if (hasAccess) return
+
+    nav(route, router, true, routerParams)
+    notifSetter(texts.notification.errors.access_denied, "error")
   }
+}
+
+export const getUserAvatar = (user?: UserT | null) => {
+  return user?.avatar?.image && process.env.NEXT_PUBLIC_API_BASE_URL
+    ? process.env.NEXT_PUBLIC_API_BASE_URL + "/" + user.avatar.image
+    : undefined
+}
+
+export const getUserInitials = (fullName: string) => {
+  const parts = fullName.split(" ")
+  const initials = parts.map((part) => {
+    return part.substring(0, 1).toUpperCase()
+  })
+  return initials.toString().replace(/,/g, "")
+}
+
+export const bigIntToInt = (bigInt: bigint): number => {
+  return Number.parseInt(bigInt.toString())
 }

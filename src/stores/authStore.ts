@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware"
 import { AuthStoreI } from "@/types/interfaces"
 import { produce } from "immer"
 import log from "@/utils/log"
+import { getUserAvatar } from "@/utils"
 
 const authStore = create<AuthStoreI>()(
   persist(
@@ -49,10 +50,7 @@ const authStore = create<AuthStoreI>()(
         ),
 
       getUserAvatar: () => {
-        const user = get().user
-        return user?.avatar?.image && process.env.NEXT_PUBLIC_API_BASE_URL
-          ? process.env.NEXT_PUBLIC_API_BASE_URL + "/" + user.avatar.image
-          : undefined
+        return getUserAvatar(get().user)
       },
     }),
     {

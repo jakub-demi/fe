@@ -18,7 +18,7 @@ import Preloader from "@/components/_common/Preloader"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
 import InputField from "@/components/_common/form/InputField"
-import { OrderItemDataCreateUpdateT } from "@/types"
+import { FormErrorT, OrderItemDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
 import { getAndSetVatRates } from "@/utils/axiosCalls"
@@ -53,10 +53,10 @@ const OrderItemForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const inputErrorsDefaultState = {
-    name: undefined as string[] | undefined,
-    count: undefined as string[] | undefined,
-    cost: undefined as string[] | undefined,
-    vat: undefined as string[] | undefined,
+    name: undefined as FormErrorT,
+    count: undefined as FormErrorT,
+    cost: undefined as FormErrorT,
+    vat: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 

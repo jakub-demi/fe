@@ -8,7 +8,7 @@ import doAxios from "@/utils/doAxios"
 import ResetPasswordConfirmation from "@/components/login/ResetPasswordConfirmation"
 import { useState } from "react"
 import log from "@/utils/log"
-import { ChangePasswordT } from "@/types"
+import { ChangePasswordT, FormErrorT } from "@/types"
 import InputField from "@/components/_common/form/InputField"
 import texts from "@/texts"
 import { handleInputErrors } from "@/utils"
@@ -27,10 +27,10 @@ const ChangePasswordDialog = ({
   const [confirmationOpen, setConfirmationOpen] = useState(false)
 
   const initialInputErrorsState = {
-    password: undefined as string[] | undefined,
-    password_confirmation: undefined as string[] | undefined,
-    token: undefined as string[] | undefined,
-    email: undefined as string[] | undefined,
+    password: undefined as FormErrorT,
+    password_confirmation: undefined as FormErrorT,
+    token: undefined as FormErrorT,
+    email: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(initialInputErrorsState)
 

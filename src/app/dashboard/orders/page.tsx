@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
-import { OrderT, UserT } from "@/types"
+import { OrderDataGridT, OrderT, UserT } from "@/types"
 import { handleResData } from "@/utils"
 import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
@@ -15,11 +15,13 @@ import { useRouter } from "next/navigation"
 import MenuItem from "@mui/material/MenuItem"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
 import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
+import authStore from "@/stores/authStore"
 
 const OrdersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
+  const user = authStore((state) => state.user)
   const router = useRouter()
 
   const [tableData, setTableData] = useState<OrderT[]>()
@@ -41,7 +43,7 @@ const OrdersPage = () => {
   }, [])
 
   useEffect(() => {
-    const rows: OrderT[] = []
+    const rows: OrderDataGridT[] = []
     tableData?.forEach((order, idx) => {
       rows.push({
         id: order.id,
@@ -144,7 +146,9 @@ const OrdersPage = () => {
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const orderId = (params.row as { id: number }).id
+        const rowParams = params.row as { id: number; has_access: boolean }
+        const orderId = rowParams.id
+        const hasAccess = (user && user.is_admin) || rowParams.has_access
         return (
           <ActionsMenu
             datagridPage="orders"
@@ -157,6 +161,11 @@ const OrdersPage = () => {
                 {texts.orders.actionsMenu.menuItems.orderItems}
               </MenuItem>
             }
+            permissions={{
+              view: true,
+              edit: hasAccess,
+              delete: hasAccess,
+            }}
           />
         )
       },

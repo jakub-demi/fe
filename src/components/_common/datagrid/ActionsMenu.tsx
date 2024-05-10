@@ -11,17 +11,32 @@ import notificationStore from "@/stores/notificationStore"
 import texts from "@/texts"
 import confirmDialogStore from "@/stores/confirmDialogStore"
 import Divider from "@mui/material/Divider"
+import log from "@/utils/log"
+
+type ActionsMenuPermissionsT = {
+  view: boolean
+  edit: boolean
+  delete: boolean
+}
+
+const ActionsMenuPermissionsDefault: ActionsMenuPermissionsT = {
+  view: true,
+  edit: true,
+  delete: true,
+}
 
 const ActionsMenu = ({
   datagridPage,
   id,
   handleReloadData,
   additionalActionItems,
+  permissions = ActionsMenuPermissionsDefault,
 }: {
   datagridPage: string
   id: number | number[]
   handleReloadData: () => void
   additionalActionItems?: React.ReactNode
+  permissions?: ActionsMenuPermissionsT
 }): React.JSX.Element => {
   const router = useRouter()
   const setNotification = notificationStore((state) => state.setNotification)
@@ -37,12 +52,26 @@ const ActionsMenu = ({
     setAnchorEl(null)
   }
 
+  const showAccessDeniedNotification = () => {
+    setNotification(texts.notification.errors.access_denied, "error")
+  }
+
   const handleAction = (type: "view" | "edit" | "delete") => {
     handleClose()
 
-    type === "view" && nav(`${datagridPage}.view`, router, false, id)
-    type === "edit" && nav(`${datagridPage}.edit`, router, false, id)
-    type === "delete" &&
+    if (type === "view" && permissions.view) {
+      nav(`${datagridPage}.view`, router, false, id)
+    } else if (type === "view" && !permissions.view) {
+      showAccessDeniedNotification()
+    }
+
+    if (type === "edit" && permissions.edit) {
+      nav(`${datagridPage}.edit`, router, false, id)
+    } else if (type === "edit" && !permissions.edit) {
+      showAccessDeniedNotification()
+    }
+
+    if (type === "delete" && permissions.delete) {
       setConfirmDialog(
         texts.actionsMenu.confirmDialog.titleItemRemoval,
         undefined,
@@ -50,6 +79,9 @@ const ActionsMenu = ({
         undefined,
         () => handleDelete()
       )
+    } else if (type === "delete" && !permissions.delete) {
+      showAccessDeniedNotification()
+    }
   }
 
   const handleDelete = () => {

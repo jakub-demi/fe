@@ -17,7 +17,7 @@ import Preloader from "@/components/_common/Preloader"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
 import InputField from "@/components/_common/form/InputField"
-import { UserDataCreateUpdateT } from "@/types"
+import { FormErrorT, UserDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
 import { extShowPasswordStateHandler } from "@/utils/inputField"
@@ -49,12 +49,12 @@ const UserForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const inputErrorsDefaultState = {
-    firstname: undefined as string[] | undefined,
-    lastname: undefined as string[] | undefined,
-    email: undefined as string[] | undefined,
-    password: undefined as string[] | undefined,
-    password_confirmation: undefined as string[] | undefined,
-    is_admin: undefined as string[] | undefined,
+    firstname: undefined as FormErrorT,
+    lastname: undefined as FormErrorT,
+    email: undefined as FormErrorT,
+    password: undefined as FormErrorT,
+    password_confirmation: undefined as FormErrorT,
+    is_admin: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 

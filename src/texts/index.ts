@@ -96,6 +96,12 @@ const texts = {
         orderUsers: {
           label: "Order Users",
         },
+        customerName: {
+          label: "Customer Name",
+        },
+        customerAddress: {
+          label: "Customer Address",
+        },
       },
       create: {
         button: "Create",

@@ -37,7 +37,7 @@ export const SecondaryMenuListItems = (): React.JSX.Element => (
 
     <MenuListItem
       icon={<AssignmentIcon />}
-      title="Current Month"
+      title="Temp Item"
     />
   </>
 )

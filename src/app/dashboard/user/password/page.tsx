@@ -16,6 +16,7 @@ import authStore from "@/stores/authStore"
 import { useRouter } from "next/navigation"
 import nav from "@/router"
 import { extShowPasswordStateHandler } from "@/utils/inputField"
+import { FormErrorT } from "@/types"
 
 const PasswordChangePage = () => {
   const router = useRouter()
@@ -32,9 +33,9 @@ const PasswordChangePage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const inputErrorsDefaultState = {
-    current_password: undefined as string[] | undefined,
-    password: undefined as string[] | undefined,
-    password_confirmation: undefined as string[] | undefined,
+    current_password: undefined as FormErrorT,
+    password: undefined as FormErrorT,
+    password_confirmation: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 

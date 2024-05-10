@@ -4,6 +4,11 @@ import { AxiosError, AxiosResponse } from "axios"
 import log from "@/utils/log"
 import dayjs, { Dayjs } from "dayjs"
 import isEqual from "lodash.isequal"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
+import nav, { RouterParam } from "@/router"
+import { httpStatusE } from "@/types/enums"
+import { setNotificationT, UserT } from "@/types"
+import texts from "@/texts"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -12,11 +17,14 @@ export const handleChangeData = <T>(
   const id = event.target.id
   const value = event.target.value
 
-  const inputFileEvent =
+  const htmlInputEvent =
     event.target.tagName.toLowerCase() === "input"
       ? (event as React.ChangeEvent<HTMLInputElement>)
       : undefined
-  const file = inputFileEvent ? inputFileEvent.target.files![0] : undefined
+  const file =
+    htmlInputEvent && htmlInputEvent.target.files
+      ? htmlInputEvent.target.files[0]
+      : undefined
 
   setter(
     produce((draft: any) => {
@@ -130,4 +138,43 @@ export const buildFilesFormData = (
   }
 
   return formData
+}
+
+export const handleForbiddenAccess = (
+  errorOrResponse: AxiosError | AxiosResponse,
+  notifSetter: setNotificationT,
+  router: AppRouterInstance,
+  route: string,
+  routerParams?: RouterParam
+) => {
+  const isError = errorOrResponse instanceof AxiosError
+
+  if (isError && errorOrResponse.response?.status === httpStatusE.FORBIDDEN) {
+    nav(route, router, true, routerParams)
+    const errData = errorOrResponse.response.data as { message: string }
+    notifSetter(errData.message, "error")
+  } else if (!isError) {
+    const hasAccess: boolean | null = errorOrResponse.data.data?.has_access
+      ? errorOrResponse.data.data.has_access
+      : null
+
+    if (hasAccess) return
+
+    nav(route, router, true, routerParams)
+    notifSetter(texts.notification.errors.access_denied, "error")
+  }
+}
+
+export const getUserAvatar = (user?: UserT | null) => {
+  return user?.avatar?.image && process.env.NEXT_PUBLIC_API_BASE_URL
+    ? process.env.NEXT_PUBLIC_API_BASE_URL + "/" + user.avatar.image
+    : undefined
+}
+
+export const getUserInitials = (fullName: string) => {
+  const parts = fullName.split(" ")
+  const initials = parts.map((part) => {
+    return part.substring(0, 1).toUpperCase()
+  })
+  return initials.toString().replace(/,/g, "")
 }

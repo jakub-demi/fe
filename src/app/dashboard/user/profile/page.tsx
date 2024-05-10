@@ -3,8 +3,8 @@
 import React, { useState } from "react"
 import MaterialIcon from "@/components/_common/MaterialIcon"
 import Button from "@mui/material/Button"
-import { UserT } from "@/types"
-import authStore, { getUserAvatar } from "@/stores/authStore"
+import { FormErrorT, UserT } from "@/types"
+import authStore from "@/stores/authStore"
 import texts from "@/texts"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
@@ -22,16 +22,17 @@ const ProfilePage = () => {
   const user = authStore.getState().user
   const setUser = authStore((state) => state.setUser)
   const setUserAvatar = authStore((state) => state.setUserAvatar)
+  const getUserAvatar = authStore((state) => state.getUserAvatar)
 
   const setNotification = notificationStore((state) => state.setNotification)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [userData, setUserData] = useState<UserT | null>(user)
   const inputErrorsDefaultState = {
-    email: undefined as string[] | undefined,
-    firstname: undefined as string[] | undefined,
-    lastname: undefined as string[] | undefined,
-    avatar: undefined as string[] | undefined,
+    email: undefined as FormErrorT,
+    firstname: undefined as FormErrorT,
+    lastname: undefined as FormErrorT,
+    avatar: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 

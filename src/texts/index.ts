@@ -93,6 +93,15 @@ const texts = {
         dueDate: {
           label: "Payment Due Date",
         },
+        orderUsers: {
+          label: "Order Users",
+        },
+        customerName: {
+          label: "Customer Name",
+        },
+        customerAddress: {
+          label: "Customer Address",
+        },
       },
       create: {
         button: "Create",
@@ -121,6 +130,8 @@ const texts = {
         dueDate: "Due Date",
         paymentDate: "Payment Date",
         createdAt: "Created At",
+        has_access: "Edit Access?",
+        order_users: "Users",
       },
     },
     orderItems: {
@@ -224,6 +235,11 @@ const texts = {
     trueFalse: {
       yes: "Yes",
       no: "No",
+    },
+  },
+  notification: {
+    errors: {
+      access_denied: "Access Forbidden.",
     },
   },
 }

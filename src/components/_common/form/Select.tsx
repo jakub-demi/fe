@@ -49,6 +49,7 @@ const SelectMui = ({
       <Select
         labelId={`${id}-label`}
         id={id}
+        name={id}
         value={value ? `${value}` : `${values[0]}`}
         defaultValue={`${value}`}
         label={error ?? label}

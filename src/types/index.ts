@@ -9,10 +9,11 @@ export type UserAvatarT = {
 }
 
 export type UserT = {
-  id: bigint
+  id: number
   email: string
   firstname: string
   lastname: string
+  fullName: string
   is_admin: boolean
   avatar?: UserAvatarT
 }
@@ -24,26 +25,50 @@ export type notificationStoreSeverityT =
   | "warning"
 
 export type OrderT = {
-  id: bigint
+  id: number
   order_number: number
   due_date: Date
   payment_date: Date | null
   created_at: Date
+  has_access: boolean
+  customer_name: string
+  customer_address: string
+  order_users: UserT[]
+}
+
+export type OrderDataGridT = {
+  id: number
+  order_number: number
+  due_date: Date
+  payment_date: Date | null
+  created_at: Date
+  has_access: boolean
+  order_users: UserT[]
 }
 
 export type OrderDataCreateT = {
   due_date: Date | string
+  order_users: number[]
+  customer_name: string
+  customer_address: string
 }
 
 export type OrderDataUpdateT = {
   due_date: Date | string
   payment_date: Date | string | null
   created_at: Date | string
+  order_users: number[]
+  customer_name: string
+  customer_address: string
+}
+
+export type OrderUsersToChooseFromT = {
+  [key: number]: string
 }
 
 export type OrderItemT = {
-  id: bigint
-  order_id: bigint
+  id: number
+  order_id: number
   name: string
   count: number
   cost: number
@@ -72,3 +97,10 @@ export type ChangePasswordT = {
   token: string
   email: string
 }
+
+export type setNotificationT = (
+  notification: string,
+  severity?: notificationStoreSeverityT
+) => void
+
+export type FormErrorT = string[] | undefined

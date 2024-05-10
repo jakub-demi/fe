@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
-import { OrderT } from "@/types"
+import { OrderDataGridT, OrderT, UserT } from "@/types"
 import { handleResData } from "@/utils"
 import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
@@ -14,11 +14,14 @@ import nav from "@/router"
 import { useRouter } from "next/navigation"
 import MenuItem from "@mui/material/MenuItem"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
+import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
+import authStore from "@/stores/authStore"
 
 const OrdersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
+  const user = authStore((state) => state.user)
   const router = useRouter()
 
   const [tableData, setTableData] = useState<OrderT[]>()
@@ -40,7 +43,7 @@ const OrdersPage = () => {
   }, [])
 
   useEffect(() => {
-    const rows: OrderT[] = []
+    const rows: OrderDataGridT[] = []
     tableData?.forEach((order, idx) => {
       rows.push({
         id: order.id,
@@ -48,6 +51,8 @@ const OrdersPage = () => {
         due_date: new Date(order.due_date),
         payment_date: order.payment_date ? new Date(order.payment_date) : null,
         created_at: new Date(order.created_at),
+        has_access: order.has_access,
+        order_users: order.order_users,
       })
     })
 
@@ -112,13 +117,38 @@ const OrdersPage = () => {
       headerAlign: "left",
     },
     {
+      field: "has_access",
+      headerName: texts.orders.dataGrid.headers.has_access,
+      type: "boolean",
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: false,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "order_users",
+      headerName: texts.orders.dataGrid.headers.order_users,
+      width: getColumnWidth(),
+      minWidth: 100,
+      editable: false,
+      align: "left",
+      headerAlign: "left",
+      renderCell: (params) => {
+        const users = (params.row as { order_users: UserT[] }).order_users
+        return <Avatars users={users} />
+      },
+    },
+    {
       field: "Actions",
       headerName: texts.dataGrid.headers.actions,
       width: getColumnWidth(),
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const orderId = (params.row as { id: number }).id
+        const rowParams = params.row as { id: number; has_access: boolean }
+        const orderId = rowParams.id
+        const hasAccess = (user && user.is_admin) || rowParams.has_access
         return (
           <ActionsMenu
             datagridPage="orders"
@@ -131,6 +161,11 @@ const OrdersPage = () => {
                 {texts.orders.actionsMenu.menuItems.orderItems}
               </MenuItem>
             }
+            permissions={{
+              view: true,
+              edit: hasAccess,
+              delete: hasAccess,
+            }}
           />
         )
       },

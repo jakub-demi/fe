@@ -9,6 +9,7 @@ import doAxios from "@/utils/doAxios"
 import log from "@/utils/log"
 import {
   handleChangeData,
+  handleForbiddenAccess,
   handleInputDefaultErrors,
   handleInputErrors,
   handleResData,
@@ -17,10 +18,11 @@ import Preloader from "@/components/_common/Preloader"
 import nav from "@/router"
 import { useRouter } from "next/navigation"
 import InputField from "@/components/_common/form/InputField"
-import { OrderItemDataCreateUpdateT } from "@/types"
+import { FormErrorT, OrderItemDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
 import { getAndSetVatRates } from "@/utils/axiosCalls"
+import { httpStatusE } from "@/types/enums"
 
 const OrderItemForm = ({
   id,
@@ -51,10 +53,10 @@ const OrderItemForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const inputErrorsDefaultState = {
-    name: undefined as string[] | undefined,
-    count: undefined as string[] | undefined,
-    cost: undefined as string[] | undefined,
-    vat: undefined as string[] | undefined,
+    name: undefined as FormErrorT,
+    count: undefined as FormErrorT,
+    cost: undefined as FormErrorT,
+    vat: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
@@ -80,7 +82,9 @@ const OrderItemForm = ({
     setIsSubmitting(true)
 
     doAxios(
-      !isUpdateForm ? `/order-items/store/${orderId}` : `/order-items/${id}`,
+      !isUpdateForm
+        ? `/orders/${orderId}/order-items`
+        : `/orders/${orderId}/order-items/${id}`,
       !isUpdateForm ? "post" : "put",
       true,
       getCreateUpdateData()
@@ -103,15 +107,19 @@ const OrderItemForm = ({
       return
     }
 
-    doAxios(`/order-items/${id}`, "get", true).then((res) => {
-      handleResData(res, setResData)
+    doAxios(`/orders/${orderId}/order-items/${id}`, "get", true)
+      .then((res) => {
+        handleResData(res, setResData)
 
-      setResData(
-        produce((draft) => {
-          draft.vat = draft.vat * 100
-        })
-      )
-    })
+        setResData(
+          produce((draft) => {
+            draft.vat = draft.vat * 100
+          })
+        )
+      })
+      .catch((err) => {
+        handleForbiddenAccess(err, setNotification, router, "orders")
+      })
   }, [])
 
   useEffect(() => {

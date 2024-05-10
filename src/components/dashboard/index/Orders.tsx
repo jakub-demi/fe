@@ -69,7 +69,7 @@ function preventDefault(event: React.MouseEvent) {
 const Orders = () => {
   return (
     <>
-      <Title>Recent Orders</Title>
+      <Title>Temp: Recent Orders</Title>
       <Table size="small">
         <TableHead>
           <TableRow>

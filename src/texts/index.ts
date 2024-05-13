@@ -45,6 +45,7 @@ const texts = {
     },
   },
   topMenu: {
+    tooltip: "Account Menu",
     avatar: {
       profile: "Profile",
       changePassword: "Change Password",
@@ -122,6 +123,7 @@ const texts = {
     actionsMenu: {
       menuItems: {
         orderItems: "Order Items",
+        downloadAsPdf: "Download as PDF",
       },
     },
     dataGrid: {

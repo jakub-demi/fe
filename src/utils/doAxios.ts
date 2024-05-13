@@ -1,4 +1,4 @@
-import axios, { AxiosPromise } from "axios"
+import axios, { AxiosPromise, ResponseType } from "axios"
 import { useRouter } from "next/navigation"
 import nav from "@/router"
 import { httpStatusE } from "@/types/enums"
@@ -19,7 +19,8 @@ const doAxios = (
     | "DELETE" = "get",
   api: boolean = false,
   data?: object,
-  headers?: object
+  headers?: object,
+  responseType?: ResponseType
 ): AxiosPromise => {
   return axios({
     baseURL:
@@ -31,6 +32,7 @@ const doAxios = (
     url,
     data,
     headers: headers,
+    responseType: responseType,
   }).catch((error) => {
     if (error.response?.status == httpStatusE.NOT_FOUND) {
       const router = useRouter()

@@ -5,7 +5,7 @@ import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderDataGridT, OrderT, UserT } from "@/types"
-import { handleResData } from "@/utils"
+import { handlePdfDownload, handleResData } from "@/utils"
 import { produce } from "immer"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
@@ -16,8 +16,11 @@ import MenuItem from "@mui/material/MenuItem"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
 import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
 import authStore from "@/stores/authStore"
+import notificationStore from "@/stores/notificationStore"
 
 const OrdersPage = () => {
+  const setNotification = notificationStore((state) => state.setNotification)
+
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
@@ -33,6 +36,16 @@ const OrdersPage = () => {
     doAxios("/orders", "get", true).then((res) => {
       handleResData(res, setTableData)
     })
+  }
+
+  const downloadAsPdf = (orderNumber: number, orderId: number) => {
+    const errMsg = handlePdfDownload(
+      `/orders/${orderId}/generate-pdf`,
+      `Order_${orderNumber}`
+    )
+    if (!errMsg) return
+
+    setNotification(errMsg, "error")
   }
 
   useEffect(() => {
@@ -146,7 +159,7 @@ const OrdersPage = () => {
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const rowParams = params.row as { id: number; has_access: boolean }
+        const rowParams = params.row as OrderDataGridT
         const orderId = rowParams.id
         const hasAccess = (user && user.is_admin) || rowParams.has_access
         return (
@@ -154,13 +167,20 @@ const OrdersPage = () => {
             datagridPage="orders"
             id={orderId}
             handleReloadData={() => loadData()}
-            additionalActionItems={
+            additionalActionItems={[
               <MenuItem
+                key={0}
                 onClick={() => nav("order-items", router, false, orderId)}
               >
                 {texts.orders.actionsMenu.menuItems.orderItems}
-              </MenuItem>
-            }
+              </MenuItem>,
+              <MenuItem
+                key={1}
+                onClick={() => downloadAsPdf(rowParams.order_number, orderId)}
+              >
+                {texts.orders.actionsMenu.menuItems.downloadAsPdf}
+              </MenuItem>,
+            ]}
             permissions={{
               view: true,
               edit: hasAccess,

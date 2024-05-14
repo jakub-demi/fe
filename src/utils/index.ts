@@ -203,3 +203,14 @@ export const handlePdfDownload = (
     })
   return errMessage
 }
+
+export const slugify = (str: string): string => {
+  return str
+    .toLowerCase()
+    .normalize("NFKD") // split accented characters into their base characters and diacritical marks
+    .replace(/[\u0300-\u036f]/g, "") // remove all the accents, which are by default in the \u03xx UNICODE block
+    .trim()
+    .replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
+    .replace(/\s+/g, "-") // replace spaces with hyphens
+    .replace(/-+/g, "-") // remove consecutive hyphens
+}

@@ -104,3 +104,13 @@ export type setNotificationT = (
 ) => void
 
 export type FormErrorT = string[] | undefined
+
+export type OrderCategoryT = {
+  id: number
+  name: string
+  slug: string
+}
+
+export type OrderCategoryDataCreateUpdateT = {
+  name: string
+}

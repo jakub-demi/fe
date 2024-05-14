@@ -171,10 +171,35 @@ const texts = {
           button: "Save",
         },
         view: {
+          button: "Back",
           cost_with_vat: {
             label: "Cost with VAT (€)",
           },
         },
+      },
+    },
+  },
+  orderCategories: {
+    dataGrid: {
+      headers: {
+        name: "Category Name",
+        slug: "Category Slug",
+      },
+    },
+    form: {
+      common: {
+        name: {
+          label: "Category Name",
+        },
+      },
+      create: {
+        button: "Create",
+      },
+      update: {
+        button: "Save",
+      },
+      view: {
+        button: "Back",
       },
     },
   },
@@ -205,6 +230,9 @@ const texts = {
       },
       update: {
         button: "Update",
+      },
+      view: {
+        button: "Back",
       },
     },
     dataGrid: {

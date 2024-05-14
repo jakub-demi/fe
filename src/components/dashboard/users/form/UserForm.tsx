@@ -184,7 +184,7 @@ const UserForm = ({
 
           <Button
             handleClick={() => nav("users", router)}
-            text={texts.orders.form.view.button}
+            text={texts.users.form.view.button}
           />
           {!readonly && (
             <Button

@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import MaterialIcon from "@/components/_common/MaterialIcon"
 import { Menu, MenuItem } from "@mui/material"
 import Divider from "@mui/material/Divider"
 import { useRouter } from "next/navigation"
@@ -12,6 +11,7 @@ import texts from "@/texts"
 import Image from "next/image"
 import cltm from "@/utils/cltm"
 import Tooltip from "@mui/material/Tooltip"
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"
 
 const ProfilMenu = () => {
   const router = useRouter()
@@ -70,10 +70,7 @@ const ProfilMenu = () => {
               className="rounded-full"
             />
           ) : (
-            <MaterialIcon
-              icon="account_circle"
-              className="text-[30px]"
-            />
+            <AccountCircleIcon className="text-[30px]" />
           )}
         </Tooltip>
       </div>

@@ -187,7 +187,7 @@ const OrderItemForm = ({
 
           <Button
             handleClick={() => nav("order-items", router, false, orderId)}
-            text={texts.orders.form.view.button}
+            text={texts.orders.orderItems.form.view.button}
           />
           {!readonly && (
             <Button

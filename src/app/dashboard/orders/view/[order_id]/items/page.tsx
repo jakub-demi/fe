@@ -13,8 +13,6 @@ import DataGrid from "@/components/_common/datagrid/DataGrid"
 import notificationStore from "@/stores/notificationStore"
 import confirmDialogStore from "@/stores/confirmDialogStore"
 import VatRenderEditCell from "@/components/dashboard/orders/items/datagrid/VatRenderEditCell"
-import { httpStatusE } from "@/types/enums"
-import nav from "@/router"
 import { useRouter } from "next/navigation"
 
 const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
@@ -141,7 +139,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
 
   const inRowEditUpdate = (row: OrderItemT) => {
     const orderItemId = row.id
-    doAxios(`/order-items/${orderItemId}`, "put", true, row)
+    doAxios(`/orders/${orderId}/order-items/${orderItemId}`, "put", true, row)
       .then((res) => {
         setNotification(res.data.message)
       })

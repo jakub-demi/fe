@@ -11,6 +11,7 @@ import nav from "@/router"
 import texts from "@/texts"
 import Image from "next/image"
 import cltm from "@/utils/cltm"
+import Tooltip from "@mui/material/Tooltip"
 
 const ProfilMenu = () => {
   const router = useRouter()
@@ -56,20 +57,25 @@ const ProfilMenu = () => {
           userAvatar && "border-2 border-primary-hover bg-white"
         )}
       >
-        {userAvatar ? (
-          <Image
-            src={userAvatar}
-            alt="User Menu Image"
-            width={30}
-            height={30}
-            className="rounded-full"
-          />
-        ) : (
-          <MaterialIcon
-            icon="account_circle"
-            className="text-[30px]"
-          />
-        )}
+        <Tooltip
+          title={texts.topMenu.tooltip}
+          arrow
+        >
+          {userAvatar ? (
+            <Image
+              src={userAvatar}
+              alt="User Menu Image"
+              width={30}
+              height={30}
+              className="rounded-full"
+            />
+          ) : (
+            <MaterialIcon
+              icon="account_circle"
+              className="text-[30px]"
+            />
+          )}
+        </Tooltip>
       </div>
       <Menu
         id="basic-menu"

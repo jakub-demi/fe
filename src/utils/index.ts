@@ -9,6 +9,7 @@ import nav, { RouterParam } from "@/router"
 import { httpStatusE } from "@/types/enums"
 import { setNotificationT, UserT } from "@/types"
 import texts from "@/texts"
+import doAxios from "@/utils/doAxios"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -177,4 +178,28 @@ export const getUserInitials = (fullName: string) => {
     return part.substring(0, 1).toUpperCase()
   })
   return initials.toString().replace(/,/g, "")
+}
+
+export const generateFileName = (name: string): string => {
+  return name.replace(/[^a-zA-Z0-9]/g, "_")
+}
+
+export const handlePdfDownload = (
+  requestPath: string,
+  documentName: string | number
+): undefined | string => {
+  let errMessage: string | undefined = undefined
+  doAxios(requestPath, "get", true, undefined, undefined, "blob")
+    .then((res) => {
+      const aTag = document.createElement("a")
+      aTag.href = URL.createObjectURL(new Blob([res.data]))
+      aTag.download = generateFileName(`${documentName}`) + ".pdf"
+      aTag.click()
+      URL.revokeObjectURL(aTag.href)
+      aTag.remove()
+    })
+    .catch((err) => {
+      errMessage = err.response.data.message
+    })
+  return errMessage
 }

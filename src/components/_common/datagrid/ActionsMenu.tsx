@@ -35,7 +35,7 @@ const ActionsMenu = ({
   datagridPage: string
   id: number | number[]
   handleReloadData: () => void
-  additionalActionItems?: React.ReactNode
+  additionalActionItems?: React.ReactNode[]
   permissions?: ActionsMenuPermissionsT
 }): React.JSX.Element => {
   const router = useRouter()
@@ -133,7 +133,8 @@ const ActionsMenu = ({
           {texts.actionsMenu.delete}
         </MenuItem>
         {additionalActionItems && <Divider />}
-        {additionalActionItems !== undefined && additionalActionItems}
+        {additionalActionItems !== undefined &&
+          additionalActionItems.map((menuItem) => menuItem)}
       </Menu>
     </div>
   )

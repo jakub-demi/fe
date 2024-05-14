@@ -31,14 +31,12 @@ const ActionsMenu = ({
   handleReloadData,
   additionalActionItems,
   permissions = ActionsMenuPermissionsDefault,
-  extAnchorState,
 }: {
   datagridPage: string
   id: number | number[]
   handleReloadData: () => void
   additionalActionItems?: React.ReactNode[]
   permissions?: ActionsMenuPermissionsT
-  extAnchorState?: HTMLElement | null
 }): React.JSX.Element => {
   const router = useRouter()
   const setNotification = notificationStore((state) => state.setNotification)

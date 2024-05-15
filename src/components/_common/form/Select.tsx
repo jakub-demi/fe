@@ -12,6 +12,7 @@ import cltm from "@/utils/cltm"
 import log from "@/utils/log"
 import { hasDistinctValues } from "@/utils"
 import texts from "@/texts"
+import { SelectValuesT } from "@/types"
 
 const SelectMui = ({
   id,
@@ -23,16 +24,18 @@ const SelectMui = ({
   specificValueDisplayFormat,
   className,
   disabled = false,
+  showNothingSelected = false,
 }: {
   id: string
   value?: string | number
   label: string
-  values: string[] | number[]
-  handleChange: (event: SelectChangeEvent) => void
+  values: SelectValuesT
+  handleChange: (event: SelectChangeEvent<string | number>) => void
   error?: string[]
   specificValueDisplayFormat?: string
   className?: string
   disabled?: boolean
+  showNothingSelected?: boolean
 }) => {
   const valueToDisplay = (value: string | number) => {
     return specificValueDisplayFormat
@@ -50,23 +53,40 @@ const SelectMui = ({
         labelId={`${id}-label`}
         id={id}
         name={id}
-        value={value ? `${value}` : `${values[0]}`}
-        defaultValue={`${value}`}
+        value={
+          value
+            ? `${value}`
+            : showNothingSelected
+              ? ""
+              : Array.isArray(values)
+                ? `${values[0]}`
+                : `${Object.keys(values)[0]}`
+        }
         label={error ?? label}
         onChange={handleChange}
       >
-        {values.map((val, idx) => (
-          <MenuItem
-            key={idx.toString() + val.toString()}
-            value={`${val}`}
-          >
-            {hasDistinctValues(values, [0, 1])
-              ? `${val}` === "1"
-                ? texts.select.trueFalse.yes
-                : texts.select.trueFalse.no
-              : valueToDisplay(val)}
-          </MenuItem>
-        ))}
+        {Array.isArray(values) &&
+          values.map((val, idx) => (
+            <MenuItem
+              key={idx.toString() + val.toString()}
+              value={`${val}`}
+            >
+              {hasDistinctValues(values, [0, 1])
+                ? `${val}` === "1"
+                  ? texts.select.trueFalse.yes
+                  : texts.select.trueFalse.no
+                : valueToDisplay(val)}
+            </MenuItem>
+          ))}
+        {!Array.isArray(values) &&
+          Object.entries(values).map(([key, val], idx) => (
+            <MenuItem
+              key={idx.toString() + key + val.toString()}
+              value={`${key}`}
+            >
+              {valueToDisplay(val)}
+            </MenuItem>
+          ))}
       </Select>
     </FormControl>
   )

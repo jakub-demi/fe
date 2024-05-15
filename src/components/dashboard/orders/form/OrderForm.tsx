@@ -11,19 +11,23 @@ import notificationStore from "@/stores/notificationStore"
 import doAxios from "@/utils/doAxios"
 import {
   FormErrorT,
-  OrderUsersToChooseFromT,
+  NumKeyStrValT,
   OrderDataCreateT,
   OrderDataUpdateT,
   OrderT,
   UserT,
+  OrderCategoryT,
 } from "@/types"
 import log from "@/utils/log"
 import {
   formatDate,
   handleChangeData,
+  handleDaytimeChange,
   handleForbiddenAccess,
   handleInputErrors,
+  handleMultiSelectChange,
   handleResData,
+  handleSelectChange,
 } from "@/utils"
 import Preloader from "@/components/_common/Preloader"
 import DateTimePicker from "@/components/_common/form/DateTimePicker"
@@ -33,6 +37,7 @@ import MultiSelect from "@/components/_common/form/MultiSelect"
 import { produce } from "immer"
 import authStore from "@/stores/authStore"
 import InputField from "@/components/_common/form/InputField"
+import Select from "@/components/_common/form/Select"
 
 const OrderForm = ({
   id,
@@ -73,9 +78,16 @@ const OrderForm = ({
   })
 
   const [orderUsersToChooseFrom, setOrderUsersToChooseFrom] =
-    useState<OrderUsersToChooseFromT>({})
+    useState<NumKeyStrValT>({})
 
   const [orderChoosenUsers, setOrderChoosenUsers] = useState<number[]>([])
+
+  const [orderCategories, setOrderCategories] = useState<OrderCategoryT[]>([])
+
+  const [orderCategoriesToChooseFrom, setOrderCategoriesToChooseFrom] =
+    useState<NumKeyStrValT>({})
+
+  const [selectedOrderCategory, setSelectedOrderCategory] = useState<number>()
 
   const inputErrorsDefaultState = {
     due_date: undefined as FormErrorT,
@@ -86,28 +98,6 @@ const OrderForm = ({
     customer_address: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
-
-  const handleChange = (
-    e: Dayjs | null,
-    setter: React.Dispatch<React.SetStateAction<Dayjs>>
-  ) => {
-    if (!e) return
-
-    setter(e)
-  }
-
-  const handleOrderUsersChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event
-    setOrderChoosenUsers(
-      produce((draft) => {
-        return typeof value === "string"
-          ? value.split(",").map(Number)
-          : value.map(Number)
-      })
-    )
-  }
 
   const getCreateData = (): OrderDataCreateT => {
     return {
@@ -153,6 +143,10 @@ const OrderForm = ({
       handleResData(res, setAllUsers)
     )
 
+    doAxios("/order-categories", "get", true).then((res) =>
+      handleResData(res, setOrderCategories)
+    )
+
     if (!id) {
       setLoading(false)
       return
@@ -187,7 +181,7 @@ const OrderForm = ({
   }, [resData])
 
   useEffect(() => {
-    let users: OrderUsersToChooseFromT = {}
+    let users: NumKeyStrValT = {}
     const choosenUsers: number[] = []
 
     if (id && resData) {
@@ -203,7 +197,7 @@ const OrderForm = ({
     } else {
       users = allUsers
         .filter((user) => choosenUsers.includes(user.id))
-        .reduce((user: OrderUsersToChooseFromT, { id, fullName }) => {
+        .reduce((user: NumKeyStrValT, { id, fullName }) => {
           user[id] = fullName
           return user
         }, {})
@@ -216,6 +210,17 @@ const OrderForm = ({
     setOrderUsersToChooseFrom(users)
     setOrderChoosenUsers(choosenUsers)
   }, [allUsers])
+
+  useEffect(() => {
+    const categories = orderCategories.reduce(
+      (category: NumKeyStrValT, { id, name }) => {
+        category[id] = name
+        return category
+      },
+      {}
+    )
+    setOrderCategoriesToChooseFrom(categories)
+  }, [orderCategories])
 
   if (loading) {
     return <Preloader />
@@ -230,7 +235,7 @@ const OrderForm = ({
               defaultValue={selectedDueDate}
               minDateTime={selectedDueDate}
               error={inputErrors.due_date}
-              handleChange={(e) => handleChange(e, setSelectedDueDate)}
+              handleChange={(e) => handleDaytimeChange(e, setSelectedDueDate)}
             />
 
             {isUpdateForm && (
@@ -241,7 +246,9 @@ const OrderForm = ({
                   defaultValue={selectedPaymentDate}
                   minDateTime={selectedPaymentDate}
                   error={inputErrors.payment_date}
-                  handleChange={(e) => handleChange(e, setSelectedPaymentDate)}
+                  handleChange={(e) =>
+                    handleDaytimeChange(e, setSelectedPaymentDate)
+                  }
                 />
 
                 <DateTimePicker
@@ -251,7 +258,7 @@ const OrderForm = ({
                   minDateTime={selectedCreatedAtDate}
                   error={inputErrors.created_at}
                   handleChange={(e) =>
-                    handleChange(e, setSelectedCreatedAtDate)
+                    handleDaytimeChange(e, setSelectedCreatedAtDate)
                   }
                 />
               </>
@@ -263,7 +270,9 @@ const OrderForm = ({
               label={texts.orders.form.common.orderUsers.label}
               selectedValues={orderChoosenUsers}
               valuesToChooseFrom={orderUsersToChooseFrom}
-              handleChange={handleOrderUsersChange}
+              handleChange={(e) =>
+                handleMultiSelectChange(e, setOrderChoosenUsers, true)
+              }
             />
 
             <InputField
@@ -282,6 +291,16 @@ const OrderForm = ({
               defaultValue={customer.customer_address}
               handleChange={(e) => handleChangeData(e, setCustomer)}
               error={inputErrors.customer_address}
+            />
+
+            <Select
+              id="category"
+              label="Category"
+              values={orderCategoriesToChooseFrom}
+              handleChange={(e) =>
+                handleSelectChange(e, setSelectedOrderCategory, true)
+              }
+              showNothingSelected={true}
             />
 
             <Button

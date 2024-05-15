@@ -1,3 +1,5 @@
+import React from "react"
+
 export type CredentialsT = {
   email: string
   password: string
@@ -34,6 +36,7 @@ export type OrderT = {
   customer_name: string
   customer_address: string
   order_users: UserT[]
+  category: OrderCategoryT
 }
 
 export type OrderDataGridT = {
@@ -62,7 +65,7 @@ export type OrderDataUpdateT = {
   customer_address: string
 }
 
-export type OrderUsersToChooseFromT = {
+export type NumKeyStrValT = {
   [key: number]: string
 }
 
@@ -114,3 +117,10 @@ export type OrderCategoryT = {
 export type OrderCategoryDataCreateUpdateT = {
   name: string
 }
+
+export type SelectValuesT =
+  | string[]
+  | number[]
+  | { [key: string | number]: string | number }
+
+export type MultiSelectValuesT = { [key: string | number]: string }

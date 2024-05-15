@@ -10,6 +10,7 @@ import { httpStatusE } from "@/types/enums"
 import { setNotificationT, UserT } from "@/types"
 import texts from "@/texts"
 import doAxios from "@/utils/doAxios"
+import { SelectChangeEvent } from "@mui/material"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -213,4 +214,51 @@ export const slugify = (str: string): string => {
     .replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
     .replace(/\s+/g, "-") // replace spaces with hyphens
     .replace(/-+/g, "-") // remove consecutive hyphens
+}
+
+export const handleDaytimeChange = (
+  daytime: Dayjs | null,
+  setter:
+    | React.Dispatch<React.SetStateAction<Dayjs>>
+    | React.Dispatch<React.SetStateAction<Dayjs | undefined>>
+) => {
+  if (!daytime) return
+
+  setter(daytime)
+}
+
+export const handleSelectChange = <T>(
+  event: SelectChangeEvent<string | number>,
+  setter: React.Dispatch<React.SetStateAction<T>>,
+  setAsNumber: boolean = false
+) => {
+  const {
+    target: { value },
+  } = event
+  setter(
+    produce((draft: any) => {
+      return (setAsNumber ? [value].map(Number) : [value].map(String))[0]
+    })
+  )
+}
+
+export const handleMultiSelectChange = <T>(
+  event: SelectChangeEvent<string[]>,
+  setter: React.Dispatch<React.SetStateAction<T>>,
+  setAsNumber: boolean = false
+) => {
+  const {
+    target: { value },
+  } = event
+  setter(
+    produce((draft: any) => {
+      return setAsNumber
+        ? typeof value === "string"
+          ? value.split(",").map(Number)
+          : value.map(Number)
+        : typeof value === "string"
+          ? value.split(",").map(String)
+          : value
+    })
+  )
 }

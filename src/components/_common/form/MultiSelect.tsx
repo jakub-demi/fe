@@ -10,6 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material"
 import cltm from "@/utils/cltm"
+import { MultiSelectValuesT } from "@/types"
 
 const MultiSelect = ({
   id,
@@ -25,7 +26,7 @@ const MultiSelect = ({
   id: string
   selectedValues: string[] | number[]
   label: string
-  valuesToChooseFrom: { [key: string | number]: string }
+  valuesToChooseFrom: MultiSelectValuesT
   handleChange: (event: SelectChangeEvent<string[]>) => void
   error?: string[]
   specificValueDisplayFormat?: string

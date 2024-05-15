@@ -1,6 +1,7 @@
 import React from "react"
+import OrderCategoryForm from "@/components/dashboard/order-categories/form/OrderCategoryForm"
 
 const OrderCategoriesCreatePage = () => {
-  return <div>OrderCategoriesCreatePage</div>
+  return <OrderCategoryForm />
 }
 export default OrderCategoriesCreatePage

@@ -4,6 +4,7 @@ import DataGridToolbar from "@/components/_common/datagrid/DataGridToolbar"
 import nav, { RouterParam } from "@/router"
 import { useRouter } from "next/navigation"
 import log from "@/utils/log"
+import notificationStore from "@/stores/notificationStore"
 
 const DataGridFrame = ({
   rowEditMode = false,
@@ -14,6 +15,7 @@ const DataGridFrame = ({
   backBtn = false,
   processRowUpdateHandler,
   processRowUpdateErrorHandler,
+  createRouteAccess = true,
 }: {
   rowEditMode?: boolean
   rows: Array<any>
@@ -23,12 +25,22 @@ const DataGridFrame = ({
   backBtn?: boolean
   processRowUpdateHandler?: (newRow: any, oldRow: any) => void
   processRowUpdateErrorHandler?: (error: any) => void
+  createRouteAccess?: boolean
 }): React.JSX.Element => {
   const router = useRouter()
+  const showForbiddenAccessNotification = notificationStore(
+    (state) => state.showForbiddenAccessNotification
+  )
+
+  const createRouteClick = () => {
+    createRouteAccess
+      ? nav(createRoute, router, false, createRouteParams)
+      : showForbiddenAccessNotification()
+  }
 
   const Toolbar = () => (
     <DataGridToolbar
-      handleClick={() => nav(createRoute, router, false, createRouteParams)}
+      handleClick={createRouteClick}
       backBtn={backBtn}
     />
   )

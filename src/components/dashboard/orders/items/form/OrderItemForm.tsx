@@ -66,9 +66,12 @@ const OrderItemForm = ({
   }
 
   const handleVatChange = (event: SelectChangeEvent) => {
+    const {
+      target: { value },
+    } = event
     setResData(
       produce((draft) => {
-        draft && (draft.vat = Number.parseFloat(event.target.value))
+        draft.vat = Number.parseFloat(value)
       })
     )
   }

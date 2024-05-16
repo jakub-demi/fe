@@ -2,6 +2,7 @@ import { create } from "zustand"
 import { NotificationStoreI } from "@/types/interfaces"
 import { produce } from "immer"
 import { notificationStoreSeverityT } from "@/types"
+import texts from "@/texts"
 
 const notificationStore = create<NotificationStoreI>()((set) => ({
   notification: {
@@ -17,6 +18,14 @@ const notificationStore = create<NotificationStoreI>()((set) => ({
       produce((state) => {
         state.notification.text = notification
         state.notification.severity = severity
+      })
+    ),
+
+  showForbiddenAccessNotification: (): void =>
+    set(
+      produce((state) => {
+        state.notification.text = texts.notification.errors.access_denied
+        state.notification.severity = "error"
       })
     ),
 

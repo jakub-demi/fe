@@ -24,6 +24,7 @@ export interface NotificationStoreI {
     severity: notificationStoreSeverityT | undefined
   }
   setNotification: setNotificationT
+  showForbiddenAccessNotification: () => void
   clearNotification: () => void
 }
 

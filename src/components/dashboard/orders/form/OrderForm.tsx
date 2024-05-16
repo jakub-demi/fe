@@ -105,6 +105,7 @@ const OrderForm = ({
       order_users: orderChoosenUsers,
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
+      category_id: selectedOrderCategory,
     }
   }
 
@@ -116,6 +117,7 @@ const OrderForm = ({
       order_users: orderChoosenUsers,
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
+      category_id: selectedOrderCategory,
     }
   }
 
@@ -176,6 +178,8 @@ const OrderForm = ({
         draft.customer_address = resData.customer_address
       })
     )
+
+    resData.category && setSelectedOrderCategory(resData.category.id)
 
     setLoading(false)
   }, [resData])
@@ -294,8 +298,9 @@ const OrderForm = ({
             />
 
             <Select
-              id="category"
-              label="Category"
+              id="category_id"
+              label={texts.orders.form.common.category.label}
+              value={selectedOrderCategory}
               values={orderCategoriesToChooseFrom}
               handleChange={(e) =>
                 handleSelectChange(e, setSelectedOrderCategory, true)

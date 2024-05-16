@@ -8,6 +8,7 @@ import notificationStore from "@/stores/notificationStore"
 import doAxios from "@/utils/doAxios"
 import log from "@/utils/log"
 import {
+  forbiddenAccessRedirect,
   handleChangeData,
   handleInputDefaultErrors,
   handleInputErrors,
@@ -18,6 +19,7 @@ import nav from "@/router"
 import { useRouter } from "next/navigation"
 import InputField from "@/components/_common/form/InputField"
 import { FormErrorT, OrderCategoryDataCreateUpdateT } from "@/types"
+import authStore from "@/stores/authStore"
 
 const OrderCategoryForm = ({
   id,
@@ -27,6 +29,8 @@ const OrderCategoryForm = ({
   readonly?: boolean
 }) => {
   const isUpdateForm: boolean = id !== undefined
+
+  const userIsAdmin = Boolean(authStore((state) => state.user?.is_admin))
 
   const router = useRouter()
 
@@ -70,6 +74,10 @@ const OrderCategoryForm = ({
   }
 
   useEffect(() => {
+    if (!readonly && !userIsAdmin) {
+      forbiddenAccessRedirect(setNotification, router, "order-categories")
+    }
+
     if (!id) {
       setLoading(false)
       return

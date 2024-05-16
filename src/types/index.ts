@@ -36,7 +36,7 @@ export type OrderT = {
   customer_name: string
   customer_address: string
   order_users: UserT[]
-  category: OrderCategoryT
+  category?: OrderCategoryT
 }
 
 export type OrderDataGridT = {
@@ -54,6 +54,7 @@ export type OrderDataCreateT = {
   order_users: number[]
   customer_name: string
   customer_address: string
+  category_id?: number
 }
 
 export type OrderDataUpdateT = {
@@ -63,6 +64,7 @@ export type OrderDataUpdateT = {
   order_users: number[]
   customer_name: string
   customer_address: string
+  category_id?: number
 }
 
 export type NumKeyStrValT = {

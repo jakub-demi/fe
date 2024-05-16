@@ -103,6 +103,9 @@ const texts = {
         customerAddress: {
           label: "Customer Address",
         },
+        category: {
+          label: "Category",
+        },
       },
       create: {
         button: "Create",

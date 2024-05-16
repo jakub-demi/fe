@@ -33,6 +33,7 @@ import ConfirmDialog from "@/components/_common/ConfirmDialog"
 import { useShallow } from "zustand/react/shallow"
 import notificationStore from "@/stores/notificationStore"
 import texts from "@/texts"
+import { forbiddenAccessRedirect } from "@/utils"
 
 const DashboardLayout = ({
   children,
@@ -57,8 +58,7 @@ const DashboardLayout = ({
 
   useEffect(() => {
     if (!userIsAdmin && pathname.includes("/admin/")) {
-      nav("dashboard", router, true)
-      setNotification(texts.notification.errors.access_denied, "error")
+      forbiddenAccessRedirect(setNotification, router, "dashboard")
     }
 
     setPageTitle(getRouteTitle(pathname) ?? dashboard)

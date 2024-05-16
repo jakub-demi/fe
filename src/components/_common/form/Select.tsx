@@ -30,7 +30,7 @@ const SelectMui = ({
   value?: string | number
   label: string
   values: SelectValuesT
-  handleChange: (event: SelectChangeEvent<string | number>) => void
+  handleChange: (event: SelectChangeEvent) => void
   error?: string[]
   specificValueDisplayFormat?: string
   className?: string

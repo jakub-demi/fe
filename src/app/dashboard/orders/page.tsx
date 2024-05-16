@@ -69,10 +69,6 @@ const OrdersPage = () => {
       })
     })
 
-    if (rows[0]) {
-      setColsCount(Object.keys(rows[0]).length)
-    }
-
     setGridRows(
       produce((draft) => {
         return rows
@@ -191,6 +187,10 @@ const OrdersPage = () => {
       },
     },
   ]
+
+  useEffect(() => {
+    setColsCount(columns.length)
+  }, [columns.length])
 
   return (
     <div

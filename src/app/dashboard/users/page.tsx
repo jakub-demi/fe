@@ -34,10 +34,6 @@ const UsersPage = () => {
   }, [])
 
   useEffect(() => {
-    if (tableData[0]) {
-      setColsCount(Object.keys(tableData[0]).length)
-    }
-
     setIsLoading(false)
   }, [tableData])
 
@@ -106,6 +102,10 @@ const UsersPage = () => {
       },
     },
   ]
+
+  useEffect(() => {
+    setColsCount(columns.length)
+  }, [columns.length])
 
   return (
     <div

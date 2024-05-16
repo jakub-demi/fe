@@ -142,6 +142,16 @@ export const buildFilesFormData = (
   return formData
 }
 
+export const forbiddenAccessRedirect = (
+  notifSetter: setNotificationT,
+  router: AppRouterInstance,
+  route: string,
+  routerParams?: RouterParam
+) => {
+  nav(route, router, true, routerParams)
+  notifSetter(texts.notification.errors.access_denied, "error")
+}
+
 export const handleForbiddenAccess = (
   errorOrResponse: AxiosError | AxiosResponse,
   notifSetter: setNotificationT,
@@ -162,8 +172,7 @@ export const handleForbiddenAccess = (
 
     if (hasAccess) return
 
-    nav(route, router, true, routerParams)
-    notifSetter(texts.notification.errors.access_denied, "error")
+    forbiddenAccessRedirect(notifSetter, router, route, routerParams)
   }
 }
 
@@ -228,7 +237,7 @@ export const handleDaytimeChange = (
 }
 
 export const handleSelectChange = <T>(
-  event: SelectChangeEvent<string | number>,
+  event: SelectChangeEvent,
   setter: React.Dispatch<React.SetStateAction<T>>,
   setAsNumber: boolean = false
 ) => {
@@ -237,7 +246,7 @@ export const handleSelectChange = <T>(
   } = event
   setter(
     produce((draft: any) => {
-      return (setAsNumber ? [value].map(Number) : [value].map(String))[0]
+      return setAsNumber ? Number.parseFloat(value) : value
     })
   )
 }
@@ -257,7 +266,7 @@ export const handleMultiSelectChange = <T>(
           ? value.split(",").map(Number)
           : value.map(Number)
         : typeof value === "string"
-          ? value.split(",").map(String)
+          ? value.split(",")
           : value
     })
   )

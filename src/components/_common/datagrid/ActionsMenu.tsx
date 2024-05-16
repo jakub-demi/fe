@@ -40,6 +40,9 @@ const ActionsMenu = ({
 }): React.JSX.Element => {
   const router = useRouter()
   const setNotification = notificationStore((state) => state.setNotification)
+  const showForbiddenAccessNotification = notificationStore(
+    (state) => state.showForbiddenAccessNotification
+  )
 
   const setConfirmDialog = confirmDialogStore((state) => state.setConfirmDialog)
 
@@ -52,23 +55,19 @@ const ActionsMenu = ({
     setAnchorEl(null)
   }
 
-  const showAccessDeniedNotification = () => {
-    setNotification(texts.notification.errors.access_denied, "error")
-  }
-
   const handleAction = (type: "view" | "edit" | "delete") => {
     handleClose()
 
     if (type === "view" && permissions.view) {
       nav(`${datagridPage}.view`, router, false, id)
     } else if (type === "view" && !permissions.view) {
-      showAccessDeniedNotification()
+      showForbiddenAccessNotification()
     }
 
     if (type === "edit" && permissions.edit) {
       nav(`${datagridPage}.edit`, router, false, id)
     } else if (type === "edit" && !permissions.edit) {
-      showAccessDeniedNotification()
+      showForbiddenAccessNotification()
     }
 
     if (type === "delete" && permissions.delete) {
@@ -80,7 +79,7 @@ const ActionsMenu = ({
         () => handleDelete()
       )
     } else if (type === "delete" && !permissions.delete) {
-      showAccessDeniedNotification()
+      showForbiddenAccessNotification()
     }
   }
 

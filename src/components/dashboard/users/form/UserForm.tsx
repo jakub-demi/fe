@@ -68,7 +68,7 @@ const UserForm = ({
   const handleIsAdminChange = (event: SelectChangeEvent) => {
     setResData(
       produce((draft) => {
-        draft && (draft.is_admin = event.target.value === "1" ? 1 : 0)
+        draft.is_admin = event.target.value === "1" ? 1 : 0
       })
     )
   }
@@ -184,7 +184,7 @@ const UserForm = ({
 
           <Button
             handleClick={() => nav("users", router)}
-            text={texts.orders.form.view.button}
+            text={texts.users.form.view.button}
           />
           {!readonly && (
             <Button

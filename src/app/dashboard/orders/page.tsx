@@ -69,10 +69,6 @@ const OrdersPage = () => {
       })
     })
 
-    if (rows[0]) {
-      setColsCount(Object.keys(rows[0]).length)
-    }
-
     setGridRows(
       produce((draft) => {
         return rows
@@ -168,12 +164,14 @@ const OrdersPage = () => {
             id={orderId}
             handleReloadData={() => loadData()}
             additionalActionItems={[
-              <MenuItem
-                key={0}
-                onClick={() => nav("order-items", router, false, orderId)}
-              >
-                {texts.orders.actionsMenu.menuItems.orderItems}
-              </MenuItem>,
+              hasAccess ? (
+                <MenuItem
+                  key={0}
+                  onClick={() => nav("order-items", router, false, orderId)}
+                >
+                  {texts.orders.actionsMenu.menuItems.orderItems}
+                </MenuItem>
+              ) : undefined,
               <MenuItem
                 key={1}
                 onClick={() => downloadAsPdf(rowParams.order_number, orderId)}
@@ -191,6 +189,10 @@ const OrdersPage = () => {
       },
     },
   ]
+
+  useEffect(() => {
+    setColsCount(columns.length)
+  }, [columns.length])
 
   return (
     <div

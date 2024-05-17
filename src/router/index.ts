@@ -76,6 +76,24 @@ const routes = (): RouteMappings => ({
     title: "Order Item - View",
   },
 
+  // Dashboard Order Categories pages
+  "order-categories": {
+    url: "/dashboard/order-categories",
+    title: "Order Categories",
+  },
+  "order-categories.create": {
+    url: "/dashboard/order-categories/create",
+    title: "Order Category - Create",
+  },
+  "order-categories.edit": {
+    url: "/dashboard/order-categories/edit/{param}",
+    title: "Order Category - Edit",
+  },
+  "order-categories.view": {
+    url: "/dashboard/order-categories/view/{param}",
+    title: "Order Category - View",
+  },
+
   // Dashboard Users pages
   "users.create": {
     url: "/dashboard/users/create",

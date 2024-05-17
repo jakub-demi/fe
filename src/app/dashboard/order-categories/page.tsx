@@ -4,23 +4,26 @@ import React, { useEffect, useRef, useState } from "react"
 import { GridColDef } from "@mui/x-data-grid"
 import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
-import { UserT } from "@/types"
+import { OrderCategoryT } from "@/types"
 import { handleResData } from "@/utils"
 import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
+import authStore from "@/stores/authStore"
 
-const UsersPage = () => {
+const OrderCategoriesPage = () => {
+  const userIsAdmin = Boolean(authStore((state) => state.user?.is_admin))
+
   const dataGridRef = useRef<HTMLDivElement | null>(null)
   const [tableWidth, setTableWidth] = useState<number>()
 
-  const [tableData, setTableData] = useState<UserT[]>([])
+  const [tableData, setTableData] = useState<OrderCategoryT[]>([])
   const [colsCount, setColsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState(true)
 
   const loadData = () => {
-    doAxios("/users", "get", true).then((res) => {
+    doAxios("/order-categories", "get", true).then((res) => {
       handleResData(res, setTableData)
     })
   }
@@ -45,8 +48,8 @@ const UsersPage = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "firstname",
-      headerName: texts.users.dataGrid.headers.firstname,
+      field: "name",
+      headerName: texts.orderCategories.dataGrid.headers.name,
       type: "string",
       width: getColumnWidth(),
       minWidth: 100,
@@ -55,29 +58,9 @@ const UsersPage = () => {
       headerAlign: "left",
     },
     {
-      field: "lastname",
-      headerName: texts.users.dataGrid.headers.lastname,
+      field: "slug",
+      headerName: texts.orderCategories.dataGrid.headers.slug,
       type: "string",
-      width: getColumnWidth(),
-      minWidth: 100,
-      editable: false,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "email",
-      headerName: texts.users.dataGrid.headers.email,
-      type: "string",
-      editable: false,
-      width: getColumnWidth(),
-      minWidth: 100,
-      align: "left",
-      headerAlign: "left",
-    },
-    {
-      field: "is_admin",
-      headerName: texts.users.dataGrid.headers.is_admin,
-      type: "boolean",
       width: getColumnWidth(),
       minWidth: 100,
       editable: false,
@@ -91,12 +74,17 @@ const UsersPage = () => {
       minWidth: 100,
       type: "actions",
       renderCell: (params) => {
-        const userId = (params.row as { id: number }).id
+        const orderCategoryId = (params.row as OrderCategoryT).id
         return (
           <ActionsMenu
-            datagridPage="users"
-            id={userId}
+            datagridPage="order-categories"
+            id={orderCategoryId}
             handleReloadData={() => loadData()}
+            permissions={{
+              view: true,
+              edit: userIsAdmin,
+              delete: userIsAdmin,
+            }}
           />
         )
       },
@@ -120,10 +108,11 @@ const UsersPage = () => {
         <DataGrid
           rows={tableData}
           columns={columns}
-          createRoute="users.create"
+          createRoute="order-categories.create"
+          createRouteAccess={userIsAdmin}
         />
       )}
     </div>
   )
 }
-export default UsersPage
+export default OrderCategoriesPage

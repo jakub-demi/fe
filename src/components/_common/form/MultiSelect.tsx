@@ -10,6 +10,7 @@ import {
   SelectChangeEvent,
 } from "@mui/material"
 import cltm from "@/utils/cltm"
+import { MultiSelectValuesT } from "@/types"
 
 const MultiSelect = ({
   id,
@@ -25,7 +26,7 @@ const MultiSelect = ({
   id: string
   selectedValues: string[] | number[]
   label: string
-  valuesToChooseFrom: { [key: string | number]: string }
+  valuesToChooseFrom: MultiSelectValuesT
   handleChange: (event: SelectChangeEvent<string[]>) => void
   error?: string[]
   specificValueDisplayFormat?: string
@@ -49,7 +50,12 @@ const MultiSelect = ({
       className={cltm("w-full mb-2", className && `w-full mb-2 ${className}`)}
       disabled={disabled}
     >
-      <InputLabel id={`${id}-label`}>{error ?? label}</InputLabel>
+      <InputLabel
+        id={`${id}-label`}
+        error={error && error.length > 0}
+      >
+        {error ?? label}
+      </InputLabel>
       <Select
         labelId={`${id}-label`}
         id={id}
@@ -62,6 +68,7 @@ const MultiSelect = ({
         renderValue={(selected) =>
           selectedVals.map((key) => valuesToChooseFrom[key]).join(", ")
         }
+        error={error && error.length > 0}
       >
         {Object.entries(valuesToChooseFrom).map(([key, val], idx) => (
           <MenuItem

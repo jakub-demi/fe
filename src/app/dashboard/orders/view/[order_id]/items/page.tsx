@@ -48,10 +48,6 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   }, [])
 
   useEffect(() => {
-    if (tableData[0]) {
-      setColsCount(Object.keys(tableData[0]).length - 1)
-    }
-
     setIsLoading(false)
   }, [tableData])
 
@@ -137,6 +133,10 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
     },
   ]
 
+  useEffect(() => {
+    setColsCount(columns.length)
+  }, [columns.length])
+
   const inRowEditUpdate = (row: OrderItemT) => {
     const orderItemId = row.id
     doAxios(`/orders/${orderId}/order-items/${orderItemId}`, "put", true, row)
@@ -178,7 +178,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
           columns={columns}
           createRoute="order-items.create"
           createRouteParams={orderId}
-          backBtn={true}
+          backBtnRoute="orders"
           processRowUpdateHandler={(newRow: OrderItemT, oldRow: OrderItemT) =>
             processRowUpdateHandler(newRow, oldRow)
           }

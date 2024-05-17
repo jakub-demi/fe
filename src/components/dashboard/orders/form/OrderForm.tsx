@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { Box, Container, SelectChangeEvent } from "@mui/material"
+import { Box, Container } from "@mui/material"
 import texts from "@/texts"
 import Button from "@/components/_common/Button"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -11,19 +11,23 @@ import notificationStore from "@/stores/notificationStore"
 import doAxios from "@/utils/doAxios"
 import {
   FormErrorT,
-  OrderUsersToChooseFromT,
+  NumKeyStrValT,
   OrderDataCreateT,
   OrderDataUpdateT,
   OrderT,
   UserT,
+  OrderCategoryT,
 } from "@/types"
 import log from "@/utils/log"
 import {
   formatDate,
   handleChangeData,
+  handleDaytimeChange,
   handleForbiddenAccess,
   handleInputErrors,
+  handleMultiSelectChange,
   handleResData,
+  handleSelectChange,
 } from "@/utils"
 import Preloader from "@/components/_common/Preloader"
 import DateTimePicker from "@/components/_common/form/DateTimePicker"
@@ -33,6 +37,7 @@ import MultiSelect from "@/components/_common/form/MultiSelect"
 import { produce } from "immer"
 import authStore from "@/stores/authStore"
 import InputField from "@/components/_common/form/InputField"
+import Select from "@/components/_common/form/Select"
 
 const OrderForm = ({
   id,
@@ -73,9 +78,16 @@ const OrderForm = ({
   })
 
   const [orderUsersToChooseFrom, setOrderUsersToChooseFrom] =
-    useState<OrderUsersToChooseFromT>({})
+    useState<NumKeyStrValT>({})
 
   const [orderChoosenUsers, setOrderChoosenUsers] = useState<number[]>([])
+
+  const [orderCategories, setOrderCategories] = useState<OrderCategoryT[]>([])
+
+  const [orderCategoriesToChooseFrom, setOrderCategoriesToChooseFrom] =
+    useState<NumKeyStrValT>({})
+
+  const [selectedOrderCategory, setSelectedOrderCategory] = useState<number>()
 
   const inputErrorsDefaultState = {
     due_date: undefined as FormErrorT,
@@ -84,30 +96,9 @@ const OrderForm = ({
     order_users: undefined as FormErrorT,
     customer_name: undefined as FormErrorT,
     customer_address: undefined as FormErrorT,
+    category_id: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
-
-  const handleChange = (
-    e: Dayjs | null,
-    setter: React.Dispatch<React.SetStateAction<Dayjs>>
-  ) => {
-    if (!e) return
-
-    setter(e)
-  }
-
-  const handleOrderUsersChange = (event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event
-    setOrderChoosenUsers(
-      produce((draft) => {
-        return typeof value === "string"
-          ? value.split(",").map(Number)
-          : value.map(Number)
-      })
-    )
-  }
 
   const getCreateData = (): OrderDataCreateT => {
     return {
@@ -115,6 +106,7 @@ const OrderForm = ({
       order_users: orderChoosenUsers,
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
+      category_id: selectedOrderCategory,
     }
   }
 
@@ -126,6 +118,7 @@ const OrderForm = ({
       order_users: orderChoosenUsers,
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
+      category_id: selectedOrderCategory,
     }
   }
 
@@ -151,6 +144,10 @@ const OrderForm = ({
   useEffect(() => {
     doAxios("/users", "get", true).then((res) =>
       handleResData(res, setAllUsers)
+    )
+
+    doAxios("/order-categories", "get", true).then((res) =>
+      handleResData(res, setOrderCategories)
     )
 
     if (!id) {
@@ -183,11 +180,13 @@ const OrderForm = ({
       })
     )
 
+    resData.category && setSelectedOrderCategory(resData.category.id)
+
     setLoading(false)
   }, [resData])
 
   useEffect(() => {
-    let users: OrderUsersToChooseFromT = {}
+    let users: NumKeyStrValT = {}
     const choosenUsers: number[] = []
 
     if (id && resData) {
@@ -203,7 +202,7 @@ const OrderForm = ({
     } else {
       users = allUsers
         .filter((user) => choosenUsers.includes(user.id))
-        .reduce((user: OrderUsersToChooseFromT, { id, fullName }) => {
+        .reduce((user: NumKeyStrValT, { id, fullName }) => {
           user[id] = fullName
           return user
         }, {})
@@ -216,6 +215,17 @@ const OrderForm = ({
     setOrderUsersToChooseFrom(users)
     setOrderChoosenUsers(choosenUsers)
   }, [allUsers])
+
+  useEffect(() => {
+    const categories = orderCategories.reduce(
+      (category: NumKeyStrValT, { id, name }) => {
+        category[id] = name
+        return category
+      },
+      {}
+    )
+    setOrderCategoriesToChooseFrom(categories)
+  }, [orderCategories])
 
   if (loading) {
     return <Preloader />
@@ -230,7 +240,7 @@ const OrderForm = ({
               defaultValue={selectedDueDate}
               minDateTime={selectedDueDate}
               error={inputErrors.due_date}
-              handleChange={(e) => handleChange(e, setSelectedDueDate)}
+              handleChange={(e) => handleDaytimeChange(e, setSelectedDueDate)}
             />
 
             {isUpdateForm && (
@@ -241,7 +251,9 @@ const OrderForm = ({
                   defaultValue={selectedPaymentDate}
                   minDateTime={selectedPaymentDate}
                   error={inputErrors.payment_date}
-                  handleChange={(e) => handleChange(e, setSelectedPaymentDate)}
+                  handleChange={(e) =>
+                    handleDaytimeChange(e, setSelectedPaymentDate)
+                  }
                 />
 
                 <DateTimePicker
@@ -251,7 +263,7 @@ const OrderForm = ({
                   minDateTime={selectedCreatedAtDate}
                   error={inputErrors.created_at}
                   handleChange={(e) =>
-                    handleChange(e, setSelectedCreatedAtDate)
+                    handleDaytimeChange(e, setSelectedCreatedAtDate)
                   }
                 />
               </>
@@ -263,7 +275,9 @@ const OrderForm = ({
               label={texts.orders.form.common.orderUsers.label}
               selectedValues={orderChoosenUsers}
               valuesToChooseFrom={orderUsersToChooseFrom}
-              handleChange={handleOrderUsersChange}
+              handleChange={(e) =>
+                handleMultiSelectChange(e, setOrderChoosenUsers, true)
+              }
             />
 
             <InputField
@@ -282,6 +296,19 @@ const OrderForm = ({
               defaultValue={customer.customer_address}
               handleChange={(e) => handleChangeData(e, setCustomer)}
               error={inputErrors.customer_address}
+            />
+
+            <Select
+              disabled={readonly}
+              id="category_id"
+              label={texts.orders.form.common.category.label}
+              value={selectedOrderCategory}
+              values={orderCategoriesToChooseFrom}
+              handleChange={(e) =>
+                handleSelectChange(e, setSelectedOrderCategory, true)
+              }
+              showNothingSelected={true}
+              error={inputErrors.category_id}
             />
 
             <Button

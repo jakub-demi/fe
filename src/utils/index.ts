@@ -10,6 +10,7 @@ import { httpStatusE } from "@/types/enums"
 import { setNotificationT, UserT } from "@/types"
 import texts from "@/texts"
 import doAxios from "@/utils/doAxios"
+import { SelectChangeEvent } from "@mui/material"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -141,6 +142,16 @@ export const buildFilesFormData = (
   return formData
 }
 
+export const forbiddenAccessRedirect = (
+  notifSetter: setNotificationT,
+  router: AppRouterInstance,
+  route: string,
+  routerParams?: RouterParam
+) => {
+  nav(route, router, true, routerParams)
+  notifSetter(texts.notification.errors.access_denied, "error")
+}
+
 export const handleForbiddenAccess = (
   errorOrResponse: AxiosError | AxiosResponse,
   notifSetter: setNotificationT,
@@ -161,8 +172,7 @@ export const handleForbiddenAccess = (
 
     if (hasAccess) return
 
-    nav(route, router, true, routerParams)
-    notifSetter(texts.notification.errors.access_denied, "error")
+    forbiddenAccessRedirect(notifSetter, router, route, routerParams)
   }
 }
 
@@ -202,4 +212,62 @@ export const handlePdfDownload = (
       errMessage = err.response.data.message
     })
   return errMessage
+}
+
+export const slugify = (str: string): string => {
+  return str
+    .toLowerCase()
+    .normalize("NFKD") // split accented characters into their base characters and diacritical marks
+    .replace(/[\u0300-\u036f]/g, "") // remove all the accents, which are by default in the \u03xx UNICODE block
+    .trim()
+    .replace(/[^a-z0-9 -]/g, "") // remove non-alphanumeric characters
+    .replace(/\s+/g, "-") // replace spaces with hyphens
+    .replace(/-+/g, "-") // remove consecutive hyphens
+}
+
+export const handleDaytimeChange = (
+  daytime: Dayjs | null,
+  setter:
+    | React.Dispatch<React.SetStateAction<Dayjs>>
+    | React.Dispatch<React.SetStateAction<Dayjs | undefined>>
+) => {
+  if (!daytime) return
+
+  setter(daytime)
+}
+
+export const handleSelectChange = <T>(
+  event: SelectChangeEvent,
+  setter: React.Dispatch<React.SetStateAction<T>>,
+  setAsNumber: boolean = false
+) => {
+  const {
+    target: { value },
+  } = event
+  setter(
+    produce((draft: any) => {
+      return setAsNumber ? Number.parseFloat(value) : value
+    })
+  )
+}
+
+export const handleMultiSelectChange = <T>(
+  event: SelectChangeEvent<string[]>,
+  setter: React.Dispatch<React.SetStateAction<T>>,
+  setAsNumber: boolean = false
+) => {
+  const {
+    target: { value },
+  } = event
+  setter(
+    produce((draft: any) => {
+      return setAsNumber
+        ? typeof value === "string"
+          ? value.split(",").map(Number)
+          : value.map(Number)
+        : typeof value === "string"
+          ? value.split(",")
+          : value
+    })
+  )
 }

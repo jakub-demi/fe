@@ -22,7 +22,6 @@ import { FormErrorT, OrderItemDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
 import { getAndSetVatRates } from "@/utils/axiosCalls"
-import { httpStatusE } from "@/types/enums"
 
 const OrderItemForm = ({
   id,
@@ -66,9 +65,12 @@ const OrderItemForm = ({
   }
 
   const handleVatChange = (event: SelectChangeEvent) => {
+    const {
+      target: { value },
+    } = event
     setResData(
       produce((draft) => {
-        draft && (draft.vat = Number.parseFloat(event.target.value))
+        draft.vat = Number.parseFloat(value)
       })
     )
   }
@@ -187,7 +189,7 @@ const OrderItemForm = ({
 
           <Button
             handleClick={() => nav("order-items", router, false, orderId)}
-            text={texts.orders.form.view.button}
+            text={texts.orders.orderItems.form.view.button}
           />
           {!readonly && (
             <Button

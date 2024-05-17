@@ -26,3 +26,20 @@ export const getAndSetVatRates = (
       )
     })
 }
+
+export const getAndSetOrderStatuses = (
+  setter: React.Dispatch<React.SetStateAction<string[]>>
+) => {
+  let data = [] as string[]
+  doAxios("/order-statuses", "get", true)
+    .then((res) => {
+      data = res.data.data as string[]
+    })
+    .finally(() => {
+      setter(
+        produce((draft) => {
+          return data
+        })
+      )
+    })
+}

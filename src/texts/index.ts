@@ -106,6 +106,9 @@ const texts = {
         category: {
           label: "Category",
         },
+        orderStatus: {
+          label: "Order Status",
+        },
       },
       create: {
         button: "Create",

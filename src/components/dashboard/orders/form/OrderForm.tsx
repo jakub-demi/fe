@@ -38,6 +38,7 @@ import { produce } from "immer"
 import authStore from "@/stores/authStore"
 import InputField from "@/components/_common/form/InputField"
 import Select from "@/components/_common/form/Select"
+import { getAndSetOrderStatuses } from "@/utils/axiosCalls"
 
 const OrderForm = ({
   id,
@@ -89,6 +90,9 @@ const OrderForm = ({
 
   const [selectedOrderCategory, setSelectedOrderCategory] = useState<number>()
 
+  const [orderStatuses, setOrderStatuses] = useState<string[]>([])
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState<string>()
+
   const inputErrorsDefaultState = {
     due_date: undefined as FormErrorT,
     payment_date: undefined as FormErrorT,
@@ -97,6 +101,7 @@ const OrderForm = ({
     customer_name: undefined as FormErrorT,
     customer_address: undefined as FormErrorT,
     category_id: undefined as FormErrorT,
+    order_status: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
@@ -149,6 +154,8 @@ const OrderForm = ({
     doAxios("/order-categories", "get", true).then((res) =>
       handleResData(res, setOrderCategories)
     )
+
+    getAndSetOrderStatuses(setOrderStatuses)
 
     if (!id) {
       setLoading(false)
@@ -307,8 +314,20 @@ const OrderForm = ({
               handleChange={(e) =>
                 handleSelectChange(e, setSelectedOrderCategory, true)
               }
-              showNothingSelected={true}
+              noValueShowNothingSelected={true}
               error={inputErrors.category_id}
+            />
+
+            <Select
+              disabled={readonly}
+              id="order_status"
+              label={texts.orders.form.common.orderStatus.label}
+              value={selectedOrderStatus}
+              values={orderStatuses}
+              handleChange={(e) =>
+                handleSelectChange(e, setSelectedOrderStatus)
+              }
+              error={inputErrors.order_status}
             />
 
             <Button

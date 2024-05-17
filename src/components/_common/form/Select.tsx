@@ -24,7 +24,7 @@ const SelectMui = ({
   specificValueDisplayFormat,
   className,
   disabled = false,
-  showNothingSelected = false,
+  noValueShowNothingSelected = false,
 }: {
   id: string
   value?: string | number
@@ -35,7 +35,7 @@ const SelectMui = ({
   specificValueDisplayFormat?: string
   className?: string
   disabled?: boolean
-  showNothingSelected?: boolean
+  noValueShowNothingSelected?: boolean
 }) => {
   const valueToDisplay = (value: string | number) => {
     return specificValueDisplayFormat
@@ -61,7 +61,7 @@ const SelectMui = ({
         value={
           value
             ? `${value}`
-            : showNothingSelected
+            : noValueShowNothingSelected
               ? ""
               : Array.isArray(values)
                 ? `${values[0]}`

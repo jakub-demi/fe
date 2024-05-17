@@ -5,26 +5,31 @@ import { GridToolbarContainer } from "@mui/x-data-grid"
 import texts from "@/texts"
 import MaterialIcon from "@/components/_common/MaterialIcon"
 import { useRouter } from "next/navigation"
+import nav, { RouterParam } from "@/router"
 
 const DataGridToolbar = ({
   color = "primary",
   icon = <AddIcon />,
   handleClick,
   btnText = texts.dataGrid.toolbar.button.create,
-  backBtn = false,
+  backBtnRoute,
+  backBtnRouteParams,
 }: {
   color?: "primary" | "secondary" | "success" | "error" | "info" | "warning"
   icon?: React.ReactNode
   handleClick?: () => void
   btnText?: string
-  backBtn?: boolean
+  backBtnRoute?: string
+  backBtnRouteParams?: RouterParam
 }) => {
   const router = useRouter()
-  const back = () => router.back()
+  const backClick = () => {
+    backBtnRoute && nav(backBtnRoute, router, true, backBtnRouteParams)
+  }
 
   return (
     <GridToolbarContainer>
-      {backBtn && (
+      {backBtnRoute && (
         <Button
           color={color}
           startIcon={
@@ -33,7 +38,7 @@ const DataGridToolbar = ({
               className="text-xl"
             />
           }
-          onClick={back}
+          onClick={backClick}
         >
           {texts.dataGrid.toolbar.button.back}
         </Button>

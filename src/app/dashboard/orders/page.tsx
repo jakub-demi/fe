@@ -164,12 +164,14 @@ const OrdersPage = () => {
             id={orderId}
             handleReloadData={() => loadData()}
             additionalActionItems={[
-              <MenuItem
-                key={0}
-                onClick={() => nav("order-items", router, false, orderId)}
-              >
-                {texts.orders.actionsMenu.menuItems.orderItems}
-              </MenuItem>,
+              hasAccess ? (
+                <MenuItem
+                  key={0}
+                  onClick={() => nav("order-items", router, false, orderId)}
+                >
+                  {texts.orders.actionsMenu.menuItems.orderItems}
+                </MenuItem>
+              ) : undefined,
               <MenuItem
                 key={1}
                 onClick={() => downloadAsPdf(rowParams.order_number, orderId)}

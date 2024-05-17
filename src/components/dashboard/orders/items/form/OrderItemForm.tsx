@@ -22,7 +22,6 @@ import { FormErrorT, OrderItemDataCreateUpdateT } from "@/types"
 import Select from "@/components/_common/form/Select"
 import { produce } from "immer"
 import { getAndSetVatRates } from "@/utils/axiosCalls"
-import { httpStatusE } from "@/types/enums"
 
 const OrderItemForm = ({
   id,

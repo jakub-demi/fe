@@ -178,7 +178,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
           columns={columns}
           createRoute="order-items.create"
           createRouteParams={orderId}
-          backBtn={true}
+          backBtnRoute="orders"
           processRowUpdateHandler={(newRow: OrderItemT, oldRow: OrderItemT) =>
             processRowUpdateHandler(newRow, oldRow)
           }

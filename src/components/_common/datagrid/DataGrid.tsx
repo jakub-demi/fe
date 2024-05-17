@@ -12,7 +12,7 @@ const DataGridFrame = ({
   columns,
   createRoute,
   createRouteParams,
-  backBtn = false,
+  backBtnRoute,
   processRowUpdateHandler,
   processRowUpdateErrorHandler,
   createRouteAccess = true,
@@ -22,7 +22,7 @@ const DataGridFrame = ({
   columns: GridColDef[]
   createRoute: string
   createRouteParams?: RouterParam
-  backBtn?: boolean
+  backBtnRoute?: string
   processRowUpdateHandler?: (newRow: any, oldRow: any) => void
   processRowUpdateErrorHandler?: (error: any) => void
   createRouteAccess?: boolean
@@ -41,7 +41,7 @@ const DataGridFrame = ({
   const Toolbar = () => (
     <DataGridToolbar
       handleClick={createRouteClick}
-      backBtn={backBtn}
+      backBtnRoute={backBtnRoute}
     />
   )
 

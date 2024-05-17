@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { Box, Container, SelectChangeEvent } from "@mui/material"
+import { Box, Container } from "@mui/material"
 import texts from "@/texts"
 import Button from "@/components/_common/Button"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -96,6 +96,7 @@ const OrderForm = ({
     order_users: undefined as FormErrorT,
     customer_name: undefined as FormErrorT,
     customer_address: undefined as FormErrorT,
+    category_id: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
@@ -298,6 +299,7 @@ const OrderForm = ({
             />
 
             <Select
+              disabled={readonly}
               id="category_id"
               label={texts.orders.form.common.category.label}
               value={selectedOrderCategory}
@@ -306,6 +308,7 @@ const OrderForm = ({
                 handleSelectChange(e, setSelectedOrderCategory, true)
               }
               showNothingSelected={true}
+              error={inputErrors.category_id}
             />
 
             <Button

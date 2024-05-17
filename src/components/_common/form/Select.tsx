@@ -48,7 +48,12 @@ const SelectMui = ({
       className={cltm("w-full mb-2", className && `w-full mb-2 ${className}`)}
       disabled={disabled}
     >
-      <InputLabel id={`${id}-label`}>{error ?? label}</InputLabel>
+      <InputLabel
+        id={`${id}-label`}
+        error={error && error.length > 0}
+      >
+        {error ?? label}
+      </InputLabel>
       <Select
         labelId={`${id}-label`}
         id={id}
@@ -64,6 +69,7 @@ const SelectMui = ({
         }
         label={error ?? label}
         onChange={handleChange}
+        error={error && error.length > 0}
       >
         {Array.isArray(values) &&
           values.map((val, idx) => (

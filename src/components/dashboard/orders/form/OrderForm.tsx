@@ -135,9 +135,6 @@ const OrderForm = ({
   }
 
   const createOrUpdateOrder = () => {
-    log("data for submit", getUpdateData())
-    return //todo:dev remove
-
     setIsSubmitting(true)
 
     doAxios(

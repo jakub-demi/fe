@@ -17,10 +17,13 @@ import {
   OrderT,
   UserT,
   OrderCategoryT,
+  OrderStatusT,
+  StrKeyStrValT,
 } from "@/types"
 import log from "@/utils/log"
 import {
   formatDate,
+  getKeyValObjectFromArray,
   handleChangeData,
   handleDaytimeChange,
   handleForbiddenAccess,
@@ -90,7 +93,9 @@ const OrderForm = ({
 
   const [selectedOrderCategory, setSelectedOrderCategory] = useState<number>()
 
-  const [orderStatuses, setOrderStatuses] = useState<string[]>([])
+  const [orderStatuses, setOrderStatuses] = useState<OrderStatusT[]>([])
+  const [orderStatusesToChooseFrom, setOrderStatusesToChooseFrom] =
+    useState<StrKeyStrValT>({})
   const [selectedOrderStatus, setSelectedOrderStatus] = useState<string>()
 
   const inputErrorsDefaultState = {
@@ -112,6 +117,7 @@ const OrderForm = ({
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
       category_id: selectedOrderCategory,
+      status: selectedOrderStatus,
     }
   }
 
@@ -124,10 +130,14 @@ const OrderForm = ({
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
       category_id: selectedOrderCategory,
+      status: selectedOrderStatus,
     }
   }
 
   const createOrUpdateOrder = () => {
+    log("data for submit", getUpdateData())
+    return //todo:dev remove
+
     setIsSubmitting(true)
 
     doAxios(
@@ -207,12 +217,11 @@ const OrderForm = ({
         users[user.id] = user.fullName
       })
     } else {
-      users = allUsers
-        .filter((user) => choosenUsers.includes(user.id))
-        .reduce((user: NumKeyStrValT, { id, fullName }) => {
-          user[id] = fullName
-          return user
-        }, {})
+      const filteredUsers = allUsers.filter((user) =>
+        choosenUsers.includes(user.id)
+      )
+      users = getKeyValObjectFromArray(filteredUsers, "id", "fullName")
+
       user && (users[user.id] = user.fullName)
       if (!id && user) {
         choosenUsers.push(user.id)
@@ -224,15 +233,14 @@ const OrderForm = ({
   }, [allUsers])
 
   useEffect(() => {
-    const categories = orderCategories.reduce(
-      (category: NumKeyStrValT, { id, name }) => {
-        category[id] = name
-        return category
-      },
-      {}
-    )
-    setOrderCategoriesToChooseFrom(categories)
+    setOrderCategoriesToChooseFrom(getKeyValObjectFromArray(orderCategories))
   }, [orderCategories])
+
+  useEffect(() => {
+    setOrderStatusesToChooseFrom(
+      getKeyValObjectFromArray(orderStatuses, "name", "value")
+    )
+  }, [orderStatuses])
 
   if (loading) {
     return <Preloader />
@@ -323,10 +331,11 @@ const OrderForm = ({
               id="order_status"
               label={texts.orders.form.common.orderStatus.label}
               value={selectedOrderStatus}
-              values={orderStatuses}
+              values={orderStatusesToChooseFrom}
               handleChange={(e) =>
                 handleSelectChange(e, setSelectedOrderStatus)
               }
+              noValueShowNothingSelected={true}
               error={inputErrors.order_status}
             />
 

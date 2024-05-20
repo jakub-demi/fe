@@ -60,7 +60,7 @@ const ConfirmDialog = (): React.JSX.Element => {
       <DialogTitle id="confirm-dialog-title">{confirmDialog.title}</DialogTitle>
       {confirmDialog.description && (
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="confirm-dialog-description">
             {confirmDialog.description}
           </DialogContentText>
         </DialogContent>

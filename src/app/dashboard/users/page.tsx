@@ -10,6 +10,7 @@ import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
+import DataGridRender from "@/components/_common/datagrid/DataGridRender"
 
 const UsersPage = () => {
   const dataGridRef = useRef<HTMLDivElement | null>(null)
@@ -108,22 +109,17 @@ const UsersPage = () => {
   }, [columns.length])
 
   return (
-    <div
-      ref={dataGridRef}
-      className="w-full"
-    >
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <SpinLoader />
-        </div>
-      ) : (
+    <DataGridRender
+      dataGridRef={dataGridRef}
+      isLoading={isLoading}
+      dataGridJsxElement={
         <DataGrid
           rows={tableData}
           columns={columns}
           createRoute="users.create"
         />
-      )}
-    </div>
+      }
+    />
   )
 }
 export default UsersPage

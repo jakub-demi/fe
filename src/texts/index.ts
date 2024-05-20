@@ -272,6 +272,10 @@ const texts = {
       yes: "Yes",
       no: "No",
     },
+    nothingSelected: {
+      tooltip: "Select this if you do not want to select anything.",
+      text: "Nothing Selected",
+    },
   },
   notification: {
     errors: {

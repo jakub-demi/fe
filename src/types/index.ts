@@ -37,6 +37,8 @@ export type OrderT = {
   customer_address: string
   order_users: UserT[]
   category?: OrderCategoryT
+  current_status?: OrderStatusT
+  status_histories?: OrderStatusHistoryT[]
 }
 
 export type OrderDataGridT = {
@@ -55,6 +57,7 @@ export type OrderDataCreateT = {
   customer_name: string
   customer_address: string
   category_id?: number
+  status?: string
 }
 
 export type OrderDataUpdateT = {
@@ -65,10 +68,15 @@ export type OrderDataUpdateT = {
   customer_name: string
   customer_address: string
   category_id?: number
+  status?: string
 }
 
 export type NumKeyStrValT = {
   [key: number]: string
+}
+
+export type StrKeyStrValT = {
+  [key: string]: string
 }
 
 export type OrderItemT = {
@@ -126,3 +134,17 @@ export type SelectValuesT =
   | { [key: string | number]: string | number }
 
 export type MultiSelectValuesT = { [key: string | number]: string }
+
+export type OrderStatusT = {
+  name: string
+  value: string
+  color: string
+  slug: string
+}
+
+export type OrderStatusHistoryT = {
+  id: number
+  order_id?: number
+  status: OrderStatusT
+  created_at: Date
+}

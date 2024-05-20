@@ -11,6 +11,7 @@ import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
 import authStore from "@/stores/authStore"
+import DataGridRender from "@/components/_common/datagrid/DataGridRender"
 
 const OrderCategoriesPage = () => {
   const userIsAdmin = Boolean(authStore((state) => state.user?.is_admin))
@@ -96,23 +97,18 @@ const OrderCategoriesPage = () => {
   }, [columns.length])
 
   return (
-    <div
-      ref={dataGridRef}
-      className="w-full"
-    >
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <SpinLoader />
-        </div>
-      ) : (
+    <DataGridRender
+      dataGridRef={dataGridRef}
+      isLoading={isLoading}
+      dataGridJsxElement={
         <DataGrid
           rows={tableData}
           columns={columns}
           createRoute="order-categories.create"
           createRouteAccess={userIsAdmin}
         />
-      )}
-    </div>
+      }
+    />
   )
 }
 export default OrderCategoriesPage

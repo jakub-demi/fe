@@ -2,6 +2,7 @@ import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import React from "react"
 import { produce } from "immer"
+import { OrderStatusT } from "@/types"
 
 export const getAndSetVatRates = (
   setter: React.Dispatch<React.SetStateAction<number[]>>,
@@ -28,12 +29,12 @@ export const getAndSetVatRates = (
 }
 
 export const getAndSetOrderStatuses = (
-  setter: React.Dispatch<React.SetStateAction<string[]>>
+  setter: React.Dispatch<React.SetStateAction<OrderStatusT[]>>
 ) => {
-  let data = [] as string[]
+  let data = [] as OrderStatusT[]
   doAxios("/order-statuses", "get", true)
     .then((res) => {
-      data = res.data.data as string[]
+      data = res.data.data as OrderStatusT[]
     })
     .finally(() => {
       setter(

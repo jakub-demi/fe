@@ -1,7 +1,6 @@
 import React from "react"
 import { produce } from "immer"
 import { AxiosError, AxiosResponse } from "axios"
-import log from "@/utils/log"
 import dayjs, { Dayjs } from "dayjs"
 import isEqual from "lodash.isequal"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
@@ -11,6 +10,7 @@ import { setNotificationT, UserT } from "@/types"
 import texts from "@/texts"
 import doAxios from "@/utils/doAxios"
 import { SelectChangeEvent } from "@mui/material"
+import log from "@/utils/log"
 
 export const handleChangeData = <T>(
   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -244,11 +244,13 @@ export const handleSelectChange = <T>(
   const {
     target: { value },
   } = event
-  setter(
-    produce((draft: any) => {
-      return setAsNumber ? Number.parseFloat(value) : value
-    })
-  )
+  !value
+    ? setter(undefined as T)
+    : setter(
+        produce((draft: any) => {
+          return setAsNumber ? Number.parseFloat(value) : value
+        })
+      )
 }
 
 export const handleMultiSelectChange = <T>(
@@ -270,4 +272,17 @@ export const handleMultiSelectChange = <T>(
           : value
     })
   )
+}
+
+export const getKeyValObjectFromArray = <T>(
+  data: T[],
+  keyName: string = "id",
+  valueName: string = "name"
+) => {
+  return data.reduce((item: Record<number | string, any>, obj: T) => {
+    const key = obj[keyName as keyof T] as number | string
+
+    item[key] = obj[valueName as keyof T]
+    return item
+  }, {})
 }

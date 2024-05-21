@@ -38,7 +38,6 @@ export type OrderT = {
   order_users: UserT[]
   category?: OrderCategoryT
   current_status?: OrderStatusT
-  status_histories?: OrderStatusHistoryT[]
 }
 
 export type OrderDataGridT = {
@@ -144,7 +143,16 @@ export type OrderStatusT = {
 
 export type OrderStatusHistoryT = {
   id: number
-  order_id?: number
+  order?: OrderT
+  user?: UserT
   status: OrderStatusT
   created_at: Date
 }
+
+export type OrderStatusHistoryDialogT = {
+  id: number
+  order: OrderT
+  status: OrderStatusT
+  user: UserT
+  created_at: Date
+}[]

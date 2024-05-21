@@ -18,6 +18,8 @@ import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
 import authStore from "@/stores/authStore"
 import notificationStore from "@/stores/notificationStore"
 import DataGridRender from "@/components/_common/datagrid/DataGridRender"
+import { Box } from "@mui/material"
+import OrderStatusHistoryDialog from "@/components/dashboard/orders/datagrid/OrderStatusHistoryDialog"
 
 const OrdersPage = () => {
   const setNotification = notificationStore((state) => state.setNotification)
@@ -158,6 +160,7 @@ const OrdersPage = () => {
       renderCell: (params) => {
         const rowParams = params.row as OrderDataGridT
         const orderId = rowParams.id
+        const orderNumber = rowParams.order_number
         const hasAccess = (user && user.is_admin) || rowParams.has_access
         return (
           <ActionsMenu
@@ -179,6 +182,11 @@ const OrdersPage = () => {
               >
                 {texts.orders.actionsMenu.menuItems.downloadAsPdf}
               </MenuItem>,
+              <OrderStatusHistoryDialog
+                key={2}
+                orderId={orderId}
+                orderNumber={orderNumber}
+              />,
             ]}
             permissions={{
               view: true,

@@ -196,6 +196,9 @@ const OrderForm = ({
 
     resData.category && setSelectedOrderCategory(resData.category.id)
 
+    resData.current_status &&
+      setSelectedOrderStatus(resData.current_status.value)
+
     setLoading(false)
   }, [resData])
 
@@ -235,7 +238,7 @@ const OrderForm = ({
 
   useEffect(() => {
     setOrderStatusesToChooseFrom(
-      getKeyValObjectFromArray(orderStatuses, "name", "value")
+      getKeyValObjectFromArray(orderStatuses, "value", "value")
     )
   }, [orderStatuses])
 
@@ -323,18 +326,19 @@ const OrderForm = ({
               error={inputErrors.category_id}
             />
 
-            <Select
-              disabled={readonly}
-              id="order_status"
-              label={texts.orders.form.common.orderStatus.label}
-              value={selectedOrderStatus}
-              values={orderStatusesToChooseFrom}
-              handleChange={(e) =>
-                handleSelectChange(e, setSelectedOrderStatus)
-              }
-              noValueShowNothingSelected={true}
-              error={inputErrors.order_status}
-            />
+            {!!id && (
+              <Select
+                disabled={readonly}
+                id="order_status"
+                label={texts.orders.form.common.orderStatus.label}
+                value={selectedOrderStatus}
+                values={orderStatusesToChooseFrom}
+                handleChange={(e) =>
+                  handleSelectChange(e, setSelectedOrderStatus)
+                }
+                error={inputErrors.order_status}
+              />
+            )}
 
             <Button
               handleClick={() => nav("orders", router)}

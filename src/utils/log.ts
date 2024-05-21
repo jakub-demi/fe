@@ -18,7 +18,19 @@ const logColors = {
 
 type logColor = keyof typeof logColors
 
-const log = (message: string, data: any, color?: logColor) => {
+const log = (
+  message: string,
+  data: any,
+  color?: logColor,
+  devOnly: boolean = false
+) => {
+  if (
+    devOnly &&
+    process.env.NEXT_PUBLIC_DEV_ENV &&
+    process.env.NEXT_PUBLIC_DEV_ENV !== "true"
+  )
+    return
+
   const stack = new Error().stack
   let callingLoc = "unknown"
   if (stack) {

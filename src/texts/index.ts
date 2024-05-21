@@ -141,6 +141,22 @@ const texts = {
         has_access: "Edit Access?",
         order_users: "Users",
       },
+      orderStatusHistoryDialog: {
+        title: "Order Status History for Order #",
+        closeButton: "Close",
+        menuItem: "Show Status History",
+        table: {
+          headers: {
+            order_number: "Order Number",
+            current_status: "Status",
+            user: "Changed By",
+            created_at: "Changed At",
+          },
+          rows: {
+            noHistoryFound: "No History Found.",
+          },
+        },
+      },
     },
     orderItems: {
       dataGrid: {

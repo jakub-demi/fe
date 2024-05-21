@@ -37,12 +37,7 @@ const doAxios = (
       window.location.replace(getRoute("e404"))
     }
 
-    if (
-      process.env.NEXT_PUBLIC_DEV_ENV &&
-      process.env.NEXT_PUBLIC_DEV_ENV === "true"
-    ) {
-      log("doAxios error", error)
-    }
+    log("doAxios error", error, "lightRed", true)
 
     throw error
   })

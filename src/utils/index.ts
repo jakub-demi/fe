@@ -56,6 +56,8 @@ export const handleInputErrors = <T>(
   }
   const { errors } = errData
 
+  if (!errors) return
+
   if ("password" in errors) {
     errors["password_confirmation"] = errors["password"].filter((str) =>
       str.toLowerCase().includes("confirm")
@@ -83,9 +85,13 @@ export const handleInputDefaultErrors = <T>(
   )
 }
 
-export const formatDate = (datetime: Date | Dayjs): string => {
+export const formatDate = (datetime: Date | Dayjs | string): string => {
   if (dayjs.isDayjs(datetime)) {
     datetime = datetime.toDate()
+  }
+
+  if (typeof datetime === "string") {
+    datetime = new Date(datetime)
   }
 
   const year = datetime.getFullYear().toString().padStart(4, "0")

@@ -31,12 +31,14 @@ const ActionsMenu = ({
   handleReloadData,
   additionalActionItems,
   permissions = ActionsMenuPermissionsDefault,
+  extAxiosDeleteApiRoute,
 }: {
   datagridPage: string
   id: number | number[]
   handleReloadData: () => void
   additionalActionItems?: React.ReactNode[]
   permissions?: ActionsMenuPermissionsT
+  extAxiosDeleteApiRoute?: string
 }): React.JSX.Element => {
   const router = useRouter()
   const setNotification = notificationStore((state) => state.setNotification)
@@ -85,7 +87,7 @@ const ActionsMenu = ({
 
   const handleDelete = () => {
     const _id = typeof id === "number" ? id : id[id.length - 1]
-    doAxios(`/${datagridPage}/${_id}`, "delete", true)
+    doAxios(extAxiosDeleteApiRoute ?? `/${datagridPage}/${_id}`, "delete", true)
       .then((res) => {
         setNotification(res.data.message)
         handleReloadData()

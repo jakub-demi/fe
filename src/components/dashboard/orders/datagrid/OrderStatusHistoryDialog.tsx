@@ -133,6 +133,7 @@ const OrderStatusHistoryDialog = ({
                         <Avatars
                           users={[user]}
                           maxAvatars={1}
+                          className={{ group: "justify-center" }}
                         />
                       </TableCell>
                       <TableCell>{formatDate(created_at)}</TableCell>

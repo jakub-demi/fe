@@ -4,11 +4,17 @@ import { Avatar, AvatarGroup } from "@mui/material"
 import { getUserAvatar, getUserInitials } from "@/utils"
 import Tooltip from "@mui/material/Tooltip"
 
-const Avatars = ({ users }: { users: UserT[] }) => {
+const Avatars = ({
+  users,
+  maxAvatars = 3,
+}: {
+  users: UserT[]
+  maxAvatars?: number
+}) => {
   return (
     <>
       {users.length > 0 ? (
-        <AvatarGroup max={3}>
+        <AvatarGroup max={maxAvatars}>
           {users.map((user) => (
             <Tooltip
               key={user.id}

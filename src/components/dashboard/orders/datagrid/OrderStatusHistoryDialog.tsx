@@ -3,7 +3,6 @@ import Button from "@/components/_common/Button"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
-import DialogContentText from "@mui/material/DialogContentText"
 import DialogTitle from "@mui/material/DialogTitle"
 import { useEffect, useState } from "react"
 import texts from "@/texts"
@@ -19,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem"
 import SpinLoader from "@/components/_common/SpinLoader"
 import log from "@/utils/log"
 import { OrderStatusHistoryDialogT } from "@/types"
+import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
 
 const OrderStatusHistoryDialog = ({
   orderId,
@@ -129,7 +129,12 @@ const OrderStatusHistoryDialog = ({
                       <TableCell sx={{ color: `${status.color}` }}>
                         {status.value}
                       </TableCell>
-                      <TableCell>{user.fullName}</TableCell>
+                      <TableCell>
+                        <Avatars
+                          users={[user]}
+                          maxAvatars={1}
+                        />
+                      </TableCell>
                       <TableCell>{formatDate(created_at)}</TableCell>
                     </TableRow>
                   ))}

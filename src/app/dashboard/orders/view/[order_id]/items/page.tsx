@@ -6,7 +6,6 @@ import log from "@/utils/log"
 import doAxios from "@/utils/doAxios"
 import { OrderItemT } from "@/types"
 import { areObjectsEqual, handleForbiddenAccess, handleResData } from "@/utils"
-import SpinLoader from "@/components/_common/SpinLoader"
 import ActionsMenu from "@/components/_common/datagrid/ActionsMenu"
 import texts from "@/texts"
 import DataGrid from "@/components/_common/datagrid/DataGrid"
@@ -128,6 +127,7 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
             datagridPage="order-items"
             id={[orderId, orderItemId]}
             handleReloadData={() => loadData()}
+            extAxiosDeleteApiRoute={`/orders/${orderId}/order-items/${orderItemId}`}
           />
         )
       },

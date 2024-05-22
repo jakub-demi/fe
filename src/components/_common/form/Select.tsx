@@ -13,6 +13,7 @@ import log from "@/utils/log"
 import { hasDistinctValues } from "@/utils"
 import texts from "@/texts"
 import { SelectValuesT } from "@/types"
+import Tooltip from "@mui/material/Tooltip"
 
 const SelectMui = ({
   id,
@@ -24,7 +25,7 @@ const SelectMui = ({
   specificValueDisplayFormat,
   className,
   disabled = false,
-  showNothingSelected = false,
+  noValueShowNothingSelected = false,
 }: {
   id: string
   value?: string | number
@@ -35,7 +36,7 @@ const SelectMui = ({
   specificValueDisplayFormat?: string
   className?: string
   disabled?: boolean
-  showNothingSelected?: boolean
+  noValueShowNothingSelected?: boolean
 }) => {
   const valueToDisplay = (value: string | number) => {
     return specificValueDisplayFormat
@@ -61,7 +62,7 @@ const SelectMui = ({
         value={
           value
             ? `${value}`
-            : showNothingSelected
+            : noValueShowNothingSelected
               ? ""
               : Array.isArray(values)
                 ? `${values[0]}`
@@ -71,6 +72,16 @@ const SelectMui = ({
         onChange={handleChange}
         error={error && error.length > 0}
       >
+        {noValueShowNothingSelected && (
+          <Tooltip
+            title={texts.select.nothingSelected.tooltip}
+            arrow
+          >
+            <MenuItem>
+              <i>{texts.select.nothingSelected.text}</i>
+            </MenuItem>
+          </Tooltip>
+        )}
         {Array.isArray(values) &&
           values.map((val, idx) => (
             <MenuItem

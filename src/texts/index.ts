@@ -106,6 +106,9 @@ const texts = {
         category: {
           label: "Category",
         },
+        orderStatus: {
+          label: "Order Status",
+        },
       },
       create: {
         button: "Create",
@@ -137,6 +140,22 @@ const texts = {
         createdAt: "Created At",
         has_access: "Edit Access?",
         order_users: "Users",
+      },
+      orderStatusHistoryDialog: {
+        title: "Order Status History for Order #",
+        closeButton: "Close",
+        menuItem: "Show Status History",
+        table: {
+          headers: {
+            order_number: "Order Number",
+            current_status: "Status",
+            user: "Changed By",
+            created_at: "Changed At",
+          },
+          rows: {
+            noHistoryFound: "No History Found.",
+          },
+        },
       },
     },
     orderItems: {
@@ -268,6 +287,10 @@ const texts = {
     trueFalse: {
       yes: "Yes",
       no: "No",
+    },
+    nothingSelected: {
+      tooltip: "Select this if you do not want to select anything.",
+      text: "Nothing Selected",
     },
   },
   notification: {

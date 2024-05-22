@@ -14,6 +14,7 @@ import notificationStore from "@/stores/notificationStore"
 import confirmDialogStore from "@/stores/confirmDialogStore"
 import VatRenderEditCell from "@/components/dashboard/orders/items/datagrid/VatRenderEditCell"
 import { useRouter } from "next/navigation"
+import DataGridRender from "@/components/_common/datagrid/DataGridRender"
 
 const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   const orderId = params.order_id
@@ -163,15 +164,10 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
   }
 
   return (
-    <div
-      ref={dataGridRef}
-      className="w-full"
-    >
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <SpinLoader />
-        </div>
-      ) : (
+    <DataGridRender
+      dataGridRef={dataGridRef}
+      isLoading={isLoading}
+      dataGridJsxElement={
         <DataGrid
           rowEditMode={true}
           rows={tableData}
@@ -183,8 +179,8 @@ const OrderItemsPage = ({ params }: { params: { order_id: number } }) => {
             processRowUpdateHandler(newRow, oldRow)
           }
         />
-      )}
-    </div>
+      }
+    />
   )
 }
 export default OrderItemsPage

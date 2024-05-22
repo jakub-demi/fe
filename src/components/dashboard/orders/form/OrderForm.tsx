@@ -17,10 +17,13 @@ import {
   OrderT,
   UserT,
   OrderCategoryT,
+  OrderStatusT,
+  StrKeyStrValT,
 } from "@/types"
 import log from "@/utils/log"
 import {
   formatDate,
+  getKeyValObjectFromArray,
   handleChangeData,
   handleDaytimeChange,
   handleForbiddenAccess,
@@ -38,6 +41,7 @@ import { produce } from "immer"
 import authStore from "@/stores/authStore"
 import InputField from "@/components/_common/form/InputField"
 import Select from "@/components/_common/form/Select"
+import { getAndSetOrderStatuses } from "@/utils/axiosCalls"
 
 const OrderForm = ({
   id,
@@ -89,6 +93,11 @@ const OrderForm = ({
 
   const [selectedOrderCategory, setSelectedOrderCategory] = useState<number>()
 
+  const [orderStatuses, setOrderStatuses] = useState<OrderStatusT[]>([])
+  const [orderStatusesToChooseFrom, setOrderStatusesToChooseFrom] =
+    useState<StrKeyStrValT>({})
+  const [selectedOrderStatus, setSelectedOrderStatus] = useState<string>()
+
   const inputErrorsDefaultState = {
     due_date: undefined as FormErrorT,
     payment_date: undefined as FormErrorT,
@@ -97,6 +106,7 @@ const OrderForm = ({
     customer_name: undefined as FormErrorT,
     customer_address: undefined as FormErrorT,
     category_id: undefined as FormErrorT,
+    order_status: undefined as FormErrorT,
   }
   const [inputErrors, setInputErrors] = useState(inputErrorsDefaultState)
 
@@ -107,6 +117,7 @@ const OrderForm = ({
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
       category_id: selectedOrderCategory,
+      status: selectedOrderStatus,
     }
   }
 
@@ -119,6 +130,7 @@ const OrderForm = ({
       customer_name: customer.customer_name,
       customer_address: customer.customer_address,
       category_id: selectedOrderCategory,
+      status: selectedOrderStatus,
     }
   }
 
@@ -149,6 +161,8 @@ const OrderForm = ({
     doAxios("/order-categories", "get", true).then((res) =>
       handleResData(res, setOrderCategories)
     )
+
+    getAndSetOrderStatuses(setOrderStatuses)
 
     if (!id) {
       setLoading(false)
@@ -182,6 +196,9 @@ const OrderForm = ({
 
     resData.category && setSelectedOrderCategory(resData.category.id)
 
+    resData.current_status &&
+      setSelectedOrderStatus(resData.current_status.value)
+
     setLoading(false)
   }, [resData])
 
@@ -200,12 +217,11 @@ const OrderForm = ({
         users[user.id] = user.fullName
       })
     } else {
-      users = allUsers
-        .filter((user) => choosenUsers.includes(user.id))
-        .reduce((user: NumKeyStrValT, { id, fullName }) => {
-          user[id] = fullName
-          return user
-        }, {})
+      const filteredUsers = allUsers.filter((user) =>
+        choosenUsers.includes(user.id)
+      )
+      users = getKeyValObjectFromArray(filteredUsers, "id", "fullName")
+
       user && (users[user.id] = user.fullName)
       if (!id && user) {
         choosenUsers.push(user.id)
@@ -217,15 +233,14 @@ const OrderForm = ({
   }, [allUsers])
 
   useEffect(() => {
-    const categories = orderCategories.reduce(
-      (category: NumKeyStrValT, { id, name }) => {
-        category[id] = name
-        return category
-      },
-      {}
-    )
-    setOrderCategoriesToChooseFrom(categories)
+    setOrderCategoriesToChooseFrom(getKeyValObjectFromArray(orderCategories))
   }, [orderCategories])
+
+  useEffect(() => {
+    setOrderStatusesToChooseFrom(
+      getKeyValObjectFromArray(orderStatuses, "value", "value")
+    )
+  }, [orderStatuses])
 
   if (loading) {
     return <Preloader />
@@ -307,9 +322,23 @@ const OrderForm = ({
               handleChange={(e) =>
                 handleSelectChange(e, setSelectedOrderCategory, true)
               }
-              showNothingSelected={true}
+              noValueShowNothingSelected={true}
               error={inputErrors.category_id}
             />
+
+            {!!id && (
+              <Select
+                disabled={readonly}
+                id="order_status"
+                label={texts.orders.form.common.orderStatus.label}
+                value={selectedOrderStatus}
+                values={orderStatusesToChooseFrom}
+                handleChange={(e) =>
+                  handleSelectChange(e, setSelectedOrderStatus)
+                }
+                error={inputErrors.order_status}
+              />
+            )}
 
             <Button
               handleClick={() => nav("orders", router)}

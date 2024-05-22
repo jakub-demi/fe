@@ -17,6 +17,9 @@ import DataGrid from "@/components/_common/datagrid/DataGrid"
 import Avatars from "@/components/dashboard/orders/datagrid/Avatars"
 import authStore from "@/stores/authStore"
 import notificationStore from "@/stores/notificationStore"
+import DataGridRender from "@/components/_common/datagrid/DataGridRender"
+import { Box } from "@mui/material"
+import OrderStatusHistoryDialog from "@/components/dashboard/orders/datagrid/OrderStatusHistoryDialog"
 
 const OrdersPage = () => {
   const setNotification = notificationStore((state) => state.setNotification)
@@ -28,7 +31,7 @@ const OrdersPage = () => {
   const router = useRouter()
 
   const [tableData, setTableData] = useState<OrderT[]>()
-  const [gridRows, setGridRows] = useState<OrderT[]>([])
+  const [gridRows, setGridRows] = useState<OrderDataGridT[]>([])
   const [colsCount, setColsCount] = useState<number>()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -157,6 +160,7 @@ const OrdersPage = () => {
       renderCell: (params) => {
         const rowParams = params.row as OrderDataGridT
         const orderId = rowParams.id
+        const orderNumber = rowParams.order_number
         const hasAccess = (user && user.is_admin) || rowParams.has_access
         return (
           <ActionsMenu
@@ -178,6 +182,11 @@ const OrdersPage = () => {
               >
                 {texts.orders.actionsMenu.menuItems.downloadAsPdf}
               </MenuItem>,
+              <OrderStatusHistoryDialog
+                key={2}
+                orderId={orderId}
+                orderNumber={orderNumber}
+              />,
             ]}
             permissions={{
               view: true,
@@ -195,22 +204,17 @@ const OrdersPage = () => {
   }, [columns.length])
 
   return (
-    <div
-      ref={dataGridRef}
-      className="w-full"
-    >
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <SpinLoader />
-        </div>
-      ) : (
+    <DataGridRender
+      dataGridRef={dataGridRef}
+      isLoading={isLoading}
+      dataGridJsxElement={
         <DataGrid
           rows={gridRows}
           columns={columns}
           createRoute="orders.create"
         />
-      )}
-    </div>
+      }
+    />
   )
 }
 export default OrdersPage

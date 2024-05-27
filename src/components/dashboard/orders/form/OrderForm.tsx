@@ -212,21 +212,9 @@ const OrderForm = ({
       })
     }
 
-    if (user?.is_admin) {
-      allUsers.forEach((user) => {
-        users[user.id] = user.fullName
-      })
-    } else {
-      const filteredUsers = allUsers.filter((user) =>
-        choosenUsers.includes(user.id)
-      )
-      users = getKeyValObjectFromArray(filteredUsers, "id", "fullName")
-
-      user && (users[user.id] = user.fullName)
-      if (!id && user) {
-        choosenUsers.push(user.id)
-      }
-    }
+    allUsers.forEach((user) => {
+      users[user.id] = user.fullName
+    })
 
     setOrderUsersToChooseFrom(users)
     setOrderChoosenUsers(choosenUsers)

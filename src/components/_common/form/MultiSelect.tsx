@@ -22,6 +22,7 @@ const MultiSelect = ({
   specificValueDisplayFormat,
   className,
   disabled = false,
+  lockedKeys,
 }: {
   id: string
   selectedValues: string[] | number[]
@@ -32,6 +33,7 @@ const MultiSelect = ({
   specificValueDisplayFormat?: string
   className?: string
   disabled?: boolean
+  lockedKeys?: string[]
 }) => {
   const [selectedVals, setSelectedVals] = useState<string[]>([])
 
@@ -74,6 +76,7 @@ const MultiSelect = ({
           <MenuItem
             key={idx.toString() + key + val}
             value={key}
+            disabled={lockedKeys?.includes(key)}
           >
             <Checkbox checked={selectedVals.indexOf(key) > -1} />
             <ListItemText primary={valueToDisplay(val)} />

@@ -293,6 +293,9 @@ const OrderForm = ({
               handleChange={(e) =>
                 handleMultiSelectChange(e, setOrderChoosenUsers, true)
               }
+              lockedKeys={
+                user?.id && !user?.is_admin ? [user.id.toString()] : undefined
+              }
             />
 
             <InputField
